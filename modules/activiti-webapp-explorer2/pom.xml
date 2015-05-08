@@ -16,6 +16,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <cuba.modeler.version>${project.version}.cuba.1-SNAPSHOT</cuba.modeler.version>
   </properties>
 
   <repositories>
@@ -150,6 +151,45 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>cuba</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.2.1</version>
+            <configuration>
+              <finalName>cuba-modeler-${cuba.modeler.version}</finalName>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>src/main/assembly/cuba-modeler-zip.xml</descriptor>
+              </descriptors>
+            </configuration>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-install-plugin</artifactId>
+            <version>2.3.1</version>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <configuration>
+              <groupId>com.haulmont.bpm</groupId>
+              <artifactId>cuba-modeler</artifactId>
+              <version>${cuba.modeler.version}</version>
+              <classifier>web</classifier>
+              <packaging>zip</packaging>
+              <file>${project.build.directory}/cuba-modeler-${cuba.modeler.version}.zip</file>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
 

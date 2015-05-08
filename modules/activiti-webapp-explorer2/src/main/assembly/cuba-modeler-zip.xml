@@ -1,0 +1,25 @@
+<assembly>
+    <id>cuba-modeler</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>src/main/webapp/editor-app</directory>
+            <outputDirectory>modeler/editor-app</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <files>
+        <file>
+            <source>src/main/resources/stencilset.json</source>
+            <outputDirectory>modeler/editor-app</outputDirectory>
+        </file>
+        <file>
+            <source>src/main/webapp/modeler.html</source>
+            <outputDirectory>modeler</outputDirectory>
+        </file>
+    </files>
+</assembly>
