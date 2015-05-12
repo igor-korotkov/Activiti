@@ -5,6 +5,7 @@
 
   <name>Activiti - JSON Converter</name>
   <artifactId>activiti-json-converter</artifactId>
+  <version>${parent.version}.cuba.1-SNAPSHOT</version>
 
   <parent>
     <groupId>org.activiti</groupId>
@@ -101,10 +102,12 @@
     <dependency>
       <groupId>org.activiti</groupId>
       <artifactId>activiti-bpmn-model</artifactId>
+      <version>${parent.version}</version>
     </dependency>
     <dependency>
       <groupId>org.activiti</groupId>
       <artifactId>activiti-bpmn-converter</artifactId>
+      <version>${parent.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
