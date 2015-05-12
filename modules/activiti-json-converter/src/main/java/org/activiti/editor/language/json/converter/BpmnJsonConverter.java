@@ -50,8 +50,10 @@ import org.activiti.bpmn.model.Signal;
 import org.activiti.bpmn.model.SignalEventDefinition;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.ValuedDataObject;
+import org.activiti.editor.constants.CubaStencilConstants;
 import org.activiti.editor.constants.EditorJsonConstants;
 import org.activiti.editor.constants.StencilConstants;
+import org.activiti.editor.language.json.converter.util.CubaBpmnJsonConverterUtil;
 import org.activiti.editor.language.json.converter.util.JsonConverterUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -495,6 +497,8 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
 
             processJsonElements(shapesArrayNode, modelNode, process, shapeMap, bpmnModel);
 
+            processCubaElements(modelNode, process);
+
         } else {
             // sequence flows are on root level so need additional parsing for pools
             for (JsonNode shapeNode : shapesArrayNode) {
@@ -914,7 +918,14 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
         graphicInfo.setY(y);
         return graphicInfo;
     }
-    
+
+    protected void processCubaElements(JsonNode modelNode, Process process) {
+        JsonNode procRolesNode = BpmnJsonConverterUtil.getProperty(CubaStencilConstants.PROPERTY_PROCESS_PROC_ROLES, modelNode);
+        if (procRolesNode != null) {
+            CubaBpmnJsonConverterUtil.parseProcRoles(procRolesNode, process);
+        }
+    }
+
     class FlowWithContainer {
         protected SequenceFlow sequenceFlow;
         protected FlowElementsContainer flowContainer;
