@@ -147,5 +147,11 @@ public class UserTaskJsonConverter extends BaseBpmnJsonConverter {
         if (taskOutcomesNode != null) {
             CubaBpmnJsonConverterUtil.parseTaskOutcomes(taskOutcomesNode, task);
         }
+
+        JsonNode taskProcRoleNode = BpmnJsonConverterUtil.getProperty(CubaStencilConstants.PROPERTY_TASK_PROC_ROLE, elementNode);
+        if (taskProcRoleNode != null) {
+            CubaBpmnJsonConverterUtil.parseTaskProcRole(taskProcRoleNode, task);
+        }
+
     }
 }

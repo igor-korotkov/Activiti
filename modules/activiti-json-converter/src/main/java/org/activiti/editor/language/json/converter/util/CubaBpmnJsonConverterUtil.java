@@ -74,6 +74,12 @@ public class CubaBpmnJsonConverterUtil {
         }
     }
 
+    public static void parseTaskProcRole(JsonNode taskProcRoleNode, UserTask task) {
+        ExtensionElement procRoleElement = createExtensionElement("procRole");
+        procRoleElement.setElementText(taskProcRoleNode.asText());
+        addExtensionElement(task, procRoleElement);
+    }
+
     protected static ExtensionElement createExtensionElement(String name) {
         ExtensionElement extensionElement = new ExtensionElement();
         extensionElement.setName(name);
