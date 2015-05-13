@@ -14,9 +14,9 @@ package org.activiti.editor.language.json.converter;
 
 import java.util.Map;
 
-import org.activiti.bpmn.model.BaseElement;
-import org.activiti.bpmn.model.FlowElement;
-import org.activiti.bpmn.model.UserTask;
+import org.activiti.bpmn.model.*;
+import org.activiti.editor.constants.CubaStencilConstants;
+import org.activiti.editor.language.json.converter.util.CubaBpmnJsonConverterUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,45 +30,45 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class UserTaskJsonConverter extends BaseBpmnJsonConverter {
 
     public static void fillTypes(Map<String, Class<? extends BaseBpmnJsonConverter>> convertersToBpmnMap,
-            Map<Class<? extends BaseElement>, Class<? extends BaseBpmnJsonConverter>> convertersToJsonMap) {
-    
+                                 Map<Class<? extends BaseElement>, Class<? extends BaseBpmnJsonConverter>> convertersToJsonMap) {
+
         fillJsonTypes(convertersToBpmnMap);
         fillBpmnTypes(convertersToJsonMap);
     }
-  
+
     public static void fillJsonTypes(Map<String, Class<? extends BaseBpmnJsonConverter>> convertersToBpmnMap) {
         convertersToBpmnMap.put(STENCIL_TASK_USER, UserTaskJsonConverter.class);
     }
-  
+
     public static void fillBpmnTypes(Map<Class<? extends BaseElement>, Class<? extends BaseBpmnJsonConverter>> convertersToJsonMap) {
         convertersToJsonMap.put(UserTask.class, UserTaskJsonConverter.class);
     }
-  
+
     @Override
     protected String getStencilId(BaseElement baseElement) {
         return STENCIL_TASK_USER;
     }
-  
+
     @Override
     protected void convertElementToJson(ObjectNode propertiesNode, BaseElement baseElement) {
         UserTask userTask = (UserTask) baseElement;
         String assignee = userTask.getAssignee();
         String owner = userTask.getOwner();
-    
-        if (StringUtils.isNotEmpty(assignee) || StringUtils.isNotEmpty(owner) || CollectionUtils.isNotEmpty(userTask.getCandidateUsers()) || 
+
+        if (StringUtils.isNotEmpty(assignee) || StringUtils.isNotEmpty(owner) || CollectionUtils.isNotEmpty(userTask.getCandidateUsers()) ||
                 CollectionUtils.isNotEmpty(userTask.getCandidateGroups())) {
-          
+
             ObjectNode assignmentNode = objectMapper.createObjectNode();
             ObjectNode assignmentValuesNode = objectMapper.createObjectNode();
-          
+
             if (StringUtils.isNotEmpty(assignee)) {
-              assignmentValuesNode.put(PROPERTY_USERTASK_ASSIGNEE, assignee);
+                assignmentValuesNode.put(PROPERTY_USERTASK_ASSIGNEE, assignee);
             }
-            
+
             if (StringUtils.isNotEmpty(owner)) {
-              assignmentValuesNode.put(PROPERTY_USERTASK_OWNER, owner);
+                assignmentValuesNode.put(PROPERTY_USERTASK_OWNER, owner);
             }
-          
+
             if (CollectionUtils.isNotEmpty(userTask.getCandidateUsers())) {
                 ArrayNode candidateArrayNode = objectMapper.createArrayNode();
                 for (String candidateUser : userTask.getCandidateUsers()) {
@@ -78,7 +78,7 @@ public class UserTaskJsonConverter extends BaseBpmnJsonConverter {
                 }
                 assignmentValuesNode.put(PROPERTY_USERTASK_CANDIDATE_USERS, candidateArrayNode);
             }
-          
+
             if (CollectionUtils.isNotEmpty(userTask.getCandidateGroups())) {
                 ArrayNode candidateArrayNode = objectMapper.createArrayNode();
                 for (String candidateGroup : userTask.getCandidateGroups()) {
@@ -88,25 +88,25 @@ public class UserTaskJsonConverter extends BaseBpmnJsonConverter {
                 }
                 assignmentValuesNode.put(PROPERTY_USERTASK_CANDIDATE_GROUPS, candidateArrayNode);
             }
-          
+
             assignmentNode.put("assignment", assignmentValuesNode);
             propertiesNode.put(PROPERTY_USERTASK_ASSIGNMENT, assignmentNode);
         }
-        
+
         if (userTask.getPriority() != null) {
             setPropertyValue(PROPERTY_USERTASK_PRIORITY, userTask.getPriority().toString(), propertiesNode);
         }
-        
+
         if (StringUtils.isNotEmpty(userTask.getFormKey())) {
             setPropertyValue(PROPERTY_FORMKEY, userTask.getFormKey(), propertiesNode);
         }
-        
+
         setPropertyValue(PROPERTY_USERTASK_DUEDATE, userTask.getDueDate(), propertiesNode);
         setPropertyValue(PROPERTY_USERTASK_CATEGORY, userTask.getCategory(), propertiesNode);
-        
+
         addFormProperties(userTask.getFormProperties(), propertiesNode);
     }
-  
+
     @Override
     protected FlowElement convertJsonToElement(JsonNode elementNode, JsonNode modelNode, Map<String, JsonNode> shapeMap) {
         UserTask task = new UserTask();
@@ -117,27 +117,35 @@ public class UserTaskJsonConverter extends BaseBpmnJsonConverter {
         }
         task.setDueDate(getPropertyValueAsString(PROPERTY_USERTASK_DUEDATE, elementNode));
         task.setCategory(getPropertyValueAsString(PROPERTY_USERTASK_CATEGORY, elementNode));
-        
+
         JsonNode assignmentNode = getProperty(PROPERTY_USERTASK_ASSIGNMENT, elementNode);
         if (assignmentNode != null) {
             JsonNode assignmentDefNode = assignmentNode.get("assignment");
             if (assignmentDefNode != null) {
-              
+
                 JsonNode assigneeNode = assignmentDefNode.get(PROPERTY_USERTASK_ASSIGNEE);
                 if (assigneeNode != null && assigneeNode.isNull() == false) {
                     task.setAssignee(assigneeNode.asText());
                 }
-                
+
                 JsonNode ownerNode = assignmentDefNode.get(PROPERTY_USERTASK_OWNER);
                 if (ownerNode != null && ownerNode.isNull() == false) {
                     task.setOwner(ownerNode.asText());
                 }
-                
+
                 task.setCandidateUsers(getValueAsList(PROPERTY_USERTASK_CANDIDATE_USERS, assignmentDefNode));
                 task.setCandidateGroups(getValueAsList(PROPERTY_USERTASK_CANDIDATE_GROUPS, assignmentDefNode));
             }
         }
         convertJsonToFormProperties(elementNode, task);
+        processCubaElements(elementNode, task);
         return task;
+    }
+
+    protected void processCubaElements(JsonNode elementNode, UserTask task) {
+        JsonNode taskOutcomesNode = BpmnJsonConverterUtil.getProperty(CubaStencilConstants.PROPERTY_TASK_OUTCOMES, elementNode);
+        if (taskOutcomesNode != null) {
+            CubaBpmnJsonConverterUtil.parseTaskOutcomes(taskOutcomesNode, task);
+        }
     }
 }

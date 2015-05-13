@@ -276,5 +276,16 @@
     "PROPERTY.PROCROLES.NAME" : "Name",
     "PROPERTY.PROCROLES.NAME.PLACEHOLDER" : "Enter a name",
     "PROPERTY.PROCROLES.VALUE" : "{{length}} proc roles",
-    "PROPERTY.PROCROLES.EMPTY" : "No proc roles configured"
+    "PROPERTY.PROCROLES.EMPTY" : "No proc roles configured",
+
+    "PROPERTY.TASKOUTCOMES.NAME" : "Outcome name",
+    "PROPERTY.TASKOUTCOMES.NAME.PLACEHOLDER" : "Enter an outcome name",
+    "PROPERTY.TASKOUTCOMES.FORM" : "Form name",
+    "PROPERTY.TASKOUTCOMES.FORM.PLACEHOLDER" : "Enter a form name",
+    "PROPERTY.TASKOUTCOMES.FORM.PARAM.NAME" : "Param name",
+    "PROPERTY.TASKOUTCOMES.FORM.PARAM.NAME.PLACEHOLDER" : "Enter param name",
+    "PROPERTY.TASKOUTCOMES.FORM.PARAM.VALUE" : "Param value",
+    "PROPERTY.TASKOUTCOMES.FORM.PARAM.VALUE.PLACEHOLDER" : "Enter param value",
+    "PROPERTY.TASKOUTCOMES.VALUE" : "{{length}} outcomes",
+    "PROPERTY.TASKOUTCOMES.EMPTY" : "No outcomes configured"
 }
