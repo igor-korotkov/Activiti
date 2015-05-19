@@ -287,5 +287,11 @@
     "PROPERTY.TASKOUTCOMES.FORM.PARAM.VALUE" : "Param value",
     "PROPERTY.TASKOUTCOMES.FORM.PARAM.VALUE.PLACEHOLDER" : "Enter param value",
     "PROPERTY.TASKOUTCOMES.VALUE" : "{{length}} outcomes",
-    "PROPERTY.TASKOUTCOMES.EMPTY" : "No outcomes configured"
+    "PROPERTY.TASKOUTCOMES.EMPTY" : "No outcomes configured",
+
+    "PROPERTY.STARTFORM.NAME" : "Form name",
+    "PROPERTY.STARTFORM.PARAM.NAME" : "Param name",
+    "PROPERTY.STARTFORM.PARAM.VALUE" : "Param value",
+    "PROPERTY.STARTFORM.VALUE" : "{{name}}",
+    "PROPERTY.STARTFORM.EMPTY" : "No start form configured"
 }

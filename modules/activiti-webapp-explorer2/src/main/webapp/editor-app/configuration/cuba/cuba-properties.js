@@ -10,3 +10,8 @@ KISBPM.PROPERTY_CONFIG["oryx-taskoutcomes-complex"] = {
     "readModeTemplateUrl": "editor-app/configuration/properties/cuba/task-outcomes-display-template.html",
     "writeModeTemplateUrl": "editor-app/configuration/properties/cuba/task-outcomes-write-template.html"
 };
+
+KISBPM.PROPERTY_CONFIG["oryx-startform-complex"] = {
+    "readModeTemplateUrl": "editor-app/configuration/properties/cuba/start-form-display-template.html",
+    "writeModeTemplateUrl": "editor-app/configuration/properties/cuba/start-form-write-template.html"
+};

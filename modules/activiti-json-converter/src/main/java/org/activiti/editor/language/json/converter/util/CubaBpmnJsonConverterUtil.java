@@ -45,25 +45,8 @@ public class CubaBpmnJsonConverterUtil {
 
             JsonNode formNode = taskOutcomeNode.get("form");
             if (formNode != null) {
-                ExtensionElement formElement = createExtensionElement("form");
-                String formName = BpmnJsonConverterUtil.getValueAsString("name", formNode);
-                addExtensionAttribute(formElement, "name", formName);
+                ExtensionElement formElement = createFormExtensionElement(formNode);
                 addChildExtensionElement(outcomeElement, formElement);
-
-                JsonNode paramsNode = formNode.get("params");
-                for (JsonNode paramNode : paramsNode) {
-                    ExtensionElement paramElement = createExtensionElement("param");
-                    JsonNode nameNode = paramNode.get("name");
-                    if (nameNode != null) {
-                        addExtensionAttribute(paramElement, "name", nameNode.asText());
-                    }
-                    JsonNode valueNode = paramNode.get("value");
-                    if (valueNode != null) {
-                        addExtensionAttribute(paramElement, "value", valueNode.asText());
-                    }
-                    addChildExtensionElement(formElement, paramElement);
-                    //todo gorbunkov other param properties
-                }
             }
 
             addChildExtensionElement(outcomesElement, outcomeElement);
@@ -78,6 +61,11 @@ public class CubaBpmnJsonConverterUtil {
         ExtensionElement procRoleElement = createExtensionElement("procRole");
         procRoleElement.setElementText(taskProcRoleNode.asText());
         addExtensionElement(task, procRoleElement);
+    }
+
+    public static void parseStartForm(JsonNode startFormNode, StartEvent startEvent) {
+        ExtensionElement formExtensionElement = createFormExtensionElement(startFormNode);
+        addExtensionElement(startEvent, formExtensionElement);
     }
 
     protected static ExtensionElement createExtensionElement(String name) {
@@ -112,5 +100,28 @@ public class CubaBpmnJsonConverterUtil {
             list = new ArrayList<ExtensionElement>();
         list.add(extensionElement);
         extensionElementsMap.put(extensionElement.getName(), list);
+    }
+
+    protected static ExtensionElement createFormExtensionElement(JsonNode formNode) {
+        ExtensionElement formElement = createExtensionElement("form");
+        String formName = BpmnJsonConverterUtil.getValueAsString("name", formNode);
+        addExtensionAttribute(formElement, "name", formName);
+
+        JsonNode paramsNode = formNode.get("params");
+        for (JsonNode paramNode : paramsNode) {
+            ExtensionElement paramElement = createExtensionElement("param");
+            JsonNode nameNode = paramNode.get("name");
+            if (nameNode != null) {
+                addExtensionAttribute(paramElement, "name", nameNode.asText());
+            }
+            JsonNode valueNode = paramNode.get("value");
+            if (valueNode != null) {
+                addExtensionAttribute(paramElement, "value", valueNode.asText());
+            }
+            addChildExtensionElement(formElement, paramElement);
+            //todo gorbunkov other param properties
+        }
+
+        return formElement;
     }
 }

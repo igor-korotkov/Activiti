@@ -14,15 +14,9 @@ package org.activiti.editor.language.json.converter;
 
 import java.util.Map;
 
-import org.activiti.bpmn.model.BaseElement;
-import org.activiti.bpmn.model.ErrorEventDefinition;
-import org.activiti.bpmn.model.Event;
-import org.activiti.bpmn.model.EventDefinition;
-import org.activiti.bpmn.model.FlowElement;
-import org.activiti.bpmn.model.MessageEventDefinition;
-import org.activiti.bpmn.model.SignalEventDefinition;
-import org.activiti.bpmn.model.StartEvent;
-import org.activiti.bpmn.model.TimerEventDefinition;
+import org.activiti.bpmn.model.*;
+import org.activiti.editor.constants.CubaStencilConstants;
+import org.activiti.editor.language.json.converter.util.CubaBpmnJsonConverterUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -101,6 +95,14 @@ public class StartEventJsonConverter extends BaseBpmnJsonConverter {
     } else if (STENCIL_EVENT_START_SIGNAL.equals(stencilId)) {
     	convertJsonToSignalDefinition(elementNode, startEvent);
     }
+    processCubaElements(elementNode, startEvent);
     return startEvent;
+  }
+
+  protected void processCubaElements(JsonNode elementNode, StartEvent startEvent) {
+    JsonNode startFormNode = BpmnJsonConverterUtil.getProperty(CubaStencilConstants.PROPERTY_START_FORM, elementNode);
+    if (startFormNode != null) {
+      CubaBpmnJsonConverterUtil.parseStartForm(startFormNode, startEvent);
+    }
   }
 }
