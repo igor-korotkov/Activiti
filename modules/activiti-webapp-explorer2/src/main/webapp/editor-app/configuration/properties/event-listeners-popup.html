@@ -36,6 +36,7 @@
             	            		<option>ACTIVITY_MESSAGE_RECEIVED</option>
             	            		<option>ACTIVITY_SIGNALED</option>
             	            		<option>ACTIVITY_STARTED</option>
+            	            		<option>ACTIVITY_CANCELLED</option>
             	            		<option>ENGINE_CLOSED</option>
             	            		<option>ENGINE_CREATED</option>
             	            		<option>ENTITY_ACTIVATED</option>
@@ -51,12 +52,14 @@
             	                	<option title="{{'EVENT_TYPE.MEMBERSHIP.DELETED.TOOLTIP' | translate}}">MEMBERSHIP_DELETED</option>
             	                	<option title="{{'EVENT_TYPE.MEMBERSHIPS.DELETED.TOOLTIP' | translate}}">MEMBERSHIPS_DELETED</option>
             	                	<option title="{{'EVENT_TYPE.TASK.ASSIGNED.TOOLTIP' | translate}}">TASK_ASSIGNED</option>
-            	                	<option title="{{'EVENT_TYPE.TASK.COMPLETED.TOOLTIP' | translate}}">TASK_COMPLETED</option>
+									<option>TASK_CREATED</option>
+									<option title="{{'EVENT_TYPE.TASK.COMPLETED.TOOLTIP' | translate}}">TASK_COMPLETED</option>
             	                	<option>TIMER_FIRED</option>
             	                	<option title="{{'EVENT_TYPE.UNCAUGHT.BPMNERROR.TOOLTIP' | translate}}">UNCAUGHT_BPMN_ERROR</option>
             	                	<option title="{{'EVENT_TYPE.VARIABLE.CREATED.TOOLTIP' | translate}}">VARIABLE_CREATED</option>
             	                	<option title="{{'EVENT_TYPE.VARIABLE.DELETED.TOOLTIP' | translate}}">VARIABLE_DELETED</option>
             	                	<option title="{{'EVENT_TYPE.VARIABLE.UPDATED.TOOLTIP' | translate}}">VARIABLE_UPDATED</option>
+            	                	<option title="{{'EVENT_TYPE.VARIABLE.UPDATED.TOOLTIP' | translate}}">PROCESS_COMPLETED</option>
             	               	</select>
             		            <i ng-if="$index > 0" class="glyphicon glyphicon-minus clickable-property" ng-click="removeEventValue($index)"></i>
             		            <i class="glyphicon glyphicon-plus clickable-property" ng-click="addEventValue($index)"></i>
