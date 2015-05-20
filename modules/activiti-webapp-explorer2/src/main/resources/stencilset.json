@@ -671,7 +671,7 @@
     "name" : "taskprocrolepackage",
     "properties" : [ {
       "id" : "taskprocrole",
-      "type" : "String",
+      "type" : "cuba-taskprocrole",
       "title" : "ProcRole code",
       "value" : "",
       "description" : "Process role code the task is assigned to",

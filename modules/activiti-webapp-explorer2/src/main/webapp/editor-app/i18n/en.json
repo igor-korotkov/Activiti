@@ -293,5 +293,8 @@
     "PROPERTY.STARTFORM.PARAM.NAME" : "Param name",
     "PROPERTY.STARTFORM.PARAM.VALUE" : "Param value",
     "PROPERTY.STARTFORM.VALUE" : "{{name}}",
-    "PROPERTY.STARTFORM.EMPTY" : "No start form configured"
+    "PROPERTY.STARTFORM.EMPTY" : "No start form configured",
+
+    "PROPERTY.USERTASK.PROCROLE.SELECT.EMPTY" : "-- No role selected --"
+
 }
