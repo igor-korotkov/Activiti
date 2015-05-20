@@ -70,10 +70,8 @@ var KisBpmProcRolesPopupCtrl = ['$scope', '$q', '$translate', function($scope, $
     }
 
         // Click handler for add button
-    var propertyIndex = 1;
     $scope.addNewProperty = function() {
-        $scope.procRoles.push({ code : 'new_role_' + propertyIndex++,
-            name : ''});
+        $scope.procRoles.push({ code : '', name : ''});
     };
 
     // Click handler for remove button
