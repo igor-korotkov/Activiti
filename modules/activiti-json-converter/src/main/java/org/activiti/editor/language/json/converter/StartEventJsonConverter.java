@@ -101,7 +101,7 @@ public class StartEventJsonConverter extends BaseBpmnJsonConverter {
 
   protected void processCubaElements(JsonNode elementNode, StartEvent startEvent) {
     JsonNode startFormNode = BpmnJsonConverterUtil.getProperty(CubaStencilConstants.PROPERTY_START_FORM, elementNode);
-    if (startFormNode != null) {
+    if (startFormNode != null && startFormNode instanceof ObjectNode) {
       CubaBpmnJsonConverterUtil.parseStartForm(startFormNode, startEvent);
     }
   }
