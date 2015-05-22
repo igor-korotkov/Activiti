@@ -68,6 +68,12 @@ public class CubaBpmnJsonConverterUtil {
         addExtensionElement(startEvent, formExtensionElement);
     }
 
+    public static void parseTaskClaimAllowed(String claimAllowed, UserTask task) {
+        ExtensionElement claimAllowedElement = createExtensionElement("claimAllowed");
+        claimAllowedElement.setElementText(claimAllowed);
+        addExtensionElement(task, claimAllowedElement);
+    }
+
     protected static ExtensionElement createExtensionElement(String name) {
         ExtensionElement extensionElement = new ExtensionElement();
         extensionElement.setName(name);
