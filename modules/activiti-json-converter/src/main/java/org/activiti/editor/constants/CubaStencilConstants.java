@@ -10,4 +10,5 @@ public interface CubaStencilConstants {
     String PROPERTY_TASK_PROC_ROLE = "taskprocrole";
     String PROPERTY_START_FORM = "startform";
     String PROPERTY_CLAIM_ALLOWED = "claimallowed";
+    String PROPERTY_TIMER_OUTCOME = "timeroutcome";
 }

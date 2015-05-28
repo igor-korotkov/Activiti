@@ -74,6 +74,12 @@ public class CubaBpmnJsonConverterUtil {
         addExtensionElement(task, claimAllowedElement);
     }
 
+    public static void parseTimerOutcome(String timerOutcome, BoundaryEvent boundaryEvent) {
+        ExtensionElement timerOutcomeElement = createExtensionElement("outcome");
+        timerOutcomeElement.setElementText(timerOutcome);
+        addExtensionElement(boundaryEvent, timerOutcomeElement);
+    }
+
     protected static ExtensionElement createExtensionElement(String name) {
         ExtensionElement extensionElement = new ExtensionElement();
         extensionElement.setName(name);

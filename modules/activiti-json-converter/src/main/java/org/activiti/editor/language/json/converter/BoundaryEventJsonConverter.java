@@ -15,18 +15,14 @@ package org.activiti.editor.language.json.converter;
 import java.util.List;
 import java.util.Map;
 
-import org.activiti.bpmn.model.BaseElement;
-import org.activiti.bpmn.model.BoundaryEvent;
-import org.activiti.bpmn.model.ErrorEventDefinition;
-import org.activiti.bpmn.model.EventDefinition;
-import org.activiti.bpmn.model.FlowElement;
-import org.activiti.bpmn.model.GraphicInfo;
-import org.activiti.bpmn.model.MessageEventDefinition;
-import org.activiti.bpmn.model.SignalEventDefinition;
+import org.activiti.bpmn.model.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.activiti.editor.constants.CubaStencilConstants;
+import org.activiti.editor.language.json.converter.util.CubaBpmnJsonConverterUtil;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Tijs Rademakers
@@ -88,7 +84,9 @@ public class BoundaryEventJsonConverter extends BaseBpmnJsonConverter {
         String stencilId = BpmnJsonConverterUtil.getStencilId(elementNode);
         if (STENCIL_EVENT_BOUNDARY_TIMER.equals(stencilId)) {
             convertJsonToTimerDefinition(elementNode, boundaryEvent);
-            boundaryEvent.setCancelActivity(getPropertyValueAsBoolean(PROPERTY_CANCEL_ACTIVITY, elementNode));
+            String cancelActivityValue = getPropertyValueAsString(PROPERTY_CANCEL_ACTIVITY, elementNode);
+            boundaryEvent.setCancelActivity(Boolean.valueOf(cancelActivityValue));
+            processCubaElements(elementNode, boundaryEvent);
             
         } else if (STENCIL_EVENT_BOUNDARY_ERROR.equals(stencilId)) {
             convertJsonToErrorDefinition(elementNode, boundaryEvent);
@@ -136,4 +134,12 @@ public class BoundaryEventJsonConverter extends BaseBpmnJsonConverter {
 
         return attachedRefId;
     }
+
+    protected void processCubaElements(JsonNode elementNode, BoundaryEvent boundaryEvent) {
+        String timerOutcome = BpmnJsonConverterUtil.getPropertyValueAsString(CubaStencilConstants.PROPERTY_TIMER_OUTCOME, elementNode);
+        if (!StringUtils.isBlank(timerOutcome)) {
+            CubaBpmnJsonConverterUtil.parseTimerOutcome(timerOutcome, boundaryEvent);
+        }
+    }
+
 }
