@@ -33,6 +33,8 @@
                     </div>
 
                     <div class="col-xs-6" ng-if="selectedOutcomes.length > 0">
+                        <span>{{'PROPERTY.TASKOUTCOMES.FORM.PARAMS' | translate:property}}</span>
+
                         <div class="default-grid" ng-grid="propertiesGridOptions"></div>
                         <div class="btn-group">
                             <a class="btn btn-icon btn-lg" rel="tooltip" data-title="{{'ACTION.ADD' | translate}}" data-placement="bottom" data-original-title="" title="" ng-click="addNewFormProperty()"><i class="glyphicon glyphicon-plus"></i></a>
