@@ -78,6 +78,7 @@ public class CubaBpmnJsonConverterUtil {
     }
 
     public static void parseLocalization(JsonNode localizationNode, Process process) {
+        localizationNode = BpmnJsonConverterUtil.validateIfNodeIsTextual(localizationNode);
         Map<String, Map<String, String>> localizationsMap = new HashMap<String, Map<String, String>>();
         ExtensionElement localizationsElement = createExtensionElement("localizations");
         for (JsonNode msgNode : localizationNode) {
