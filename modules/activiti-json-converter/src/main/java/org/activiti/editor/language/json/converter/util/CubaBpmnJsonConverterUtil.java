@@ -99,16 +99,14 @@ public class CubaBpmnJsonConverterUtil {
 
         for (String locale : localizationsMap.keySet()) {
             Map<String, String> messagesForLocale = localizationsMap.get(locale);
-            StringBuilder sb = new StringBuilder();
-            for (Map.Entry<String, String> entry : messagesForLocale.entrySet()) {
-                sb.append(entry.getKey())
-                        .append(" = ")
-                        .append(entry.getValue())
-                        .append("\n");
-            }
             ExtensionElement localizationElement = createExtensionElement("localization");
             addExtensionAttribute(localizationElement, "lang", locale);
-            localizationElement.setElementText(sb.toString());
+            for (Map.Entry<String, String> entry : messagesForLocale.entrySet()) {
+                ExtensionElement msgElement = createExtensionElement("msg");
+                addExtensionAttribute(msgElement, "key", entry.getKey());
+                addExtensionAttribute(msgElement, "value", entry.getValue());
+                addChildExtensionElement(localizationElement, msgElement);
+            }
             addChildExtensionElement(localizationsElement, localizationElement);
         }
 
