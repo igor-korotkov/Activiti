@@ -6,10 +6,7 @@ import org.activiti.bpmn.model.Process;
 import org.activiti.editor.constants.CubaBpmnXMLConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverterUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author gorbunkov
@@ -78,6 +75,43 @@ public class CubaBpmnJsonConverterUtil {
         ExtensionElement timerOutcomeElement = createExtensionElement("outcome");
         timerOutcomeElement.setElementText(timerOutcome);
         addExtensionElement(boundaryEvent, timerOutcomeElement);
+    }
+
+    public static void parseLocalization(JsonNode localizationNode, Process process) {
+        Map<String, Map<String, String>> localizationsMap = new HashMap<String, Map<String, String>>();
+        ExtensionElement localizationsElement = createExtensionElement("localizations");
+        for (JsonNode msgNode : localizationNode) {
+            String key = msgNode.get("key").asText();
+            JsonNode valueNode = msgNode.get("value");
+            Iterator<String> fieldNamesIterator = valueNode.fieldNames();
+            while (fieldNamesIterator.hasNext()) {
+                String locale = fieldNamesIterator.next();
+                String value = valueNode.get(locale).asText();
+                Map<String, String> map = localizationsMap.get(locale);
+                if (map == null) {
+                    map = new HashMap<String, String>();
+                    localizationsMap.put(locale, map);
+                }
+                map.put(key, value);
+            }
+        }
+
+        for (String locale : localizationsMap.keySet()) {
+            Map<String, String> messagesForLocale = localizationsMap.get(locale);
+            StringBuilder sb = new StringBuilder();
+            for (Map.Entry<String, String> entry : messagesForLocale.entrySet()) {
+                sb.append(entry.getKey())
+                        .append(" = ")
+                        .append(entry.getValue())
+                        .append("\n");
+            }
+            ExtensionElement localizationElement = createExtensionElement("localization");
+            addExtensionAttribute(localizationElement, "lang", locale);
+            localizationElement.setElementText(sb.toString());
+            addChildExtensionElement(localizationsElement, localizationElement);
+        }
+
+        addExtensionElement(process, localizationsElement);
     }
 
     protected static ExtensionElement createExtensionElement(String name) {

@@ -707,6 +707,16 @@
           "description" : "Timer outcome",
           "popular" : true
       } ]
+  }, {
+      "name" : "localizationpackage",
+      "properties" : [ {
+          "id" : "localization",
+          "type" : "multiplecomplex",
+          "title" : "Localization",
+          "value" : "",
+          "description" : "Localization",
+          "popular" : true
+      } ]
   } ],
   "stencils" : [ {
     "type" : "node",
@@ -718,7 +728,7 @@
     "groups" : [ "Diagram" ],
     "mayBeRoot" : true,
     "hide" : true,
-    "propertyPackages" : [ "process_idpackage", "namepackage", "documentationpackage", "process_authorpackage", "process_versionpackage", "process_namespacepackage", "executionlistenerspackage", "eventlistenerspackage", "procrolespackage" ],
+    "propertyPackages" : [ "process_idpackage", "namepackage", "documentationpackage", "process_authorpackage", "process_versionpackage", "process_namespacepackage", "executionlistenerspackage", "eventlistenerspackage", "procrolespackage", "localizationpackage" ],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ ]
   }, {

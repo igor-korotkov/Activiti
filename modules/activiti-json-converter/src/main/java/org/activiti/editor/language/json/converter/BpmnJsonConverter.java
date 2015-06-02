@@ -924,6 +924,12 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
         if (procRolesNode != null) {
             CubaBpmnJsonConverterUtil.parseProcRoles(procRolesNode, process);
         }
+
+        JsonNode localizationNode = BpmnJsonConverterUtil.getProperty(CubaStencilConstants.PROPERTY_PROCESS_LOCALIZATION, modelNode);
+        if (localizationNode != null) {
+            CubaBpmnJsonConverterUtil.parseLocalization(localizationNode, process);
+        }
+
     }
 
     class FlowWithContainer {

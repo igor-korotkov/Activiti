@@ -20,3 +20,8 @@ KISBPM.PROPERTY_CONFIG["cuba-taskprocrole"] = {
     "readModeTemplateUrl": "editor-app/configuration/properties/default-value-display-template.html",
     "writeModeTemplateUrl": "editor-app/configuration/properties/cuba/task-procrole-write-template.html"
 };
+
+KISBPM.PROPERTY_CONFIG["oryx-localization-multiplecomplex"] = {
+    "readModeTemplateUrl": "editor-app/configuration/properties/cuba/localization-display-template.html",
+    "writeModeTemplateUrl": "editor-app/configuration/properties/cuba/localization-write-template.html"
+};

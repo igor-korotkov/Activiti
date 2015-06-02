@@ -295,6 +295,9 @@
     "PROPERTY.STARTFORM.VALUE" : "{{name}}",
     "PROPERTY.STARTFORM.EMPTY" : "No start form configured",
 
-    "PROPERTY.USERTASK.PROCROLE.SELECT.EMPTY" : "-- No role selected --"
+    "PROPERTY.USERTASK.PROCROLE.SELECT.EMPTY" : "-- No role selected --",
 
+    "PROPERTY.LOCALIZATION.VALUE" : "Localization defined",
+    "PROPERTY.LOCALIZATION.EMPTY" : "Localization not defined",
+    "PROPERTY.LOCALIZATION.MSG.KEY" : "Message key"
 }

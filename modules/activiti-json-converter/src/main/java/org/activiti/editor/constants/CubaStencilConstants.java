@@ -11,4 +11,5 @@ public interface CubaStencilConstants {
     String PROPERTY_START_FORM = "startform";
     String PROPERTY_CLAIM_ALLOWED = "claimallowed";
     String PROPERTY_TIMER_OUTCOME = "timeroutcome";
+    String PROPERTY_PROCESS_LOCALIZATION = "localization";
 }
