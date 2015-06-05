@@ -23,7 +23,7 @@ var KisBpmStartFormPopupCtrl = ['$scope', '$q', '$translate', function($scope, $
             $scope.form = angular.copy($scope.property.value);
         }
     } else {
-        $scope.form = {name: "standardProcessForm", params: []};
+        $scope.form = {name: "standardProcForm", params: []};
     }
 
     // Array to contain selected properties (yes - we only can select one, but ng-grid isn't smart enough)

@@ -81,7 +81,7 @@ var KisBpmTaskOutcomesPopupCtrl = ['$scope', '$q', '$translate', function($scope
 
         // Click handler for add button
     var propertyIndex = 1;
-    var defaultFormName = 'standardProcessForm';
+    var defaultFormName = 'standardProcForm';
     $scope.addNewOutcome = function() {
         $scope.taskOutcomes.push({
             name : '',
