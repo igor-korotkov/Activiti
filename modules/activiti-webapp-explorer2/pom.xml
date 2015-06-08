@@ -17,6 +17,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <cuba.modeler.version>${project.version}.cuba.1-SNAPSHOT</cuba.modeler.version>
+    <cuba.repository.url>http://repository.haulmont.com:8587/nexus/content/repositories/releases</cuba.repository.url>
+    <cuba.repository.id>haulmont-nexus</cuba.repository.id>
   </properties>
 
   <repositories>
@@ -186,12 +188,28 @@
               <file>${project.build.directory}/cuba-modeler-${cuba.modeler.version}.zip</file>
             </configuration>
           </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>2.8.2</version>
+            <goals>
+              <goal>deploy-file</goal>
+            </goals>
+            <configuration>
+              <url>${cuba.repository.url}</url>
+              <repositoryId>${cuba.repository.id}</repositoryId>
+              <groupId>com.haulmont.bpm</groupId>
+              <artifactId>cuba-modeler</artifactId>
+              <version>${cuba.modeler.version}</version>
+              <classifier>web</classifier>
+              <packaging>zip</packaging>
+              <file>${project.build.directory}/cuba-modeler-${cuba.modeler.version}.zip</file>
+            </configuration>
+          </plugin>
         </plugins>
       </build>
     </profile>
-
   </profiles>
-
 
   <dependencies>
 
