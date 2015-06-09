@@ -27,7 +27,12 @@
                                 <input id="nameField" class="form-control" type="text" ng-model="selectedOutcomes[0].name" placeholder="{{'PROPERTY.TASKOUTCOMES.NAME.PLACEHOLDER' | translate }}" />
 
                                 <label for="formField">{{'PROPERTY.TASKOUTCOMES.FORM' | translate}}</label>
-                                <input id="formField" class="form-control" type="text" ng-model="selectedOutcomes[0].form.name" placeholder="{{'PROPERTY.TASKOUTCOMES.FORM.PLACEHOLDER' | translate }}" />
+                                <select id="formField"
+                                        class="form-control"
+                                        ng-model="selectedOutcomes[0].form.name"
+                                        ng-options="form.name as form.name for form in formDescriptions">
+                                    <option value="">{{'PROPERTY.TASKOUTCOMES.FORM.NOT_SELECTED' | translate}}</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -42,10 +47,17 @@
                         </div>
                         <div ng-show="selectedFormParams.length > 0">
                             <div class="form-group">
-                                <label for="formPropertyNameField">{{'PROPERTY.TASKOUTCOMES.FORM.PARAM.NAME' | translate}}</label>
-                                <input id="formPropertyNameField" class="form-control" type="text" ng-model="selectedFormParams[0].name" placeholder="{{'PROPERTY.TASKOUTCOMES.FORM.PARAM.NAME.PLACEHOLDER' | translate }}" />
-                                <label for="formPropertyValueField">{{'PROPERTY.TASKOUTCOMES.FORM.PARAM.VALUE' | translate}}</label>
-                                <input id="formPropertyValueField" class="form-control" type="text" ng-model="selectedFormParams[0].value" placeholder="{{'PROPERTY.TASKOUTCOMES.FORM.PARAM.VALUE.PLACEHOLDER' | translate }}" />
+                                <label for="formParamNameField">{{'PROPERTY.TASKOUTCOMES.FORM.PARAM.NAME' | translate}}</label>
+                                <select id="formParamNameField"
+                                        class="form-control"
+                                        ng-model="selectedFormParams[0].name"
+                                        ng-options="param.name as param.name for param in currentFormDescription.params"
+                                        ng-change="setDefaultParamValue()">
+                                    <option value="">{{'PROPERTY.TASKOUTCOMES.PARAM.NAME.NOT_SELECTED' | translate}}</option>
+                                </select>
+
+                                <label for="formParamValueField">{{'PROPERTY.TASKOUTCOMES.FORM.PARAM.VALUE' | translate}}</label>
+                                <input id="formParamValueField" class="form-control" type="text" ng-model="selectedFormParams[0].value" placeholder="{{'PROPERTY.TASKOUTCOMES.FORM.PARAM.VALUE.PLACEHOLDER' | translate }}" />
                             </div>
                         </div>
 

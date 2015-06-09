@@ -10,7 +10,13 @@
 
                 <div class="form-group">
                     <label for="formNameField">{{'PROPERTY.STARTFORM.NAME' | translate}}</label>
-                    <input id="formNameField" class="form-control" type="text" ng-model="form.name" placeholder="{{'PROPERTY.STARTFORM.NAME.PLACEHOLDER' | translate }}" />
+                    <select id="formNameField"
+                            class="form-control"
+                            ng-model="form.name"
+                            ng-options="form.name as form.name for form in formDescriptions">
+                        <option value="">{{'PROPERTY.STARTFORM.NOT_SELECTED' | translate}}</option>
+                    </select>
+
                 </div>
 
                 <div class="row row-no-gutter">
@@ -30,11 +36,15 @@
                     <div class="col-xs-6">
                             <div ng-show="selectedFormParams.length > 0">
                                 <div class="form-group">
-                                    <label for="formPropertyNameField">{{'PROPERTY.STARTFORM.PARAM.NAME' |
+                                    <label for="formParamNameField">{{'PROPERTY.STARTFORM.PARAM.NAME' |
                                         translate}}</label>
-                                    <input id="formPropertyNameField" class="form-control" type="text"
-                                           ng-model="selectedFormParams[0].name"
-                                           placeholder="{{'PROPERTY.TASKOUTCOMES.FORM.PARAM.NAME.PLACEHOLDER' | translate }}"/>
+                                    <select id="formParamNameField"
+                                            class="form-control"
+                                            ng-model="selectedFormParams[0].name"
+                                            ng-options="param.name as param.name for param in currentFormDescription.params"
+                                            ng-change="setDefaultParamValue()">
+                                        <option value="">{{'PROPERTY.TASKOUTCOMES.PARAM.NAME.NOT_SELECTED' | translate}}</option>
+                                    </select>
                                     <label for="formPropertyValueField">{{'PROPERTY.STARTFORM.PARAM.VALUE' |
                                         translate}}</label>
                                     <input id="formPropertyValueField" class="form-control" type="text"

@@ -10,7 +10,7 @@ var KisBpmTaskOutcomesCtrl = [ '$scope', '$modal', '$timeout', '$translate', fun
     $modal(opts);
 }];
 
-var KisBpmTaskOutcomesPopupCtrl = ['$scope', '$q', '$translate', function($scope, $q, $translate) {
+var KisBpmTaskOutcomesPopupCtrl = ['$scope', '$q', '$translate', '$http', function($scope, $q, $translate, $http) {
 
     // Put json representing task outcomes on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null && $scope.property.value.length > 0) {
@@ -78,6 +78,35 @@ var KisBpmTaskOutcomesPopupCtrl = ['$scope', '$q', '$translate', function($scope
         selectedItems: $scope.selectedFormParams,
         columnDefs: [{field: 'name', displayName: 'Name'}, {field: 'value', displayName: 'Value'}]
     }
+
+    $http.get(KISBPM.URL.getAllForms())
+        .success(function(data) {
+            $scope.formDescriptions = data;
+
+            $scope.$watch('selectedOutcomes[0].form.name', function(newValue) {
+                for (var i = 0; i < $scope.formDescriptions.length; i++) {
+                    var formDescription = $scope.formDescriptions[i];
+                    if (formDescription.name == newValue) {
+                        $scope.currentFormDescription = formDescription;
+                        break;
+                    }
+                }
+            });
+        })
+        .error(function(data) {
+
+        });
+
+    $scope.setDefaultParamValue = function() {
+        var params = $scope.currentFormDescription.params;
+        for (var i = 0; i < params.length; i++) {
+            var paramDescription = params[i];
+            if (paramDescription.name == $scope.selectedFormParams[0].name) {
+                $scope.selectedFormParams[0].value = paramDescription.value;
+                break;
+            }
+        }
+    };
 
         // Click handler for add button
     var propertyIndex = 1;

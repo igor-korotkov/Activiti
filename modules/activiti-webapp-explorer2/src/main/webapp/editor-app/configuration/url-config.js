@@ -30,5 +30,9 @@ KISBPM.URL = {
 
     putModel: function(modelId) {
         return CUBA.CONFIG.modelerRoot + '/model/' + modelId;
+    },
+
+    getAllForms: function() {
+        return CUBA.CONFIG.modelerRoot + '/form';
     }
 };

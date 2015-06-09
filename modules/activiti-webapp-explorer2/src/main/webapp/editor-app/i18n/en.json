@@ -284,17 +284,20 @@
     "PROPERTY.TASKOUTCOMES.FORM.PLACEHOLDER" : "Enter a form name",
     "PROPERTY.TASKOUTCOMES.FORM.PARAM.NAME" : "Param name",
     "PROPERTY.TASKOUTCOMES.FORM.PARAM.NAME.PLACEHOLDER" : "Enter param name",
+    "PROPERTY.TASKOUTCOMES.PARAM.NAME.NOT_SELECTED" : "-- Select param name --",
     "PROPERTY.TASKOUTCOMES.FORM.PARAM.VALUE" : "Param value",
     "PROPERTY.TASKOUTCOMES.FORM.PARAM.VALUE.PLACEHOLDER" : "Enter param value",
     "PROPERTY.TASKOUTCOMES.VALUE" : "{{length}} outcomes",
     "PROPERTY.TASKOUTCOMES.EMPTY" : "No outcomes configured",
     "PROPERTY.TASKOUTCOMES.FORM.PARAMS" : "Form parameters:",
+    "PROPERTY.TASKOUTCOMES.FORM.NOT_SELECTED" : "-- Select a form --",
 
     "PROPERTY.STARTFORM.NAME" : "Form name",
     "PROPERTY.STARTFORM.PARAM.NAME" : "Param name",
     "PROPERTY.STARTFORM.PARAM.VALUE" : "Param value",
     "PROPERTY.STARTFORM.VALUE" : "{{name}}",
     "PROPERTY.STARTFORM.EMPTY" : "No start form configured",
+    "PROPERTY.STARTFORM.NOT_SELECTED" : "-- Select a form",
 
     "PROPERTY.USERTASK.PROCROLE.SELECT.EMPTY" : "-- No role selected --",
 
