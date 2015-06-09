@@ -113,6 +113,22 @@ public class CubaBpmnJsonConverterUtil {
         addExtensionElement(process, localizationsElement);
     }
 
+    public static void parseFlowConditionDescription(JsonNode descriptionNode, SequenceFlow flow, Map<String, JsonNode> shapeMap) {
+        descriptionNode = BpmnJsonConverterUtil.validateIfNodeIsTextual(descriptionNode);
+        String taskResourceId = descriptionNode.get("taskResourceId").asText();
+        String outcome = descriptionNode.get("outcome").asText();
+        String operation = descriptionNode.get("operation").asText();
+        String count = descriptionNode.get("count").asText();
+
+        JsonNode taskNode = shapeMap.get(taskResourceId);
+        JsonNode overrideidNode = taskNode.get("properties").get("overrideid");
+        if (overrideidNode == null) throw new RuntimeException("Error converting flow condition description. Cannot find overrideId value for task " + taskResourceId);
+        String taskId = overrideidNode.asText();
+        String expression = "${" + taskId + "_result.count('" + outcome + "') " + operation + " " + count + "}";
+        flow.setConditionExpression(expression);
+    }
+
+
     protected static ExtensionElement createExtensionElement(String name) {
         ExtensionElement extensionElement = new ExtensionElement();
         extensionElement.setName(name);

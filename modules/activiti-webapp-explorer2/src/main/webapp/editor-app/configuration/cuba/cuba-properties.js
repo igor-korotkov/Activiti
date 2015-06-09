@@ -25,3 +25,8 @@ KISBPM.PROPERTY_CONFIG["oryx-localization-multiplecomplex"] = {
     "readModeTemplateUrl": "editor-app/configuration/properties/cuba/localization-display-template.html",
     "writeModeTemplateUrl": "editor-app/configuration/properties/cuba/localization-write-template.html"
 };
+
+KISBPM.PROPERTY_CONFIG["oryx-flowconditiondescription-complex"] = {
+    "readModeTemplateUrl": "editor-app/configuration/properties/cuba/flow-condition-description-display-template.html",
+    "writeModeTemplateUrl": "editor-app/configuration/properties/cuba/flow-condition-description-write-template.html"
+};

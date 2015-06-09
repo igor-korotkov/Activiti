@@ -300,5 +300,14 @@
 
     "PROPERTY.LOCALIZATION.VALUE" : "Localization defined",
     "PROPERTY.LOCALIZATION.EMPTY" : "Localization not defined",
-    "PROPERTY.LOCALIZATION.MSG.KEY" : "Message key"
+    "PROPERTY.LOCALIZATION.MSG.KEY" : "Message key",
+
+    "PROPERTY.FLOWCONDITION.NOT_AVAILABLE" : "You can edit condition description only for nodes that goes from exclusive gateway and have a userTask before the gateway",
+    "PROPERTY.FLOWCONDITION.OUTCOME" : "Task outcome",
+    "PROPERTY.FLOWCONDITION.OPERATION" : "Operation",
+    "PROPERTY.FLOWCONDITION.COUNT" : "Outcomes count",
+    "PROPERTY.FLOWCONDITION.OUTCOME.NOT_SELECTED" : "-- Select an outcome --",
+    "PROPERTY.FLOWCONDITION.PREVTASK" : "Previous task id",
+    "PROPERTY.FLOWCONDITION.VALUE" : "Description defined",
+    "PROPERTY.FLOWCONDITION.EMPTY" : "No description defined"
 }

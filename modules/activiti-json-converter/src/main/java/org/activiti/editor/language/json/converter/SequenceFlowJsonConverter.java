@@ -23,6 +23,8 @@ import org.activiti.bpmn.model.FlowElementsContainer;
 import org.activiti.bpmn.model.Gateway;
 import org.activiti.bpmn.model.GraphicInfo;
 import org.activiti.bpmn.model.SequenceFlow;
+import org.activiti.editor.constants.CubaStencilConstants;
+import org.activiti.editor.language.json.converter.util.CubaBpmnJsonConverterUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -230,7 +232,9 @@ public class SequenceFlowJsonConverter extends BaseBpmnJsonConverter {
             }
         }
     }
-    
+
+    parseCubaElements(elementNode, flow, shapeMap);
+
     return flow;
   }
   
@@ -290,4 +294,15 @@ public class SequenceFlowJsonConverter extends BaseBpmnJsonConverter {
       extensionElement.setElementText(value);
       flow.addExtensionElement(extensionElement);
   }
+
+    protected void parseCubaElements(JsonNode elementNode, SequenceFlow flow, Map<String, JsonNode> shapeMap) {
+        if (StringUtils.isBlank(flow.getConditionExpression())) {
+            JsonNode descriptionNode = BpmnJsonConverterUtil.getProperty(CubaStencilConstants.PROPERTY_FLOW_CONDITION_DESCRIPTION, elementNode);
+            if (descriptionNode != null) {
+                descriptionNode = BpmnJsonConverterUtil.validateIfNodeIsTextual(descriptionNode);
+                if (!descriptionNode.isTextual())
+                    CubaBpmnJsonConverterUtil.parseFlowConditionDescription(descriptionNode, flow, shapeMap);
+            }
+        }
+    }
 }

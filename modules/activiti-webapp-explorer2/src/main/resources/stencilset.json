@@ -717,6 +717,16 @@
           "description" : "Localization",
           "popular" : true
       } ]
+  }, {
+      "name" : "flowconditiondescriptionpackage",
+      "properties" : [ {
+          "id" : "flowconditiondescription",
+          "type" : "Complex",
+          "title" : "Flow condition description",
+          "value" : "",
+          "description" : "Flow condition description",
+          "popular" : true
+      } ]
   } ],
   "stencils" : [ {
     "type" : "node",
@@ -1130,7 +1140,7 @@
     "layout" : [ {
       "type" : "layout.bpmn2_0.sequenceflow"
     } ],
-    "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "conditionsequenceflowpackage", "executionlistenerspackage", "defaultflowpackage" ],
+    "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "conditionsequenceflowpackage", "executionlistenerspackage", "defaultflowpackage", "flowconditiondescriptionpackage" ],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "ConnectingObjectsMorph", "all" ]
   }, {

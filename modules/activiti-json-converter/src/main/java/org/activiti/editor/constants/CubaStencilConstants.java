@@ -12,4 +12,5 @@ public interface CubaStencilConstants {
     String PROPERTY_CLAIM_ALLOWED = "claimallowed";
     String PROPERTY_TIMER_OUTCOME = "timeroutcome";
     String PROPERTY_PROCESS_LOCALIZATION = "localization";
+    String PROPERTY_FLOW_CONDITION_DESCRIPTION = "flowconditiondescription";
 }
