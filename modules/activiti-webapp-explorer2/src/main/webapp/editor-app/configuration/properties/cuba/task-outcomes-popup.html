@@ -11,17 +11,17 @@
                 <div class="row row-no-gutter">
                     <div class="col-xs-6">
                         <div ng-if="translationsRetrieved" class="default-grid" ng-grid="gridOptions"></div>
-                        <div>
-                            <!--<div class="btn-group">-->
-                                <!--<a class="btn btn-icon btn-lg" rel="tooltip" data-title="{{'ACTION.MOVE.UP' | translate}}" data-placement="bottom" data-original-title="" title="" ng-click="movePropertyUp()"><i class="glyphicon glyphicon-arrow-up"></i></a>-->
-                                <!--<a class="btn btn-icon btn-lg" rel="tooltip" data-title="{{'ACTION.MOVE.DOWN' | translate}}" data-placement="bottom" data-original-title="" title="" ng-click="movePropertyDown()"><i class="glyphicon glyphicon-arrow-down"></i></a>-->
-                            <!--</div>-->
-                            <div class="btn-group">
+                        <div class="clearfix">
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-icon btn-lg" rel="tooltip" data-title="{{'ACTION.MOVE.UP' | translate}}" data-placement="bottom" data-original-title="" title="" ng-click="moveOutcomeUp()"><i class="glyphicon glyphicon-arrow-up"></i></a>
+                                <a class="btn btn-icon btn-lg" rel="tooltip" data-title="{{'ACTION.MOVE.DOWN' | translate}}" data-placement="bottom" data-original-title="" title="" ng-click="moveOutcomeDown()"><i class="glyphicon glyphicon-arrow-down"></i></a>
+                            </div>
+                            <div class="btn-group pull-right">
                                 <a class="btn btn-icon btn-lg" rel="tooltip" data-title="{{'ACTION.ADD' | translate}}" data-placement="bottom" data-original-title="" title="" ng-click="addNewOutcome()"><i class="glyphicon glyphicon-plus"></i></a>
                                 <a class="btn btn-icon btn-lg" rel="tooltip" data-title="{{'ACTION.REMOVE' | translate}}" data-placement="bottom" data-original-title="" title="" ng-click="removeOutcome()"><i class="glyphicon glyphicon-minus"></i></a>
                             </div>
                         </div>
-                        <div ng-show="selectedOutcomes.length > 0">
+                        <div class="row row-no-gutter " ng-show="selectedOutcomes.length > 0">
                             <div class="form-group">
                                 <label for="nameField">{{'PROPERTY.TASKOUTCOMES.NAME' | translate}}</label>
                                 <input id="nameField" class="form-control" type="text" ng-model="selectedOutcomes[0].name" placeholder="{{'PROPERTY.TASKOUTCOMES.NAME.PLACEHOLDER' | translate }}" />
@@ -41,9 +41,11 @@
                         <span>{{'PROPERTY.TASKOUTCOMES.FORM.PARAMS' | translate:property}}</span>
 
                         <div class="default-grid" ng-grid="propertiesGridOptions"></div>
-                        <div class="btn-group">
-                            <a class="btn btn-icon btn-lg" rel="tooltip" data-title="{{'ACTION.ADD' | translate}}" data-placement="bottom" data-original-title="" title="" ng-click="addNewFormProperty()"><i class="glyphicon glyphicon-plus"></i></a>
-                            <a class="btn btn-icon btn-lg" rel="tooltip" data-title="{{'ACTION.REMOVE' | translate}}" data-placement="bottom" data-original-title="" title="" ng-click="removeFormProperty()"><i class="glyphicon glyphicon-minus"></i></a>
+                        <div class="clearfix">
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-icon btn-lg" rel="tooltip" data-title="{{'ACTION.ADD' | translate}}" data-placement="bottom" data-original-title="" title="" ng-click="addNewFormProperty()"><i class="glyphicon glyphicon-plus"></i></a>
+                                <a class="btn btn-icon btn-lg" rel="tooltip" data-title="{{'ACTION.REMOVE' | translate}}" data-placement="bottom" data-original-title="" title="" ng-click="removeFormProperty()"><i class="glyphicon glyphicon-minus"></i></a>
+                            </div>
                         </div>
                         <div ng-show="selectedFormParams.length > 0">
                             <div class="form-group">

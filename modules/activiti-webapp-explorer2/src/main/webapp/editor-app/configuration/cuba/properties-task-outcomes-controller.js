@@ -10,7 +10,7 @@ var KisBpmTaskOutcomesCtrl = [ '$scope', '$modal', '$timeout', '$translate', fun
     $modal(opts);
 }];
 
-var KisBpmTaskOutcomesPopupCtrl = ['$scope', '$q', '$translate', '$http', function($scope, $q, $translate, $http) {
+var KisBpmTaskOutcomesPopupCtrl = ['$scope', '$q', '$translate', '$http', '$timeout', function($scope, $q, $translate, $http, $timeout) {
 
     // Put json representing task outcomes on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null && $scope.property.value.length > 0) {
@@ -153,37 +153,37 @@ var KisBpmTaskOutcomesPopupCtrl = ['$scope', '$q', '$translate', '$http', functi
         }
     };
 
-    //// Click handler for up button
-    //$scope.movePropertyUp = function() {
-    //    if ($scope.selectedOutcomes.length > 0) {
-    //        var index = $scope.formProperties.indexOf($scope.selectedOutcomes[0]);
-    //        if (index != 0) { // If it's the first, no moving up of course
-    //            // Reason for funny way of swapping, see https://github.com/angular-ui/ng-grid/issues/272
-    //            var temp = $scope.formProperties[index];
-    //            $scope.formProperties.splice(index, 1);
-    //            $timeout(function(){
-    //                $scope.formProperties.splice(index + -1, 0, temp);
-    //            }, 100);
-    //
-    //        }
-    //    }
-    //};
-    //
-    //// Click handler for down button
-    //$scope.movePropertyDown = function() {
-    //    if ($scope.selectedOutcomes.length > 0) {
-    //        var index = $scope.formProperties.indexOf($scope.selectedOutcomes[0]);
-    //        if (index != $scope.formProperties.length - 1) { // If it's the last element, no moving down of course
-    //            // Reason for funny way of swapping, see https://github.com/angular-ui/ng-grid/issues/272
-    //            var temp = $scope.formProperties[index];
-    //            $scope.formProperties.splice(index, 1);
-    //            $timeout(function(){
-    //                $scope.formProperties.splice(index + 1, 0, temp);
-    //            }, 100);
-    //
-    //        }
-    //    }
-    //};
+    // Click handler for up button
+    $scope.moveOutcomeUp = function() {
+        if ($scope.selectedOutcomes.length > 0) {
+            var index = $scope.taskOutcomes.indexOf($scope.selectedOutcomes[0]);
+            if (index != 0) { // If it's the first, no moving up of course
+                // Reason for funny way of swapping, see https://github.com/angular-ui/ng-grid/issues/272
+                var temp = $scope.taskOutcomes[index];
+                $scope.taskOutcomes.splice(index, 1);
+                $timeout(function(){
+                    $scope.taskOutcomes.splice(index + -1, 0, temp);
+                }, 100);
+
+            }
+        }
+    };
+
+    // Click handler for down button
+    $scope.moveOutcomeDown = function() {
+        if ($scope.selectedOutcomes.length > 0) {
+            var index = $scope.taskOutcomes.indexOf($scope.selectedOutcomes[0]);
+            if (index != $scope.taskOutcomes.length - 1) { // If it's the last element, no moving down of course
+                // Reason for funny way of swapping, see https://github.com/angular-ui/ng-grid/issues/272
+                var temp = $scope.taskOutcomes[index];
+                $scope.taskOutcomes.splice(index, 1);
+                $timeout(function(){
+                    $scope.taskOutcomes.splice(index + 1, 0, temp);
+                }, 100);
+
+            }
+        }
+    };
 
     // Click handler for save button
     $scope.save = function() {
