@@ -5,7 +5,7 @@
 
   <name>Activiti - JSON Converter</name>
   <artifactId>activiti-json-converter</artifactId>
-  <version>${parent.version}.cuba.1-SNAPSHOT</version>
+  <version>${cuba.modeler.version}</version>
 
   <parent>
     <groupId>org.activiti</groupId>
@@ -24,6 +24,7 @@
     </activiti.osgi.export.additional>
     <cuba.repository.url>http://repository.haulmont.com:8587/nexus/content/repositories/releases</cuba.repository.url>
     <cuba.repository.id>haulmont-nexus</cuba.repository.id>
+    <cuba.modeler.version>5.17.0.cuba.5-SNAPSHOT</cuba.modeler.version>
   </properties>
 
   <build>
@@ -194,20 +195,19 @@
                           <repositoryId>${cuba.repository.id}</repositoryId>
                       </configuration>
                   </plugin>
+                  <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                      <artifactId>maven-install-plugin</artifactId>
+                      <version>2.3.1</version>
+                      <goals>
+                          <goal>install</goal>
+                      </goals>
+                      <configuration>
+                          <version>${cuba.modeler.version}</version>
+                      </configuration>
+                  </plugin>
               </plugins>
           </build>
       </profile>
   </profiles>
-    <distributionManagement>
-        <repository>
-            <id>haulmont-nexus-releases</id>
-            <name>Haulmont Nexus Repository</name>
-            <url>http://repository.haulmont.com:8587/nexus/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>haulmont-nexus</id>
-            <name>Haulmont Nexus Repository</name>
-            <url>http://repository.haulmont.com:8587/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>

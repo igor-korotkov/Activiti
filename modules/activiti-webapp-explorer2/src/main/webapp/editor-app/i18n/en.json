@@ -312,5 +312,8 @@
     "PROPERTY.FLOWCONDITION.OUTCOME.NOT_SELECTED" : "-- Select an outcome --",
     "PROPERTY.FLOWCONDITION.PREVTASK" : "Previous task id",
     "PROPERTY.FLOWCONDITION.VALUE" : "Description defined",
-    "PROPERTY.FLOWCONDITION.EMPTY" : "No description defined"
+    "PROPERTY.FLOWCONDITION.EMPTY" : "No description defined",
+
+    "PROPERTY.FLOW.OUTCOME.EMPTY" : "No outcome selected",
+    "PROPERTY.FLOW.OUTCOME.SELECT.EMPTY" : "-- Select an outcome --"
 }

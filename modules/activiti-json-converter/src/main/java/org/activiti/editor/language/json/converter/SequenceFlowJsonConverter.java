@@ -297,11 +297,11 @@ public class SequenceFlowJsonConverter extends BaseBpmnJsonConverter {
 
     protected void parseCubaElements(JsonNode elementNode, SequenceFlow flow, Map<String, JsonNode> shapeMap) {
         if (StringUtils.isBlank(flow.getConditionExpression())) {
-            JsonNode descriptionNode = BpmnJsonConverterUtil.getProperty(CubaStencilConstants.PROPERTY_FLOW_CONDITION_DESCRIPTION, elementNode);
+            JsonNode descriptionNode = BpmnJsonConverterUtil.getProperty(CubaStencilConstants.PROPERTY_FLOWOUTCOME, elementNode);
             if (descriptionNode != null) {
                 descriptionNode = BpmnJsonConverterUtil.validateIfNodeIsTextual(descriptionNode);
                 if (!descriptionNode.isTextual())
-                    CubaBpmnJsonConverterUtil.parseFlowConditionDescription(descriptionNode, flow, shapeMap);
+                    CubaBpmnJsonConverterUtil.parseFlowOutcome(descriptionNode, flow, shapeMap);
             }
         }
     }

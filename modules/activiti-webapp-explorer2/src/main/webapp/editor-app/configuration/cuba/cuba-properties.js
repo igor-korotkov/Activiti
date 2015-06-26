@@ -30,3 +30,8 @@ KISBPM.PROPERTY_CONFIG["oryx-flowconditiondescription-complex"] = {
     "readModeTemplateUrl": "editor-app/configuration/properties/cuba/flow-condition-description-display-template.html",
     "writeModeTemplateUrl": "editor-app/configuration/properties/cuba/flow-condition-description-write-template.html"
 };
+
+KISBPM.PROPERTY_CONFIG["oryx-flowoutcome-complex"] = {
+    "readModeTemplateUrl": "editor-app/configuration/properties/cuba/flow-outcome-display-template.html",
+    "writeModeTemplateUrl": "editor-app/configuration/properties/cuba/flow-outcome-write-template.html"
+};

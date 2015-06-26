@@ -13,4 +13,5 @@ public interface CubaStencilConstants {
     String PROPERTY_TIMER_OUTCOME = "timeroutcome";
     String PROPERTY_PROCESS_LOCALIZATION = "localization";
     String PROPERTY_FLOW_CONDITION_DESCRIPTION = "flowconditiondescription";
+    String PROPERTY_FLOWOUTCOME = "flowoutcome";
 }

@@ -727,6 +727,16 @@
           "description" : "Flow condition description",
           "popular" : true
       } ]
+  }, {
+      "name" : "flowoutcomepackage",
+      "properties" : [ {
+          "id" : "flowoutcome",
+          "type" : "Complex",
+          "title" : "Flow outcome",
+          "value" : "",
+          "description" : "Previous task outcome",
+          "popular" : true
+      } ]
   } ],
   "stencils" : [ {
     "type" : "node",
@@ -1140,7 +1150,7 @@
     "layout" : [ {
       "type" : "layout.bpmn2_0.sequenceflow"
     } ],
-    "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "conditionsequenceflowpackage", "executionlistenerspackage", "defaultflowpackage", "flowconditiondescriptionpackage" ],
+    "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "conditionsequenceflowpackage", "executionlistenerspackage", "defaultflowpackage", "flowconditiondescriptionpackage", "flowoutcomepackage" ],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "ConnectingObjectsMorph", "all" ]
   }, {
