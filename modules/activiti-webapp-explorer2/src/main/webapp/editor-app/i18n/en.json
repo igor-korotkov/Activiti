@@ -315,5 +315,8 @@
     "PROPERTY.FLOWCONDITION.EMPTY" : "No description defined",
 
     "PROPERTY.FLOW.OUTCOME.EMPTY" : "No outcome selected",
-    "PROPERTY.FLOW.OUTCOME.SELECT.EMPTY" : "-- Select an outcome --"
+    "PROPERTY.FLOW.OUTCOME.SELECT.EMPTY" : "-- Select an outcome --",
+
+    "PROPERTY.SUBMODELID.EMPTY" : "Sub model not selected",
+    "PROPERTY.SUBMODEL.SELECT.EMPTY" : "-- Select a submodel --"
 }

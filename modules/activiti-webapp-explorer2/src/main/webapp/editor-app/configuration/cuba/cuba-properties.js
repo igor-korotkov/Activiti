@@ -35,3 +35,8 @@ KISBPM.PROPERTY_CONFIG["oryx-flowoutcome-complex"] = {
     "readModeTemplateUrl": "editor-app/configuration/properties/cuba/flow-outcome-display-template.html",
     "writeModeTemplateUrl": "editor-app/configuration/properties/cuba/flow-outcome-write-template.html"
 };
+
+KISBPM.PROPERTY_CONFIG["oryx-submodel-complex"] = {
+    "readModeTemplateUrl": "editor-app/configuration/properties/cuba/submodel-display-template.html",
+    "writeModeTemplateUrl": "editor-app/configuration/properties/cuba/submodel-write-template.html"
+};
