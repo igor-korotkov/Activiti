@@ -139,7 +139,7 @@ public class CubaBpmnJsonConverterUtil {
         if (overrideidNode != null && !overrideidNode.asText().isEmpty())  {
             taskId = overrideidNode.asText();
         }
-        String expression = "${" + taskId + "_result.count('" + outcome + "') > 0}";
+        String expression = "${" + taskId.replace("-", "") + "_result.count('" + outcome + "') > 0}";
         flow.setConditionExpression(expression);
     }
 
