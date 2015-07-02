@@ -602,7 +602,7 @@
       "id" : "multiinstance_collection",
       "type" : "String",
       "title" : "Collection (Multi-instance)",
-      "value" : "",
+      "value" : "auto_evaluation",
       "description" : "Define the collection for the multi instance.",
       "popular" : true
     } ]
