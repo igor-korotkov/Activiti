@@ -56,6 +56,9 @@ KISBPM.TOOLBAR.ACTIONS["saveModel"] = function(services) {
     // Parse dom to string
     var svgDOM = DataManager.serialize(svgClone);
 
+    modelMetaData.name = $scope.editor.getCanvas().properties['oryx-name'];
+    modelMetaData.description = $scope.editor.getCanvas().properties['oryx-documentation'];
+
     var params = {
         json_xml: json,
         svg_xml: svgDOM,
