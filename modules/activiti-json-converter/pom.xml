@@ -208,6 +208,18 @@
                   </plugin>
               </plugins>
           </build>
+          <distributionManagement>
+              <repository>
+                  <id>${cuba.repository.id}</id>
+                  <name>Internal Releases</name>
+                  <url>${cuba.repository.url}</url>
+              </repository>
+              <snapshotRepository>
+                  <id>${cuba.repository.id}</id>
+                  <name>Internal Releases</name>
+                  <url>${cuba.repository.url}</url>
+              </snapshotRepository>
+          </distributionManagement>
       </profile>
   </profiles>
 </project>
