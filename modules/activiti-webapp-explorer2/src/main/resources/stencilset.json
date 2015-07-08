@@ -672,7 +672,7 @@
     "properties" : [ {
       "id" : "taskprocrole",
       "type" : "cuba-taskprocrole",
-      "title" : "ProcRole code",
+      "title" : "Process role",
       "value" : "",
       "description" : "Process role code the task is assigned to",
       "popular" : true
