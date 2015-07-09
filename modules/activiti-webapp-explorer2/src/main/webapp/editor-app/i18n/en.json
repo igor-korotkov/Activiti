@@ -298,6 +298,7 @@
     "PROPERTY.STARTFORM.VALUE" : "{{caption}}",
     "PROPERTY.STARTFORM.EMPTY" : "No start form configured",
     "PROPERTY.STARTFORM.NOT_SELECTED" : "-- Select a form",
+    "PROPERTY.STARTFORM.PARAMETERS" : "Form parameters:",
 
     "PROPERTY.USERTASK.PROCROLE.SELECT.EMPTY" : "-- No role selected --",
 
