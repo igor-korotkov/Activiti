@@ -295,7 +295,7 @@
     "PROPERTY.STARTFORM.NAME" : "Form name",
     "PROPERTY.STARTFORM.PARAM.NAME" : "Param name",
     "PROPERTY.STARTFORM.PARAM.VALUE" : "Param value",
-    "PROPERTY.STARTFORM.VALUE" : "{{name}}",
+    "PROPERTY.STARTFORM.VALUE" : "{{caption}}",
     "PROPERTY.STARTFORM.EMPTY" : "No start form configured",
     "PROPERTY.STARTFORM.NOT_SELECTED" : "-- Select a form",
 

@@ -22,8 +22,6 @@ var KisBpmStartFormPopupCtrl = ['$scope', '$q', '$translate', '$http', function(
             // this to cope with the fact that the user can click the cancel button and no changes should have happended
             $scope.form = angular.copy($scope.property.value);
         }
-    } else {
-        $scope.form = {name: "standardProcForm", params: []};
     }
 
     // Array to contain selected properties (yes - we only can select one, but ng-grid isn't smart enough)
@@ -52,11 +50,31 @@ var KisBpmStartFormPopupCtrl = ['$scope', '$q', '$translate', '$http', function(
         .success(function(data) {
             $scope.formDescriptions = data;
 
+            for (var i = 0; i < $scope.formDescriptions.length; i++) {
+                var formDescription = $scope.formDescriptions[i];
+                if (formDescription.isDefault === true) {
+                    $scope.defaultFormDescription = formDescription;
+                    break;
+                }
+            }
+
+            //init form if it isn't filled yet
+            if ($scope.form == undefined) {
+                var name = "";
+                var caption = "";
+                if ($scope.defaultFormDescription != undefined) {
+                    name = $scope.defaultFormDescription.name;
+                    caption = $scope.defaultFormDescription.caption;
+                }
+                $scope.form = {name: name, caption: caption, params: []};
+            }
+
             $scope.$watch('form.name', function(newValue) {
                 for (var i = 0; i < $scope.formDescriptions.length; i++) {
                     var formDescription = $scope.formDescriptions[i];
                     if (formDescription.name == newValue) {
                         $scope.currentFormDescription = formDescription;
+                        $scope.form.caption = formDescription.caption;
                         break;
                     }
                 }

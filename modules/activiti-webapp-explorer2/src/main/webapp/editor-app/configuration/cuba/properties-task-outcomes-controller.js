@@ -66,7 +66,7 @@ var KisBpmTaskOutcomesPopupCtrl = ['$scope', '$q', '$translate', '$http', '$time
         multiSelect: false,
         keepLastSelected: false,
         selectedItems: $scope.selectedOutcomes,
-        columnDefs: [{field: 'name', displayName: 'Name'}, {field: 'form.name', displayName: 'Form'}]
+        columnDefs: [{field: 'name', displayName: 'Name'}, {field: 'form.caption', displayName: 'Form'}]
     }
 
     $scope.propertiesGridOptions = {
@@ -82,6 +82,14 @@ var KisBpmTaskOutcomesPopupCtrl = ['$scope', '$q', '$translate', '$http', '$time
     $http.get(KISBPM.URL.getAllForms())
         .success(function(data) {
             $scope.formDescriptions = data;
+
+            for (var i = 0; i < $scope.formDescriptions.length; i++) {
+                var formDescription = $scope.formDescriptions[i];
+                if (formDescription.isDefault === true) {
+                    $scope.defaultFormDescription = formDescription;
+                    break;
+                }
+            }
 
             $scope.$watch('selectedOutcomes[0].form.name', function(newValue) {
                 for (var i = 0; i < $scope.formDescriptions.length; i++) {
@@ -110,11 +118,17 @@ var KisBpmTaskOutcomesPopupCtrl = ['$scope', '$q', '$translate', '$http', '$time
 
         // Click handler for add button
     var propertyIndex = 1;
-    var defaultFormName = 'standardProcForm';
     $scope.addNewOutcome = function() {
+        var name = "";
+        var caption = "";
+        if ($scope.defaultFormDescription != undefined) {
+            name = $scope.defaultFormDescription.name;
+            caption = $scope.defaultFormDescription.caption;
+        }
+
         $scope.taskOutcomes.push({
             name : '',
-            form: {name: defaultFormName, params: []}});
+            form: {name: name, caption: caption, params: []}});
     };
 
     // Click handler for remove button
