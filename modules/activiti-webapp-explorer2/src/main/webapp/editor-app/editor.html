@@ -111,23 +111,56 @@
 		                        </a>
 		                    </div>
 		                </div>
-                    	<div class="selected-item-body">
-	                        <div>
-	                             <div class="property-row" ng-repeat="property in selectedItem.properties"
-	                                ng-click="propertyClicked($index)" ng-class="{'clear' : $index%2 == 0}">
-	                                <span class="title" ng-if="!property.hidden">{{ property.title }}&nbsp;:</span>
-	                                <span class="title-removed" ng-if="property.hidden"><i>{{ property.title }}&nbsp;({{'PROPERTY.REMOVED' | translate}})&nbsp;:</i></span>
+                        <div class="selected-item-body">
+                            <div>
+                                <div class="property-row" ng-repeat="property in selectedItem.mainProperties"
+                                     ng-click="propertyClicked($index)" ng-class="{'clear' : $index%2 == 0}">
+                                    <span class="title" ng-if="!property.hidden">{{ property.title }}&nbsp;:</span>
+                                    <span class="title-removed" ng-if="property.hidden"><i>{{ property.title }}&nbsp;({{'PROPERTY.REMOVED'
+                                        | translate}})&nbsp;:</i></span>
 	                                <span class="value"> 
 	                                    <ng-include
-	                                        src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                src="getPropertyTemplateUrl($index)"
+                                                ng-if="!property.hasReadWriteMode"></ng-include>
 	                                    <ng-include src="getPropertyReadModeTemplateUrl($index)"
-	                                        ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                    ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
 	                                    <ng-include src="getPropertyWriteModeTemplateUrl($index)"
-	                                        ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+                                                    ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
 	                                </span>
-	                            </div>
-	                        </div>
-	                    </div>
+                                </div>
+
+                                <div class="advanced-properties" ng-show="selectedItem.advancedProperties">
+                                    <div class="advanced-properties-title">
+                                        <a ng-click="advancedPropertiesState.collapsed = !advancedPropertiesState.collapsed">
+                                            <span>{{advancedPropertiesState.collapsed ? 'SELECTED_ITEM.ADVANCED_PROPERTIES.SHOW' : 'SELECTED_ITEM.ADVANCED_PROPERTIES.HIDE' |translate}}</span>
+                                        </a>
+                                    </div>
+                                    <div class="advanced-properties-content"
+                                         ng-show="!advancedPropertiesState.collapsed">
+                                        <div class="property-row"
+                                             ng-repeat="property in selectedItem.advancedProperties"
+                                             ng-click="propertyClicked(selectedItem.mainProperties.length + $index)"
+                                             ng-class="{'clear' : $index%2 == 0}">
+                                            <span class="title"
+                                                  ng-if="!property.hidden">{{ property.title }}&nbsp;:</span>
+                                            <span class="title-removed" ng-if="property.hidden"><i>{{ property.title }}&nbsp;({{'PROPERTY.REMOVED'
+                                                | translate}})&nbsp;:</i></span>
+	                                        <span class="value">
+	                                            <ng-include
+                                                    src="getPropertyTemplateUrl(selectedItem.mainProperties.length + $index)"
+                                                    ng-if="!property.hasReadWriteMode"></ng-include>
+	                                            <ng-include
+                                                    src="getPropertyReadModeTemplateUrl(selectedItem.mainProperties.length + $index)"
+                                                    ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+	                                            <ng-include
+                                                    src="getPropertyWriteModeTemplateUrl(selectedItem.mainProperties.length + $index)"
+                                                    ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+	                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 	    			</div>     
     			</div>            
             </div>

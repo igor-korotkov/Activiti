@@ -760,6 +760,7 @@
     "mayBeRoot" : true,
     "hide" : true,
     "propertyPackages" : [ "process_idpackage", "namepackage", "documentationpackage", "process_authorpackage", "process_versionpackage", "process_namespacepackage", "executionlistenerspackage", "eventlistenerspackage", "procrolespackage", "localizationpackage" ],
+    "mainPropertyPackages" : [ "process_idpackage", "namepackage", "documentationpackage", "procrolespackage", "localizationpackage" ],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ ]
   }, {
@@ -771,6 +772,7 @@
     "icon" : "startevent/none.png",
     "groups" : [ "Start Events" ],
     "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "executionlistenerspackage", "initiatorpackage", "startformpackage" ],
+    "mainPropertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "startformpackage" ],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "sequence_start", "Startevents_all", "StartEventsMorph", "all" ]
   }, {
@@ -826,6 +828,7 @@
     "icon" : "activity/list/type.user.png",
     "groups" : [ "Activities" ],
     "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "asynchronousdefinitionpackage", "exclusivedefinitionpackage", "executionlistenerspackage", "multiinstance_typepackage", "multiinstance_cardinalitypackage", "multiinstance_collectionpackage", "multiinstance_variablepackage", "multiinstance_conditionpackage", "isforcompensationpackage", "usertaskassignmentpackage", "duedatedefinitionpackage", "prioritydefinitionpackage", "tasklistenerspackage", "taskoutcomespackage", "taskprocrolepackage", "claimallowedpackage" ],
+    "mainPropertyPackages" : ["overrideidpackage", "namepackage", "taskoutcomespackage", "taskprocrolepackage", "multiinstance_typepackage", "claimallowedpackage"],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "Activity", "sequence_start", "sequence_end", "ActivitiesMorph", "all" ]
   }, {
@@ -837,6 +840,7 @@
     "icon" : "activity/list/type.service.png",
     "groups" : [ "Activities" ],
     "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "asynchronousdefinitionpackage", "exclusivedefinitionpackage", "executionlistenerspackage", "multiinstance_typepackage", "multiinstance_cardinalitypackage", "multiinstance_collectionpackage", "multiinstance_variablepackage", "multiinstance_conditionpackage", "isforcompensationpackage", "servicetaskclasspackage", "servicetaskexpressionpackage", "servicetaskdelegateexpressionpackage", "servicetaskfieldspackage", "servicetaskresultvariablepackage" ],
+    "mainPropertyPackages" : [ "overrideidpackage", "namepackage", "servicetaskexpressionpackage"],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "Activity", "sequence_start", "sequence_end", "ActivitiesMorph", "all" ]
   }, {
@@ -848,6 +852,7 @@
     "icon" : "activity/list/type.script.png",
     "groups" : [ "Activities" ],
     "propertyPackages" : [ "scriptformatpackage", "scripttextpackage", "overrideidpackage", "namepackage", "documentationpackage", "asynchronousdefinitionpackage", "exclusivedefinitionpackage", "executionlistenerspackage", "multiinstance_typepackage", "multiinstance_cardinalitypackage", "multiinstance_collectionpackage", "multiinstance_variablepackage", "multiinstance_conditionpackage", "isforcompensationpackage" ],
+    "mainPropertyPackages" : [ "scriptformatpackage", "scripttextpackage", "overrideidpackage", "namepackage"],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "Activity", "sequence_start", "sequence_end", "ActivitiesMorph", "all" ]
   }, {
@@ -1172,7 +1177,8 @@
     "layout" : [ {
       "type" : "layout.bpmn2_0.sequenceflow"
     } ],
-    "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "conditionsequenceflowpackage", "executionlistenerspackage", "defaultflowpackage", "flowconditiondescriptionpackage", "flowoutcomepackage" ],
+    "propertyPackages" : [ "overrideidpackage", "namepackage", "documentationpackage", "conditionsequenceflowpackage", "executionlistenerspackage", "defaultflowpackage", "flowoutcomepackage" ],
+    "mainPropertyPackages" : [ "overrideidpackage", "namepackage", "defaultflowpackage", "flowoutcomepackage" ],
     "hiddenPropertyPackages" : [ ],
     "roles" : [ "ConnectingObjectsMorph", "all" ]
   }, {

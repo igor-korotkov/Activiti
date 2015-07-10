@@ -21,22 +21,22 @@ var KISBPM = KISBPM || {};
 KISBPM.URL = {
 
     getModel: function(modelId) {
-        return CUBA.CONFIG.modelerRoot + '/model/' + modelId;
+        return CUBA.CONFIG.modelerRoot() + '/model/' + modelId;
     },
 
     getStencilSet: function() {
-        return CUBA.CONFIG.modelerRoot + '/editor-app/stencilset.json?version=' + Date.now();
+        return CUBA.CONFIG.modelerRoot() + '/editor-app/stencilset.json?version=' + Date.now();
     },
 
     putModel: function(modelId) {
-        return CUBA.CONFIG.modelerRoot + '/model/' + modelId;
+        return CUBA.CONFIG.modelerRoot() + '/model/' + modelId;
     },
 
     getAllForms: function() {
-        return CUBA.CONFIG.modelerRoot + '/form';
+        return CUBA.CONFIG.modelerRoot() + '/form';
     },
 
     getAllModels: function() {
-        return CUBA.CONFIG.modelerRoot + '/model';
+        return CUBA.CONFIG.modelerRoot() + '/model';
     }
 };

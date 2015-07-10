@@ -319,5 +319,8 @@
     "PROPERTY.FLOW.OUTCOME.SELECT.EMPTY" : "-- Select an outcome --",
 
     "PROPERTY.SUBMODELID.EMPTY" : "Sub model not selected",
-    "PROPERTY.SUBMODEL.SELECT.EMPTY" : "-- Select a submodel --"
+    "PROPERTY.SUBMODEL.SELECT.EMPTY" : "-- Select a submodel --",
+
+    "SELECTED_ITEM.ADVANCED_PROPERTIES.SHOW" : "Show advanced properties",
+    "SELECTED_ITEM.ADVANCED_PROPERTIES.HIDE" : "Hide advanced properties"
 }

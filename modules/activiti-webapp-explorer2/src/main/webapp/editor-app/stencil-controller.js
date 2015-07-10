@@ -33,7 +33,11 @@ angular.module('activitiModeler')
                 jQuery(window).trigger('resize');
             });
         };
-        
+
+        // CUBA begin
+        $scope.advancedPropertiesState = {'collapsed': true};
+        // CUBA end
+
         // Code that is dependent on an initialised Editor is wrapped in a promise for the editor
         $scope.editorFactory.promise.then(function () {
         	
@@ -345,6 +349,10 @@ angular.module('activitiModeler')
                             selectedItem.properties.push(currentProperty);
                         }
                     }
+
+                    // CUBA start
+                    CubaStencilUtils.fillMainAndAdvancedProperties(selectedItem, stencil);
+                    // CUBA end
 
                     // Need to wrap this in an $apply block, see http://jimhoskins.com/2012/12/17/angularjs-and-apply.html
                     $scope.safeApply(function () {

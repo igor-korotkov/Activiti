@@ -5802,6 +5802,7 @@ ORYX.Core.StencilSet.Stencil = {
 		
 		this._view;
 		this._properties = new Hash();
+        this._mainPropertiesIds = [];
 
 		// check stencil consistency and set defaults.
 		/*with(this._jsonStencil) {
@@ -5900,7 +5901,7 @@ ORYX.Core.StencilSet.Stencil = {
 
 		// init property packages
 		if(this._jsonStencil.propertyPackages && this._jsonStencil.propertyPackages instanceof Array) {
-			
+
 			this._jsonStencil.propertyPackages.each((function(ppId) {
 				var pp = this._propertyPackages[ppId];
 				
@@ -5908,7 +5909,11 @@ ORYX.Core.StencilSet.Stencil = {
 					pp.each((function(prop){
 						var oProp = new ORYX.Core.StencilSet.Property(prop, this._namespace, this);
 						this._properties[oProp.prefix() + "-" + oProp.id()] = oProp;
-						
+                        // CUBA start
+						if (this._jsonStencil.mainPropertyPackages != undefined && this._jsonStencil.mainPropertyPackages.indexOf(ppId) > -1) {
+                            this._mainPropertiesIds.push(oProp.prefix() + "-" + oProp.id());
+                        }
+                        // CUBA end
 					}).bind(this));
 				}
 			}).bind(this));

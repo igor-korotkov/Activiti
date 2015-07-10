@@ -326,6 +326,10 @@ div.propertySection {
     box-shadow:none !important;
 }
 
+.advanced-properties {
+    clear: both;
+}
+
 .default-grid {
     border: 1px solid rgb(212,212,212);
     width: 100%;
