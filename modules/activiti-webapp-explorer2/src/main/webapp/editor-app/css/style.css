@@ -307,8 +307,8 @@ div.propertySection {
 }
 
 .propertySection.collapsed {
-	max-height: 50px;
-	height: 50px;
+    max-height: 100px;
+    height: 100px;
 	overflow: hidden;
 }
 
