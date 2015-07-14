@@ -96,6 +96,7 @@ var KisBpmTaskOutcomesPopupCtrl = ['$scope', '$q', '$translate', '$http', '$time
                     var formDescription = $scope.formDescriptions[i];
                     if (formDescription.name == newValue) {
                         $scope.currentFormDescription = formDescription;
+                        $scope.selectedOutcomes[0].form.caption = formDescription.caption;
                         break;
                     }
                 }
