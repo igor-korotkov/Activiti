@@ -239,7 +239,7 @@
       "id" : "scriptformat",
       "type" : "String",
       "title" : "Script format",
-      "value" : "",
+      "value" : "groovy",
       "description" : "Script format of the script task.",
       "popular" : true
     } ]
