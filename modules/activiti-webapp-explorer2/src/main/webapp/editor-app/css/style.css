@@ -267,7 +267,7 @@ div.propertySection {
 .selected-item-body {
 	padding: 0;
 	overflow: auto;
-	height: 199px;
+	height: 160px;
 }
 
 .selected-item-body > div {
