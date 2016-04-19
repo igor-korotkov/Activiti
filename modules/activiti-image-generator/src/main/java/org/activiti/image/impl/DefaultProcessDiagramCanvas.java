@@ -217,26 +217,26 @@ public class DefaultProcessDiagramCanvas {
     LABEL_FONT = new Font(labelFontName, Font.ITALIC, 10);
     
     try {
-      USERTASK_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/userTask.png", customClassLoader));
-      SCRIPTTASK_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/scriptTask.png", customClassLoader));
-      SERVICETASK_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/serviceTask.png", customClassLoader));
-      RECEIVETASK_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/receiveTask.png", customClassLoader));
-      SENDTASK_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/sendTask.png", customClassLoader));
-      MANUALTASK_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/manualTask.png", customClassLoader));
-      BUSINESS_RULE_TASK_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/businessRuleTask.png", customClassLoader));
-      SHELL_TASK_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/shellTask.png", customClassLoader));
-      CAMEL_TASK_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/camelTask.png", customClassLoader));
-      MULE_TASK_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/muleTask.png", customClassLoader));
+      USERTASK_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/userTask.png", customClassLoader));
+      SCRIPTTASK_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/scriptTask.png", customClassLoader));
+      SERVICETASK_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/serviceTask.png", customClassLoader));
+      RECEIVETASK_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/receiveTask.png", customClassLoader));
+      SENDTASK_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/sendTask.png", customClassLoader));
+      MANUALTASK_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/manualTask.png", customClassLoader));
+      BUSINESS_RULE_TASK_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/businessRuleTask.png", customClassLoader));
+      SHELL_TASK_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/shellTask.png", customClassLoader));
+      CAMEL_TASK_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/camelTask.png", customClassLoader));
+      MULE_TASK_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/muleTask.png", customClassLoader));
       
-      TIMER_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/timer.png", customClassLoader));
-      COMPENSATE_THROW_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/compensate-throw.png", customClassLoader));
-      COMPENSATE_CATCH_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/compensate.png", customClassLoader));
-      ERROR_THROW_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/error-throw.png", customClassLoader));
-      ERROR_CATCH_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/error.png", customClassLoader));
-      MESSAGE_THROW_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/message-throw.png", customClassLoader));
-      MESSAGE_CATCH_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/message.png", customClassLoader));
-      SIGNAL_THROW_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/signal-throw.png", customClassLoader));
-      SIGNAL_CATCH_IMAGE = ImageIO.read(ReflectUtil.getResourceAsStream("org/activiti/icons/signal.png", customClassLoader));
+      TIMER_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/timer.png", customClassLoader));
+      COMPENSATE_THROW_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/compensate-throw.png", customClassLoader));
+      COMPENSATE_CATCH_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/compensate.png", customClassLoader));
+      ERROR_THROW_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/error-throw.png", customClassLoader));
+      ERROR_CATCH_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/error.png", customClassLoader));
+      MESSAGE_THROW_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/message-throw.png", customClassLoader));
+      MESSAGE_CATCH_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/message.png", customClassLoader));
+      SIGNAL_THROW_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/signal-throw.png", customClassLoader));
+      SIGNAL_CATCH_IMAGE = ImageIO.read(ReflectUtil.getResource("org/activiti/icons/signal.png", customClassLoader));
     } catch (IOException e) {
       LOGGER.warn("Could not load image for process diagram creation: {}", e.getMessage());
     }
@@ -255,14 +255,7 @@ public class DefaultProcessDiagramCanvas {
 
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     try {
-      // Try to remove white space
-      minX = (minX <= 5) ? 5 : minX;
-      minY = (minY <= 5) ? 5 : minY;
-      BufferedImage imageToSerialize = processDiagram;
-      if (minX >= 0 && minY >= 0) {
-        imageToSerialize = processDiagram.getSubimage(minX - 5, minY - 5, canvasWidth - minX + 5, canvasHeight - minY + 5);
-      }
-      ImageIO.write(imageToSerialize, imageType, out);
+      ImageIO.write(processDiagram, imageType, out);
       
     } catch (IOException e) {
       throw new ActivitiImageException("Error while generating process image", e);
@@ -783,6 +776,7 @@ public class DefaultProcessDiagramCanvas {
           }
           layouts.add(new TextLayout(lastLine, g.getFont(), g.getFontRenderContext()));
         }
+        break;
       } else {
         layouts.add(layout);
         lastLine = text.substring(previousPosition, measurer.getPosition());
@@ -1139,7 +1133,7 @@ public class DefaultProcessDiagramCanvas {
       g.setFont(LABEL_FONT);
 
       int wrapWidth = 100;
-      int textY = (int) (graphicInfo.getY() + graphicInfo.getHeight());
+      int textY = (int) graphicInfo.getY();
       
       // TODO: use drawMultilineText()
       AttributedString as = new AttributedString(text);
@@ -1154,8 +1148,9 @@ public class DefaultProcessDiagramCanvas {
     	  textY += tl.getAscent();
     	  Rectangle2D bb = tl.getBounds();
     	  double tX = graphicInfo.getX();
-    	  if (centered)
-        	  tX += (int) (graphicInfo.getWidth() / 2 - bb.getWidth() / 2);
+    	  if (centered) {
+    	  	tX += (int) (graphicInfo.getWidth() / 2 - bb.getWidth() / 2);
+    	  }
     	  tl.draw(g, (float) tX, textY);
     	  textY += tl.getDescent() + tl.getLeading() + (interline - 1.0f) * tl.getAscent();
       }

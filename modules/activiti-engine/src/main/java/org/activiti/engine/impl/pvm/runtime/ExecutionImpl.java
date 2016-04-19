@@ -201,7 +201,8 @@ public class ExecutionImpl implements
       }
     }
   }
-  
+
+  @Override
   public void destroyScope(String reason) {
     
    log.debug("performing destroy scope behavior for execution {}", this);
@@ -223,6 +224,16 @@ public class ExecutionImpl implements
   public ExecutionImpl getParent() {
     ensureParentInitialized();
     return parent;
+  }
+  
+  @Override
+  public String getSuperExecutionId() {
+    ensureActivityInitialized();
+    if (superExecution != null) {
+      return superExecution.getId();
+    }
+    
+    return null;
   }
   
   public String getParentId() {
@@ -777,6 +788,10 @@ public class ExecutionImpl implements
   }
   public boolean isEnded() {
     return isEnded;
+  }
+  @Override
+  public void setEnded(boolean ended) {
+  	this.isEnded = ended;
   }
   public void setProcessDefinition(ProcessDefinitionImpl processDefinition) {
     this.processDefinition = processDefinition;

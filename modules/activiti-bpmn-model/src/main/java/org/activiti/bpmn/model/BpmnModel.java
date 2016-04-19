@@ -41,6 +41,7 @@ public class BpmnModel {
 	protected List<Import> imports = new ArrayList<Import>();
 	protected List<Interface> interfaces = new ArrayList<Interface>();
 	protected List<Artifact> globalArtifacts = new ArrayList<Artifact>();
+	protected List<Resource> resources = new ArrayList<Resource>();
 	protected Map<String, String> namespaceMap = new LinkedHashMap<String, String>();
 	protected String targetNamespace;
 	protected List<String> userTaskFormTypes;
@@ -110,6 +111,15 @@ public class BpmnModel {
 	  }
 	  
 	  return null;
+  }
+	
+	public Process getProcessById(String id) {
+    for (Process process : processes) {
+      if (process.getId().equals(id)) {
+        return process;
+      }
+    }
+    return null;
   }
 	
 	public List<Process> getProcesses() {
@@ -280,7 +290,37 @@ public class BpmnModel {
 	public void addFlowGraphicInfoList(String key, List<GraphicInfo> graphicInfoList) {
 		flowLocationMap.put(key, graphicInfoList);
 	}
-	
+
+  public Collection<Resource> getResources() {
+    return resources;
+  }
+
+  public void setResources(Collection<Resource> resourceList) {
+    if (resourceList != null) {
+      resources.clear();
+      resources.addAll(resourceList);
+    }
+  }
+    
+  public void addResource(Resource resource) {
+    if (resource != null) {
+      resources.add(resource);
+    }
+  }
+    
+  public boolean containsResourceId(String resourceId) {
+    return getResource(resourceId) != null;
+  }
+    
+  public Resource getResource(String id) {
+    for (Resource resource : resources) {
+      if (id.equals(resource.getId())) {
+        return resource;
+      }
+    }
+    return null;
+  }
+
   public Collection<Signal> getSignals() {
   	return signals;
   }
@@ -351,11 +391,24 @@ public class BpmnModel {
       messageMap.put(message.getId(), message);
     }
   }
-  
+
   public Message getMessage(String id) {
-    return messageMap.get(id);
+    Message result = messageMap.get(id);
+    if (result == null) {
+      int indexOfNS = id.indexOf(":");
+      if (indexOfNS > 0) {
+        String idNamespace = id.substring(0, indexOfNS);
+        if (idNamespace.equalsIgnoreCase(this.getTargetNamespace())) {
+          id = id.substring(indexOfNS + 1);
+        }
+        result = messageMap.get(id);
+      }
+    }
+    return result;
   }
-  
+
+
+
   public boolean containsMessageId(String messageId) {
     return messageMap.containsKey(messageId);
   }

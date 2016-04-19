@@ -80,17 +80,27 @@ public class JobEntityManager extends AbstractManager {
     }
 
     timer.insert();
-    
+
     ProcessEngineConfiguration engineConfiguration = Context.getProcessEngineConfiguration();
     if (engineConfiguration.isAsyncExecutorEnabled() == false && 
         timer.getDuedate().getTime() <= (engineConfiguration.getClock().getCurrentTime().getTime())) {
-      
+
       hintJobExecutor(timer);
     }
   }
   
+  /*"Not used anymore. Will be removed in a future release." */
+  @Deprecated()
   public void retryAsyncJob(JobEntity job) {
     AsyncExecutor asyncExecutor = Context.getProcessEngineConfiguration().getAsyncExecutor();
+    try {
+    	
+    	// If a job has to be retried, we wait for a certain amount of time,
+    	// otherwise the job will be continuously be retried without delay (and thus seriously stressing the database).
+	    Thread.sleep(asyncExecutor.getRetryWaitTimeInMillis());
+	    
+    } catch (InterruptedException e) {
+    }
     asyncExecutor.executeAsyncJob(job);
   }
   
@@ -113,7 +123,7 @@ public class JobEntityManager extends AbstractManager {
       .getTransactionContext()
       .addTransactionListener(TransactionState.COMMITTED, transactionListener);
   }
- 
+
   public void cancelTimers(ExecutionEntity execution) {
     List<TimerEntity> timers = Context
       .getCommandContext()
@@ -191,11 +201,35 @@ public class JobEntityManager extends AbstractManager {
   }
 
   @SuppressWarnings("unchecked")
-  public List<Job> findJobsByConfiguration(String jobHandlerType, String jobHandlerConfiguration) {
-    Map<String, String> params = new HashMap<String, String>();
-    params.put("handlerType", jobHandlerType);
-    params.put("handlerConfiguration", jobHandlerConfiguration);
-    return getDbSqlSession().selectList("selectJobsByConfiguration", params);
+  public List<Job> findJobsByTypeAndProcessDefinitionKeyNoTenantId(String jobHandlerType, String processDefinitionKey) {
+  	 Map<String, String> params = new HashMap<String, String>(2);
+     params.put("handlerType", jobHandlerType);
+     params.put("processDefinitionKey", processDefinitionKey);
+     return getDbSqlSession().selectList("selectJobByTypeAndProcessDefinitionKeyNoTenantId", params);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public List<Job> findJobsByTypeAndProcessDefinitionKeyAndTenantId(String jobHandlerType, String processDefinitionKey, String tenantId) {
+  	 Map<String, String> params = new HashMap<String, String>(3);
+     params.put("handlerType", jobHandlerType);
+     params.put("processDefinitionKey", processDefinitionKey);
+     params.put("tenantId", tenantId);
+     return getDbSqlSession().selectList("selectJobByTypeAndProcessDefinitionKeyAndTenantId", params);
+  }
+  
+  @SuppressWarnings("unchecked")
+  public List<Job> findJobsByTypeAndProcessDefinitionId(String jobHandlerType, String processDefinitionId) {
+  	 Map<String, String> params = new HashMap<String, String>(2);
+     params.put("handlerType", jobHandlerType);
+     params.put("processDefinitionId", processDefinitionId);
+     return getDbSqlSession().selectList("selectJobByTypeAndProcessDefinitionId", params);
+  }
+  
+  public void unacquireJob(String jobId) {
+  	Map<String, Object> params = new HashMap<String, Object>(2);
+  	params.put("id", jobId);
+  	params.put("dueDate", new Date(getProcessEngineConfiguration().getClock().getCurrentTime().getTime()));
+  	getDbSqlSession().update("unacquireJob", params);
   }
 
   public long findJobCountByQueryCriteria(JobQueryImpl jobQuery) {

@@ -63,6 +63,7 @@ import org.activiti.bpmn.converter.parser.MessageParser;
 import org.activiti.bpmn.converter.parser.ParticipantParser;
 import org.activiti.bpmn.converter.parser.PotentialStarterParser;
 import org.activiti.bpmn.converter.parser.ProcessParser;
+import org.activiti.bpmn.converter.parser.ResourceParser;
 import org.activiti.bpmn.converter.parser.SignalParser;
 import org.activiti.bpmn.converter.parser.SubProcessParser;
 import org.activiti.bpmn.converter.util.BpmnXMLUtil;
@@ -88,6 +89,7 @@ import org.activiti.bpmn.model.SequenceFlow;
 import org.activiti.bpmn.model.StringDataObject;
 import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.TextAnnotation;
+import org.activiti.bpmn.model.Transaction;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,6 +131,7 @@ public class BpmnXMLConverter implements BpmnXMLConstants {
   protected ParticipantParser participantParser = new ParticipantParser();
   protected PotentialStarterParser potentialStarterParser = new PotentialStarterParser();
   protected ProcessParser processParser = new ProcessParser();
+  protected ResourceParser resourceParser = new ResourceParser();
   protected SignalParser signalParser = new SignalParser();
   protected SubProcessParser subProcessParser = new SubProcessParser();
 	
@@ -317,12 +320,16 @@ public class BpmnXMLConverter implements BpmnXMLConstants {
           activeSubProcessList.remove(activeSubProcessList.size() - 1);
         }
 
-				if (xtr.isStartElement() == false)
+				if (xtr.isStartElement() == false) {
 					continue;
+				}
 
 				if (ELEMENT_DEFINITIONS.equals(xtr.getLocalName())) {
 				  definitionsParser.parse(xtr, model);
-				
+				  
+        } else if (ELEMENT_RESOURCE.equals(xtr.getLocalName())) {
+          resourceParser.parse(xtr, model);
+          
 				} else if (ELEMENT_SIGNAL.equals(xtr.getLocalName())) {
 					signalParser.parse(xtr, model);
 					
@@ -545,7 +552,12 @@ public class BpmnXMLConverter implements BpmnXMLConstants {
     if (flowElement instanceof SubProcess) {
       
       SubProcess subProcess = (SubProcess) flowElement;
-      xtw.writeStartElement(ELEMENT_SUBPROCESS);
+      if (flowElement instanceof Transaction) {
+        xtw.writeStartElement(ELEMENT_TRANSACTION);
+      } else {
+        xtw.writeStartElement(ELEMENT_SUBPROCESS);
+      }
+      
       xtw.writeAttribute(ATTRIBUTE_ID, subProcess.getId());
       if (StringUtils.isNotEmpty(subProcess.getName())) {
         xtw.writeAttribute(ATTRIBUTE_NAME, subProcess.getName());
@@ -555,6 +567,14 @@ public class BpmnXMLConverter implements BpmnXMLConstants {
       
       if (subProcess instanceof EventSubProcess) {
         xtw.writeAttribute(ATTRIBUTE_TRIGGERED_BY, ATTRIBUTE_VALUE_TRUE);
+        
+      } else if (subProcess instanceof Transaction == false) {
+        if (subProcess.isAsynchronous()) {
+          BpmnXMLUtil.writeQualifiedAttribute(ATTRIBUTE_ACTIVITY_ASYNCHRONOUS, ATTRIBUTE_VALUE_TRUE, xtw);
+          if (subProcess.isNotExclusive()) {
+            BpmnXMLUtil.writeQualifiedAttribute(ATTRIBUTE_ACTIVITY_EXCLUSIVE, ATTRIBUTE_VALUE_FALSE, xtw);
+          }
+        }
       }
       
       if (StringUtils.isNotEmpty(subProcess.getDocumentation())) {

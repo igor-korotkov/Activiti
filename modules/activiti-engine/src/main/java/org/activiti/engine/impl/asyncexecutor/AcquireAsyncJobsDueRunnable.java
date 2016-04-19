@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.activiti.engine.ActivitiOptimisticLockingException;
 import org.activiti.engine.impl.cmd.AcquireAsyncJobsDueCmd;
 import org.activiti.engine.impl.interceptor.CommandExecutor;
+import org.activiti.engine.impl.persistence.entity.JobEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,12 +50,27 @@ public class AcquireAsyncJobsDueRunnable implements Runnable {
       
       try {
         AcquiredJobEntities acquiredJobs = commandExecutor.execute(new AcquireAsyncJobsDueCmd(asyncExecutor));
+
+        boolean allJobsSuccessfullyOffered = true; 
+        for (JobEntity job : acquiredJobs.getJobs()) {
+          boolean jobSuccessFullyOffered = asyncExecutor.executeAsyncJob(job);
+          if (!jobSuccessFullyOffered) {
+            allJobsSuccessfullyOffered = false;
+          }
+        }
         
-        // if all jobs were executed
+        // If all jobs are executed, we check if we got back the amount we expected
+        // If not, we will wait, as to not query the database needlessly. 
+        // Otherwise, we set the wait time to 0, as to query again immediately.
         millisToWait = asyncExecutor.getDefaultAsyncJobAcquireWaitTimeInMillis();
         int jobsAcquired = acquiredJobs.size();
         if (jobsAcquired >= asyncExecutor.getMaxAsyncJobsDuePerAcquisition()) {
           millisToWait = 0; 
+        }
+        
+        // If the queue was full, we wait too (even if we got enough jobs back), as not overload the queue
+        if (millisToWait == 0 && !allJobsSuccessfullyOffered) {
+          millisToWait = asyncExecutor.getDefaultQueueSizeFullWaitTimeInMillis();
         }
 
       } catch (ActivitiOptimisticLockingException optimisticLockingException) { 

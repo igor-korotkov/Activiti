@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,9 +54,9 @@ import org.activiti.bpmn.model.ValuedDataObject;
 import org.activiti.editor.constants.CubaStencilConstants;
 import org.activiti.editor.constants.EditorJsonConstants;
 import org.activiti.editor.constants.StencilConstants;
+import org.activiti.editor.language.json.converter.util.CollectionUtils;
 import org.activiti.editor.language.json.converter.util.CubaBpmnJsonConverterUtil;
 import org.activiti.editor.language.json.converter.util.JsonConverterUtil;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,6 +147,8 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
         DI_CIRCLES.add(STENCIL_EVENT_BOUNDARY_SIGNAL);
         DI_CIRCLES.add(STENCIL_EVENT_BOUNDARY_TIMER);
         DI_CIRCLES.add(STENCIL_EVENT_BOUNDARY_MESSAGE);
+        DI_CIRCLES.add(STENCIL_EVENT_BOUNDARY_CANCEL);
+        DI_CIRCLES.add(STENCIL_EVENT_BOUNDARY_COMPENSATION);
 
         DI_CIRCLES.add(STENCIL_EVENT_CATCH_MESSAGE);
         DI_CIRCLES.add(STENCIL_EVENT_CATCH_SIGNAL);
@@ -156,6 +159,8 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
 
         DI_CIRCLES.add(STENCIL_EVENT_END_NONE);
         DI_CIRCLES.add(STENCIL_EVENT_END_ERROR);
+        DI_CIRCLES.add(STENCIL_EVENT_END_CANCEL);
+        DI_CIRCLES.add(STENCIL_EVENT_END_TERMINATE);
 
         DI_RECTANGLES.add(STENCIL_CALL_ACTIVITY);
         DI_RECTANGLES.add(STENCIL_SUB_PROCESS);
@@ -236,10 +241,17 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
         if (mainProcess.isExecutable() == false) {
           propertiesNode.put(PROPERTY_PROCESS_EXECUTABLE, "No");
         }
-        
+        if (StringUtils.isNoneEmpty(model.getTargetNamespace())){
+            propertiesNode.put(PROPERTY_PROCESS_NAMESPACE, model.getTargetNamespace());
+        }
+
+        BpmnJsonConverterUtil.convertMessagesToJson(model.getMessages(), propertiesNode);
+
         BpmnJsonConverterUtil.convertListenersToJson(mainProcess.getExecutionListeners(), true, propertiesNode);
         BpmnJsonConverterUtil.convertEventListenersToJson(mainProcess.getEventListeners(), propertiesNode);
-        
+        BpmnJsonConverterUtil.convertSignalDefinitionsToJson(model, propertiesNode);
+        BpmnJsonConverterUtil.convertMessagesToJson(model, propertiesNode);
+
         if (CollectionUtils.isNotEmpty(mainProcess.getDataObjects())) {
           BpmnJsonConverterUtil.convertDataPropertiesToJson(mainProcess.getDataObjects(), propertiesNode);
         }
@@ -465,6 +477,29 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
             }
         }
 
+        // Signal Definitions exist on the root level
+        JsonNode signalDefinitionNode = BpmnJsonConverterUtil.getProperty(PROPERTY_SIGNAL_DEFINITIONS, modelNode);
+        signalDefinitionNode = BpmnJsonConverterUtil.validateIfNodeIsTextual(signalDefinitionNode);
+        signalDefinitionNode = BpmnJsonConverterUtil.validateIfNodeIsTextual(signalDefinitionNode); // no idea why this needs to be done twice ..
+        if (signalDefinitionNode != null) {
+          if (signalDefinitionNode instanceof ArrayNode) {
+            ArrayNode signalDefinitionArrayNode = (ArrayNode) signalDefinitionNode;
+            Iterator<JsonNode> signalDefinitionIterator = signalDefinitionArrayNode.iterator();
+            while (signalDefinitionIterator.hasNext()) {
+              JsonNode signalDefinitionJsonNode = signalDefinitionIterator.next();
+              String signalId = signalDefinitionJsonNode.get(PROPERTY_SIGNAL_DEFINITION_ID).asText();
+              String signalName = signalDefinitionJsonNode.get(PROPERTY_SIGNAL_DEFINITION_NAME).asText();
+              String signalScope = signalDefinitionJsonNode.get(PROPERTY_SIGNAL_DEFINITION_SCOPE).asText();
+
+              Signal signal = new Signal();
+              signal.setId(signalId);
+              signal.setName(signalName);
+              signal.setScope((signalScope.toLowerCase().equals("processinstance")) ? Signal.SCOPE_PROCESS_INSTANCE : Signal.SCOPE_GLOBAL);
+              bpmnModel.addSignal(signal);
+            }
+          }
+        }
+
         if (nonEmptyPoolFound == false) {
             Process process = new Process();
             bpmnModel.getProcesses().add(process);
@@ -479,7 +514,9 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
             if (processExecutableNode != null && StringUtils.isNotEmpty(processExecutableNode.asText())) {
               process.setExecutable(JsonConverterUtil.getPropertyValueAsBoolean(PROPERTY_PROCESS_EXECUTABLE, modelNode));
             }
-            
+
+            BpmnJsonConverterUtil.convertJsonToMessages(modelNode, bpmnModel);
+
             BpmnJsonConverterUtil.convertJsonToListeners(modelNode, process);
             JsonNode eventListenersNode = BpmnJsonConverterUtil.getProperty(PROPERTY_EVENT_LISTENERS, modelNode);
             if (eventListenersNode != null) {
@@ -662,7 +699,7 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
                     ((FlowNode) sourceFlowElement).getOutgoingFlows().add(sequenceFlow);
                     JsonNode edgeNode = edgeMap.get(sequenceFlow.getId());
                     if (edgeNode != null) {
-                      boolean isDefault = JsonConverterUtil.getPropertyValueAsBoolean("defaultflow", edgeNode);
+                      boolean isDefault = JsonConverterUtil.getPropertyValueAsBoolean(PROPERTY_SEQUENCEFLOW_DEFAULT, edgeNode);
                       if (isDefault) {
                           if (sourceFlowElement instanceof Activity) {
                               ((Activity) sourceFlowElement).setDefaultFlow(sequenceFlow.getId());

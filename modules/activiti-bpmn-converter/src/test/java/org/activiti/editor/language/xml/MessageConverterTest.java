@@ -23,12 +23,17 @@ public class MessageConverterTest extends AbstractConverterTest {
   }
   
   private void validateModel(BpmnModel model) {
-    Message message = model.getMessage("Examples:writeReport");
+    Message message = model.getMessage("writeReport");
     assertNotNull(message);
     assertEquals("Examples:writeReportItem", message.getItemRef());
-    Message message2 = model.getMessage("Examples:writeReport2");
+    assertEquals("newWriteReport", message.getName());
+    assertEquals("writeReport", message.getId());
+
+    Message message2 = model.getMessage("writeReport2");
     assertNotNull(message2);
     assertEquals("http://foo.bar.com/Examples:writeReportItem2", message2.getItemRef());
+    assertEquals("newWriteReport2", message2.getName());
+    assertEquals("writeReport2", message2.getId());
   }
   
   protected String getResource() {

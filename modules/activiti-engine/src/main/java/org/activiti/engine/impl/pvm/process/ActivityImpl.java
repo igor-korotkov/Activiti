@@ -200,5 +200,4 @@ public class ActivityImpl extends ScopeImpl implements PvmActivity, HasDIBounds 
   public void setExclusive(boolean isExclusive) {
     this.isExclusive = isExclusive;
   }
-  
 }

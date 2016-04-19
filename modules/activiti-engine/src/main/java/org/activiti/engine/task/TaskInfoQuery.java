@@ -175,6 +175,11 @@ public interface TaskInfoQuery<T extends TaskInfoQuery<?, ?>, V extends TaskInfo
    */
   T processInstanceId(String processInstanceId);
   
+  /**
+   * Only select tasks for the given process ids.
+   */
+  T processInstanceIdIn(List<String> processInstanceIds);
+  
   /** Only select tasks foe the given business key */
   T processInstanceBusinessKey(String processInstanceBusinessKey);
   
@@ -287,6 +292,9 @@ public interface TaskInfoQuery<T extends TaskInfoQuery<?, ?>, V extends TaskInfo
    *  lowercased when the query is executed.
    */
   T processDefinitionKeyLikeIgnoreCase(String processDefinitionKeyLikeIgnoreCase);
+  
+  /** Only select tasks that have a process definition for which the key is present in the given list **/
+  T processDefinitionKeyIn(List<String> processDefinitionKeys);
   
   /**
    * Only select tasks which are part of a process instance which has the given
@@ -420,6 +428,14 @@ public interface TaskInfoQuery<T extends TaskInfoQuery<?, ?>, V extends TaskInfo
    *          (string%), ends with (%string) or contains (%string%). */
   T taskVariableValueLike(String name, String value);
   
+  /** Only select tasks which have a local variable value like the given value (case insensitive)
+   * when they ended. This can be used on string variables only.
+   * @param name cannot be null.
+   * @param value cannot be null. The string can include the
+   *          wildcard character '%' to express like-strategy: starts with
+   *          (string%), ends with (%string) or contains (%string%). */
+  T taskVariableValueLikeIgnoreCase(String name, String value);
+  
   /**
    * Only select tasks which are part of a process that has a variable
    * with the given name set to the given value.
@@ -502,6 +518,14 @@ public interface TaskInfoQuery<T extends TaskInfoQuery<?, ?>, V extends TaskInfo
    *          (string%), ends with (%string) or contains (%string%). */
   T processVariableValueLike(String name, String value);
   
+  /** Only select tasks which have a global variable value like the given value (case insensitive)
+   * when they ended. This can be used on string variables only.
+   * @param name cannot be null.
+   * @param value cannot be null. The string can include the
+   *          wildcard character '%' to express like-strategy: starts with
+   *          (string%), ends with (%string) or contains (%string%). */
+  T processVariableValueLikeIgnoreCase(String name, String value);
+  
   /**
    * Include local task variables in the task query result
    */
@@ -511,6 +535,16 @@ public interface TaskInfoQuery<T extends TaskInfoQuery<?, ?>, V extends TaskInfo
    * Include global task variables in the task query result
    */
   T includeProcessVariables();
+  
+  /**
+   * Localize task name and description to specified locale.
+   */
+  T locale(String locale);
+  
+  /**
+   * Instruct localization to fallback to more general locales including the default locale of the JVM if the specified locale is not found. 
+   */
+  T withLocalizationFallback();
   
   /**
    * All query clauses called will be added to a single or-statement. This or-statement will be

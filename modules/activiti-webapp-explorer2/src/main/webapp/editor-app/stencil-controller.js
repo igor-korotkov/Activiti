@@ -134,39 +134,35 @@ angular.module('activitiModeler')
                         'removed': removed,
                         'customIcon': false,
                         'canConnect': false,
-                        'canConnectTo': false};
+                        'canConnectTo': false,
+                        'canConnectAssociation': false};
                     
-                    if (data.stencils[stencilIndex].customIconId && data.stencils[stencilIndex].customIconId > 0)
-                    {
+                    if (data.stencils[stencilIndex].customIconId && data.stencils[stencilIndex].customIconId > 0) {
                         stencilItem.customIcon = true;
                         stencilItem.icon = data.stencils[stencilIndex].customIconId;
                     }
                     
                     if (!removed) {
-                        if (quickMenuDefinition.indexOf(stencilItem.id) >= 0)
-                        {
+                        if (quickMenuDefinition.indexOf(stencilItem.id) >= 0) {
                         	quickMenuItems[quickMenuDefinition.indexOf(stencilItem.id)] = stencilItem;
                         }
                     }
                     
-                    for (var i = 0; i < data.stencils[stencilIndex].roles.length; i++)
-                    {
+                    if (stencilItem.id === 'TextAnnotation' || stencilItem.id === 'BoundaryCompensationEvent') {
+                    	stencilItem.canConnectAssociation = true;
+                    }
+                    
+                    for (var i = 0; i < data.stencils[stencilIndex].roles.length; i++) {
                     	var stencilRole = data.stencils[stencilIndex].roles[i];
-                    	if (stencilRole === 'sequence_start')
-                    	{
+                    	if (stencilRole === 'sequence_start') {
                     		stencilItem.canConnect = true;
-                    	}
-                    	else if (stencilRole === 'sequence_end')
-                    	{
+                    	} else if (stencilRole === 'sequence_end') {
                     		stencilItem.canConnectTo = true;
                     	}
                     	
-                    	for (var j = 0; j < morphRoles.length; j++)
-                    	{
-                    		if (stencilRole === morphRoles[j].role)
-                    		{
-                    		    if (!removed)
-                    		    {
+                    	for (var j = 0; j < morphRoles.length; j++) {
+                    		if (stencilRole === morphRoles[j].role) {
+                    		    if (!removed) {
                     			     morphRoles[j].morphOptions.push(stencilItem);
                     			}
                     			stencilItem.morphRole = morphRoles[j].role;
@@ -175,17 +171,14 @@ angular.module('activitiModeler')
                     	}
                     }
 
-                    if (currentGroup)
-                    {
+                    if (currentGroup) {
 	                    // Add the stencil item to the correct group
 	                    currentGroup.items.push(stencilItem);
-	                    if (ignoreForPaletteDefinition.indexOf(stencilItem.id) < 0)
-	                    {
+	                    if (ignoreForPaletteDefinition.indexOf(stencilItem.id) < 0) {
 	                    	currentGroup.paletteItems.push(stencilItem);
 	                    }
 
-                    } else
-                    {
+                    } else {
                         // It's a root stencil element
                         if (!removed) {
                             stencilItemGroups.push(stencilItem);
@@ -430,44 +423,38 @@ angular.module('activitiModeler')
             			}
             	    }
         			
-        			if (morphShapes && morphShapes.length > 0)
-        			{
+        			var x = shapeXY.x;
+    				if (bounds.width() < 48) {
+    					x -= 24;
+    				}
+        			
+        			if (morphShapes && morphShapes.length > 0) {
         				// In case the element is not wide enough, start the 2 bottom-buttons more to the left
         				// to prevent overflow in the right-menu
-	        			  
-        				var x = shapeXY.x;
-        				if(bounds.width() < 48) {
-        					x -= 24;
-        				}
-        			  
 	        			var morphButton = document.getElementById('morph-button');
 	        			morphButton.style.display = "block";
 	        			morphButton.style.left = x + 24 +'px';
 	        			morphButton.style.top = (shapeXY.y+bounds.height() + 2) + 'px';
-	        			
-	        			var deleteButton = document.getElementById('delete-button');
-	        			deleteButton.style.display = "block";
-	        			deleteButton.style.left = x + 'px';
-	        			deleteButton.style.top = (shapeXY.y+bounds.height() + 2) + 'px';
         			}
         			
-        			if (stencilItem && stencilItem.canConnect)
-        			{
+        			var deleteButton = document.getElementById('delete-button');
+        			deleteButton.style.display = "block";
+        			deleteButton.style.left = x + 'px';
+        			deleteButton.style.top = (shapeXY.y+bounds.height() + 2) + 'px';
+        			
+        			if (stencilItem && (stencilItem.canConnect || stencilItem.canConnectAssociation)) {
 	        			var quickButtonCounter = 0;
 	        			var quickButtonX = shapeXY.x+bounds.width() + 5;
 	        			var quickButtonY = shapeXY.y;
 	        			jQuery('.Oryx_button').each(function(i, obj) {
-	        				if (obj.id !== 'morph-button' && obj.id != 'delete-button')
-	        				{
+	        				if (obj.id !== 'morph-button' && obj.id != 'delete-button') {
 	        					quickButtonCounter++;
-	        					if (quickButtonCounter > 3)
-	        					{
+	        					if (quickButtonCounter > 3) {
 	        						quickButtonX = shapeXY.x+bounds.width() + 5;
 	        						quickButtonY += 24;
 	        						quickButtonCounter = 1;
-	        					}
-	        					else if (quickButtonCounter > 1)
-	        					{
+	        						
+	        					} else if (quickButtonCounter > 1) {
 	        						quickButtonX += 24;
 	        					}
 	        					obj.style.display = "block";
@@ -786,45 +773,45 @@ angular.module('activitiModeler')
                 var parentAbs = $scope.dragCurrentParent.absoluteXY();
                 pos.x -= parentAbs.x;
                 pos.y -= parentAbs.y;
-                
+
+                var containedStencil = undefined;
+                var stencilSets = $scope.editor.getStencilSets().values();
+                for (var i = 0; i < stencilSets.length; i++)
+                {
+                    var stencilSet = stencilSets[i];
+                    var nodes = stencilSet.nodes();
+                    for (var j = 0; j < nodes.length; j++)
+                    {
+                        if (nodes[j].idWithoutNs() === ui.draggable[0].id)
+                        {
+                            containedStencil = nodes[j];
+                            break;
+                        }
+                    }
+
+                    if (!containedStencil)
+                    {
+                        var edges = stencilSet.edges();
+                        for (var j = 0; j < edges.length; j++)
+                        {
+                            if (edges[j].idWithoutNs() === ui.draggable[0].id)
+                            {
+                                containedStencil = edges[j];
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!containedStencil) return;
+
             	if ($scope.quickMenu)
             	{
             		var shapes = $scope.editor.getSelection();
             		if (shapes && shapes.length == 1)
             		{
             			var currentSelectedShape = shapes.first();
-            		
-	            		var containedStencil = undefined;
-	                	var stencilSets = $scope.editor.getStencilSets().values();
-	                	for (var i = 0; i < stencilSets.length; i++)
-	                	{
-	                		var stencilSet = stencilSets[i];
-	            			var nodes = stencilSet.nodes();
-	            			for (var j = 0; j < nodes.length; j++)
-	                    	{
-	            				if (nodes[j].idWithoutNs() === ui.draggable[0].id)
-	            				{
-	            					containedStencil = nodes[j];
-	            					break;
-	            				}
-	                    	}
-	            			
-	            			if (!containedStencil)
-	            			{
-	            				var edges = stencilSet.edges();
-	                			for (var j = 0; j < edges.length; j++)
-	                        	{
-	                				if (edges[j].idWithoutNs() === ui.draggable[0].id)
-	                				{
-	                					containedStencil = edges[j];
-	                					break;
-	                				}
-	                        	}
-	            			}
-	                	}
-	                	
-	                	if (!containedStencil) return;
-	        			
+
 	        			var option = {};
 	        			option.type = currentSelectedShape.getStencil().namespace() + ui.draggable[0].id;
 	        			option.namespace = currentSelectedShape.getStencil().namespace();
@@ -866,74 +853,86 @@ angular.module('activitiModeler')
             	}
             	else
             	{
+                    var canAttach = false;
+                    if (containedStencil.idWithoutNs() === 'BoundaryErrorEvent' || containedStencil.idWithoutNs() === 'BoundaryTimerEvent' ||
+                        containedStencil.idWithoutNs() === 'BoundarySignalEvent' || containedStencil.idWithoutNs() === 'BoundaryMessageEvent' ||
+                        containedStencil.idWithoutNs() === 'BoundaryCancelEvent' || containedStencil.idWithoutNs() === 'BoundaryCompensationEvent') {
+                        // Modify position, otherwise boundary event will get position related to left corner of the canvas instead of the container
+                        pos = $scope.editor.eventCoordinates( event );
+                        canAttach = true;
+                    }
 
-	                var option = {};
-	                option['type'] = $scope.modelData.model.stencilset.namespace + item.id;
-					option['namespace'] = $scope.modelData.model.stencilset.namespace;
-					option['position'] = pos;
-					option['parent'] = $scope.dragCurrentParent;
-	
-	                var commandClass = ORYX.Core.Command.extend({
-	                    construct: function (option, currentParent, canAttach, position, facade) {
-	                        this.option = option;
-	                        this.currentParent = currentParent;
-	                        this.canAttach = canAttach;
-	                        this.position = position;
-	                        this.facade = facade;
-	                        this.selection = this.facade.getSelection();
-	                        this.shape;
-	                        this.parent;
-	                    },
-	                    execute: function () {
-	                        if (!this.shape) {
-	                            this.shape = this.facade.createShape(option);
-	                            this.parent = this.shape.parent;
-	                        } else {
-	                            this.parent.add(this.shape);
-	                        }
-	
-	                        if (this.canAttach && this.currentParent instanceof ORYX.Core.Node && this.shape.dockers.length > 0) {
-	
-	                            var docker = this.shape.dockers[0];
-	
-	                            if (this.currentParent.parent instanceof ORYX.Core.Node) {
-	                                this.currentParent.parent.add(docker.parent);
-	                            }
-	
-	                            docker.bounds.centerMoveTo(this.position);
-	                            docker.setDockedShape(this.currentParent);
-	                            //docker.update();
-	                        }
-	
-	                        this.facade.setSelection([this.shape]);
-	                        this.facade.getCanvas().update();
-	                        this.facade.updateSelection();
-	
-	                    },
-	                    rollback: function () {
-	                        this.facade.deleteShape(this.shape);
-	
-	                        //this.currentParent.update();
-	
-	                        this.facade.setSelection(this.selection.without(this.shape));
-	                        this.facade.getCanvas().update();
-	                        this.facade.updateSelection();
-	
-	                    }
-	                });
-	
-	                // Update canvas
-	                var command = new commandClass(option, $scope.dragCurrentParent, false, pos, $scope.editor);
-	                $scope.editor.executeCommands([command]);
-	
-	                // Fire event to all who want to know about this
-	                var dropEvent = {
-	                    type: KISBPM.eventBus.EVENT_TYPE_ITEM_DROPPED,
-	                    droppedItem: item,
-	                    position: pos
-	                };
-	                KISBPM.eventBus.dispatch(dropEvent.type, dropEvent);
-            	}
+                    var option = {};
+                    option['type'] = $scope.modelData.model.stencilset.namespace + item.id;
+                    option['namespace'] = $scope.modelData.model.stencilset.namespace;
+                    option['position'] = pos;
+                    option['parent'] = $scope.dragCurrentParent;
+
+                    var commandClass = ORYX.Core.Command.extend({
+                        construct: function(option, dockedShape, canAttach, position, facade){
+                            this.option = option;
+                            this.docker = null;
+                            this.dockedShape = dockedShape;
+                            this.dockedShapeParent = dockedShape.parent || facade.getCanvas();
+                            this.position = position;
+                            this.facade	= facade;
+                            this.selection = this.facade.getSelection();
+                            this.shape = null;
+                            this.parent = null;
+                            this.canAttach = canAttach;
+                        },
+                        execute: function(){
+                            if (!this.shape) {
+                                this.shape = this.facade.createShape(option);
+                                this.parent = this.shape.parent;
+                            } else if (this.parent) {
+                                this.parent.add(this.shape);
+                            }
+
+                            if (this.canAttach && this.shape.dockers && this.shape.dockers.length) {
+                                this.docker = this.shape.dockers[0];
+
+                                this.dockedShapeParent.add(this.docker.parent);
+
+                                // Set the Docker to the new Shape
+                                this.docker.setDockedShape(undefined);
+                                this.docker.bounds.centerMoveTo(this.position);
+                                if (this.dockedShape !== this.facade.getCanvas()) {
+                                    this.docker.setDockedShape(this.dockedShape);
+                                }
+                                this.facade.setSelection( [this.docker.parent] );
+                            }
+
+                            this.facade.getCanvas().update();
+                            this.facade.updateSelection();
+
+                        },
+                        rollback: function(){
+                            if (this.shape) {
+                                this.facade.setSelection(this.selection.without(this.shape));
+                                this.facade.deleteShape(this.shape);
+                            }
+                            if (this.canAttach && this.docker) {
+                                this.docker.setDockedShape(undefined);
+                            }
+                            this.facade.getCanvas().update();
+                            this.facade.updateSelection();
+
+                        }
+                    });
+
+                    // Update canvas
+                    var command = new commandClass(option, $scope.dragCurrentParent, canAttach, pos, $scope.editor);
+                    $scope.editor.executeCommands([command]);
+
+                    // Fire event to all who want to know about this
+                    var dropEvent = {
+                        type: KISBPM.eventBus.EVENT_TYPE_ITEM_DROPPED,
+                        droppedItem: item,
+                        position: pos
+                    };
+                    KISBPM.eventBus.dispatch(dropEvent.type, dropEvent);
+                }
             }
 
             $scope.dragCurrentParent = undefined;
@@ -956,6 +955,9 @@ angular.module('activitiModeler')
         $scope.startDragCallback = function (event, ui) {
             $scope.dragModeOver = false;
             $scope.quickMenu = false;
+            if (!ui.helper.hasClass('stencil-item-dragged')) {
+                ui.helper.addClass('stencil-item-dragged');
+            }
         };
         
         $scope.startDragCallbackQuickMenu = function (event, ui) {
@@ -1107,27 +1109,21 @@ angular.module('activitiModeler')
                         $scope.dragCurrentParentId = parentCandidate.id;
                         $scope.dragCurrentParentStencil = parentStencilId;
                         $scope.dragCanContain = _canContain;
-                    }
-                    else 
-                    { 
+                        
+                    } else  { 
                     	var canvasCandidate = $scope.editor.getCanvas();
                     	var canConnect = false;
                     	
                     	var targetStencil = $scope.getStencilItemById(parentCandidate.getStencil().idWithoutNs());
-            			if (targetStencil)
-            			{
+            			if (targetStencil) {
             				var associationConnect = false;
-            				if (stencil.idWithoutNs() === 'Association' && curCan.getStencil().idWithoutNs() === 'TextAnnotation')
-            				{
+            				if (stencil.idWithoutNs() === 'Association' && (curCan.getStencil().idWithoutNs() === 'TextAnnotation' || curCan.getStencil().idWithoutNs() === 'BoundaryCompensationEvent')) {
             				    associationConnect = true;
-            				}
-                            else if (stencil.idWithoutNs() === 'DataAssociation' && curCan.getStencil().idWithoutNs() === 'DataStore')
-                            {
+            				} else if (stencil.idWithoutNs() === 'DataAssociation' && curCan.getStencil().idWithoutNs() === 'DataStore') {
                                 associationConnect = true;
                             }
             				
-            				if (targetStencil.canConnectTo || associationConnect)
-            				{
+            				if (targetStencil.canConnectTo || associationConnect) {
             					canConnect = true;
             				}
             			}
@@ -1258,7 +1254,7 @@ angular.module('activitiModeler')
             			if (targetStencil)
             			{
             				var associationConnect = false;
-            				if (stencil.idWithoutNs() === 'Association' && curCan.getStencil().idWithoutNs() === 'TextAnnotation')  
+            				if (stencil.idWithoutNs() === 'Association' && (curCan.getStencil().idWithoutNs() === 'TextAnnotation' || curCan.getStencil().idWithoutNs() === 'BoundaryCompensationEvent'))  
             				{
             					associationConnect = true;
             				}
@@ -1349,7 +1345,6 @@ KISBPM.CreateCommand = ORYX.Core.Command.extend({
 				this.shape.dockers.first().setDockedShape(this.connectedShape);
 				this.shape.dockers.first().setReferencePoint(this.sourceRefPos);
 			}
-			resume = true;
 		}
 		else {
 			this.shape = this.facade.createShape(this.option);

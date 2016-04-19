@@ -40,6 +40,50 @@
     )
   </insert>
 
+  <insert id="bulkInsertHistoricVariableInstance" parameterType="java.util.List">
+    insert into ${prefix}ACT_HI_VARINST (ID_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, NAME_, REV_, VAR_TYPE_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_, CREATE_TIME_, LAST_UPDATED_TIME_)
+    values 
+      <foreach collection="list" item="historicVariable" index="index" separator=",">
+        (#{historicVariable.id, jdbcType=VARCHAR},
+         #{historicVariable.processInstanceId, jdbcType=VARCHAR},
+         #{historicVariable.executionId, jdbcType=VARCHAR},
+         #{historicVariable.taskId, jdbcType=VARCHAR},
+         #{historicVariable.variableName, jdbcType=VARCHAR},
+         #{historicVariable.revision, jdbcType=VARCHAR},
+         #{historicVariable.variableType, jdbcType=VARCHAR},
+         #{historicVariable.byteArrayRef, typeHandler=ByteArrayRefTypeHandler},
+         #{historicVariable.doubleValue, jdbcType=DOUBLE},
+         #{historicVariable.longValue, jdbcType=BIGINT},
+         #{historicVariable.textValue, jdbcType=VARCHAR},
+         #{historicVariable.textValue2, jdbcType=VARCHAR},
+         #{historicVariable.createTime, jdbcType=TIMESTAMP},
+         #{historicVariable.lastUpdatedTime, jdbcType=TIMESTAMP})
+       </foreach>
+  </insert>
+
+  <insert id="bulkInsertHistoricVariableInstance_oracle" parameterType="java.util.List">
+    INSERT ALL 
+      <foreach collection="list" item="historicVariable" index="index">
+      INTO ${prefix}ACT_HI_VARINST (ID_, PROC_INST_ID_, EXECUTION_ID_, TASK_ID_, NAME_, REV_,
+      VAR_TYPE_, BYTEARRAY_ID_, DOUBLE_, LONG_ , TEXT_, TEXT2_, CREATE_TIME_, LAST_UPDATED_TIME_) VALUES 
+          (#{historicVariable.id, jdbcType=VARCHAR},
+           #{historicVariable.processInstanceId, jdbcType=VARCHAR},
+           #{historicVariable.executionId, jdbcType=VARCHAR},
+           #{historicVariable.taskId, jdbcType=VARCHAR},
+           #{historicVariable.variableName, jdbcType=VARCHAR},
+           #{historicVariable.revision, jdbcType=VARCHAR},
+           #{historicVariable.variableType, jdbcType=VARCHAR},
+           #{historicVariable.byteArrayRef, typeHandler=ByteArrayRefTypeHandler},
+           #{historicVariable.doubleValue, jdbcType=DOUBLE},
+           #{historicVariable.longValue, jdbcType=BIGINT},
+           #{historicVariable.textValue, jdbcType=VARCHAR},
+           #{historicVariable.textValue2, jdbcType=VARCHAR},
+           #{historicVariable.createTime, jdbcType=TIMESTAMP},
+           #{historicVariable.lastUpdatedTime, jdbcType=TIMESTAMP})
+       </foreach>
+    SELECT * FROM dual
+  </insert>
+
   <!-- HISTORIC PROCESS VARIABLE UPDATE -->
   
   <update id="updateHistoricVariableInstance" parameterType="org.activiti.engine.impl.persistence.entity.HistoricVariableInstanceEntity">
@@ -109,7 +153,10 @@
         RES.ID_ = #{id}
       </if>
       <if test="processInstanceId != null">
-        RES.PROC_INST_ID_ = #{processInstanceId}
+        and RES.PROC_INST_ID_ = #{processInstanceId}
+      </if>
+      <if test="executionId != null">
+        and RES.EXECUTION_ID_ = #{executionId}
       </if>
       <if test="taskId != null">
         and RES.TASK_ID_ = #{taskId}
@@ -133,7 +180,7 @@
         <if test="queryVariableValue.textValue != null &amp;&amp; queryVariableValue.longValue == null &amp;&amp; queryVariableValue.doubleValue == null">
         and RES.TEXT_
         <choose>
-          <when test="queryVariableValue.operator.equals('LIKE')">LIKE</when>
+          <when test="queryVariableValue.operator.equals('LIKE') || queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">LIKE</when>
           <otherwise><include refid="executionVariableOperator" /></otherwise>
         </choose>
           #{queryVariableValue.textValue}
@@ -141,7 +188,7 @@
         <if test="queryVariableValue.textValue2 != null">
         and RES.TEXT2_
         <choose>
-          <when test="queryVariableValue.operator.equals('LIKE')">LIKE</when>
+          <when test="queryVariableValue.operator.equals('LIKE') || queryVariableValue.operator.equals('LIKE_IGNORE_CASE')">LIKE</when>
           <otherwise><include refid="executionVariableOperator" /></otherwise>
         </choose>
           #{queryVariableValue.textValue2}

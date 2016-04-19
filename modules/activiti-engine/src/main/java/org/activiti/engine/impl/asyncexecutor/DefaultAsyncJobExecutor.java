@@ -1,3 +1,15 @@
+/* Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.activiti.engine.impl.asyncexecutor;
 
 import java.util.LinkedList;
@@ -5,9 +17,13 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.activiti.engine.impl.context.Context;
+import org.activiti.engine.impl.interceptor.Command;
+import org.activiti.engine.impl.interceptor.CommandContext;
 import org.activiti.engine.impl.interceptor.CommandExecutor;
 import org.activiti.engine.impl.persistence.entity.JobEntity;
 import org.slf4j.Logger;
@@ -51,6 +67,8 @@ private static Logger log = LoggerFactory.getLogger(DefaultAsyncJobExecutor.clas
   protected AcquireTimerJobsRunnable timerJobRunnable;
   protected AcquireAsyncJobsDueRunnable asyncJobsDueRunnable;
   
+  protected ExecuteAsyncRunnableFactory executeAsyncRunnableFactory;
+  
   protected boolean isAutoActivate = false;
   protected boolean isActive = false;
   
@@ -58,10 +76,12 @@ private static Logger log = LoggerFactory.getLogger(DefaultAsyncJobExecutor.clas
   protected int maxAsyncJobsDuePerAcquisition = 1;
   protected int defaultTimerJobAcquireWaitTimeInMillis = 10 * 1000;
   protected int defaultAsyncJobAcquireWaitTimeInMillis = 10 * 1000;
+  protected int defaultQueueSizeFullWaitTime = 0; 
   
   protected String lockOwner = UUID.randomUUID().toString();
   protected int timerLockTimeInMillis = 5 * 60 * 1000;
   protected int asyncJobLockTimeInMillis = 5 * 60 * 1000;
+  protected int retryWaitTimeInMillis = 500;
   
   // Job queue used when async executor is not yet started and jobs are already added.
   // This is mainly used for testing purpose.
@@ -69,12 +89,56 @@ private static Logger log = LoggerFactory.getLogger(DefaultAsyncJobExecutor.clas
   
   protected CommandExecutor commandExecutor;
   
-  public void executeAsyncJob(JobEntity job) {
+  public boolean executeAsyncJob(final JobEntity job) {
     if (isActive) {
-    	executorService.execute(new ExecuteAsyncRunnable(job, commandExecutor));
+      Runnable runnable = createRunnableForJob(job);
+    	try {
+    		executorService.execute(runnable);
+    	} catch (RejectedExecutionException e) {
+    	  
+    	  // When a RejectedExecutionException is caught, this means that the queue for holding the jobs 
+    	  // that are to be executed is full and can't store more.
+    	  // The job is now 'unlocked', meaning that the lock owner/time is set to null,
+    	  // so other executors can pick the job up (or this async executor, the next time the 
+    	  // acquire query is executed.
+    	  
+    	  // This can happen while already in a command context (for example in a transaction listener
+    	  // after the async executor has been hinted that a new async job is created)
+    	  // or not (when executed in the aquire thread runnable)
+    	  
+    		CommandContext commandContext = Context.getCommandContext();
+    		if (commandContext != null) {
+    		  unlockJob(job, commandContext);
+    		} else {
+    		  commandExecutor.execute(new Command<Void>() {
+            public Void execute(CommandContext commandContext) {
+              unlockJob(job, commandContext);
+              return null;
+            }
+          });
+    		}
+    		
+    		// Job queue full, returning true so (if wanted) the acquiring can be throttled
+    		return false;
+    	}
+    	
     } else {
       temporaryJobQueue.add(job);
     }
+    
+    return true;
+  }
+  
+  protected Runnable createRunnableForJob(final JobEntity job) {
+    if (executeAsyncRunnableFactory == null) {
+      return new ExecuteAsyncRunnable(job, commandExecutor);
+    } else {
+      return executeAsyncRunnableFactory.createExecuteAsyncRunnable(job, commandExecutor);
+    }
+  }
+ 
+  protected void unlockJob(final JobEntity job, CommandContext commandContext) {
+    commandContext.getJobEntityManager().unacquireJob(job.getId());
   }
   
   /** Starts the async executor */
@@ -126,10 +190,7 @@ private static Logger log = LoggerFactory.getLogger(DefaultAsyncJobExecutor.clas
     	log.info("Creating executor service with corePoolSize {}, maxPoolSize {} and keepAliveTime {}",
     			corePoolSize, maxPoolSize, keepAliveTime);
     	
-    	ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, threadPoolQueue);      
-    	threadPoolExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-    	executorService = threadPoolExecutor;
-    	
+    	executorService = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, threadPoolQueue);      
     }
     
     startJobAcquisitionThread();
@@ -319,6 +380,14 @@ private static Logger log = LoggerFactory.getLogger(DefaultAsyncJobExecutor.clas
   public void setDefaultAsyncJobAcquireWaitTimeInMillis(int defaultAsyncJobAcquireWaitTimeInMillis) {
     this.defaultAsyncJobAcquireWaitTimeInMillis = defaultAsyncJobAcquireWaitTimeInMillis;
   }
+  
+  public int getDefaultQueueSizeFullWaitTimeInMillis() {
+    return defaultQueueSizeFullWaitTime;
+  }
+
+  public void setDefaultQueueSizeFullWaitTimeInMillis(int defaultQueueSizeFullWaitTime) {
+    this.defaultQueueSizeFullWaitTime = defaultQueueSizeFullWaitTime;
+  }
 
   public void setTimerJobRunnable(AcquireTimerJobsRunnable timerJobRunnable) {
     this.timerJobRunnable = timerJobRunnable;
@@ -327,4 +396,21 @@ private static Logger log = LoggerFactory.getLogger(DefaultAsyncJobExecutor.clas
   public void setAsyncJobsDueRunnable(AcquireAsyncJobsDueRunnable asyncJobsDueRunnable) {
     this.asyncJobsDueRunnable = asyncJobsDueRunnable;
   }
+
+	public int getRetryWaitTimeInMillis() {
+		return retryWaitTimeInMillis;
+	}
+
+	public void setRetryWaitTimeInMillis(int retryWaitTimeInMillis) {
+		this.retryWaitTimeInMillis = retryWaitTimeInMillis;
+	}
+
+	public ExecuteAsyncRunnableFactory getExecuteAsyncRunnableFactory() {
+		return executeAsyncRunnableFactory;
+	}
+
+	public void setExecuteAsyncRunnableFactory(ExecuteAsyncRunnableFactory executeAsyncRunnableFactory) {
+		this.executeAsyncRunnableFactory = executeAsyncRunnableFactory;
+	}
+
 }

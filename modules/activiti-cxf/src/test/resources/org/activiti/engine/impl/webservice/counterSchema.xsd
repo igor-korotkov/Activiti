@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.6 in JDK 6. --><xs:schema xmlns:tns="http://webservice.impl.engine.activiti.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://webservice.impl.engine.activiti.org/">
+<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.6 in JDK 6. --><xs:schema xmlns:tns="http://webservice.impl.engine.activiti.org/counter" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://webservice.impl.engine.activiti.org/counter">
 
 <xs:element name="getCount" type="tns:getCount"></xs:element>
 
@@ -11,6 +11,14 @@
 <xs:element name="prettyPrintCount" type="tns:prettyPrintCount"></xs:element>
 
 <xs:element name="prettyPrintCountResponse" type="tns:prettyPrintCountResponse"></xs:element>
+
+    <xs:element name="noNameResult" type="tns:noNameResult"></xs:element>
+
+<xs:element name="noNameResultResponse" type="tns:noNameResultResponse"></xs:element>
+
+    <xs:element name="reservedWordAsName" type="tns:reservedWordAsName"></xs:element>
+
+<xs:element name="reservedWordAsNameResponse" type="tns:reservedWordAsNameResponse"></xs:element>
 
 <xs:element name="reset" type="tns:reset"></xs:element>
 
@@ -30,6 +38,32 @@
 <xs:complexType name="prettyPrintCountResponse">
 <xs:sequence>
 <xs:element name="prettyPrint" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+    <xs:complexType name="reservedWordAsName">
+<xs:sequence>
+<xs:element name="prefix" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="suffix" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="reservedWordAsNameResponse">
+<xs:sequence>
+<xs:element name="static" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+    <xs:complexType name="noNameResult">
+<xs:sequence>
+<xs:element name="prefix" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="suffix" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="noNameResultResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"></xs:element>
 </xs:sequence>
 </xs:complexType>
 

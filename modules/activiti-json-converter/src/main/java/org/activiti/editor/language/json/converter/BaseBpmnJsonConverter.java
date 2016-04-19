@@ -46,12 +46,13 @@ import org.activiti.bpmn.model.ServiceTask;
 import org.activiti.bpmn.model.SignalEventDefinition;
 import org.activiti.bpmn.model.StartEvent;
 import org.activiti.bpmn.model.SubProcess;
+import org.activiti.bpmn.model.TerminateEventDefinition;
 import org.activiti.bpmn.model.TimerEventDefinition;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.editor.constants.EditorJsonConstants;
 import org.activiti.editor.constants.StencilConstants;
+import org.activiti.editor.language.json.converter.util.CollectionUtils;
 import org.activiti.editor.language.json.converter.util.JsonConverterUtil;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,13 +146,8 @@ public abstract class BaseBpmnJsonConverter implements EditorJsonConstants, Sten
                 outgoingArrayNode.add(BpmnJsonConverterUtil.createResourceNode(boundaryEvent.getId()));
             }
 
-            if (activity.isAsynchronous()) {
-                propertiesNode.put(PROPERTY_ASYNCHRONOUS, PROPERTY_VALUE_YES);
-            }
-
-            if (activity.isNotExclusive()) {
-                propertiesNode.put(PROPERTY_EXCLUSIVE, PROPERTY_VALUE_NO);
-            }
+            propertiesNode.put(PROPERTY_ASYNCHRONOUS, activity.isAsynchronous());
+            propertiesNode.put(PROPERTY_EXCLUSIVE, !activity.isNotExclusive());
 
             if (activity.getLoopCharacteristics() != null) {
                 MultiInstanceLoopCharacteristics loopDef = activity.getLoopCharacteristics();
@@ -423,7 +419,8 @@ public abstract class BaseBpmnJsonConverter implements EditorJsonConstants, Sten
                 ArrayNode valuesNode = objectMapper.createArrayNode();
                 for (FormValue formValue : property.getFormValues()) {
                     ObjectNode valueNode = objectMapper.createObjectNode();
-                    valueNode.put("value", formValue.getName());
+                    valueNode.put(PROPERTY_FORM_ENUM_VALUES_NAME, formValue.getName());
+                    valueNode.put(PROPERTY_FORM_ENUM_VALUES_ID, formValue.getId());
                     valuesNode.add(valueNode);
                 }
                 propertyItemNode.put(PROPERTY_FORM_ENUM_VALUES, valuesNode);
@@ -492,6 +489,12 @@ public abstract class BaseBpmnJsonConverter implements EditorJsonConstants, Sten
                 if (StringUtils.isNotEmpty(timerDefinition.getTimeDate())) {
                     propertiesNode.put(PROPERTY_TIMER_DATE, timerDefinition.getTimeDate());
                 }
+                if (StringUtils.isNotEmpty(timerDefinition.getEndDate())) {
+                    propertiesNode.put(PROPERTY_TIMER_CYCLE_END_DATE, timerDefinition.getEndDate());
+                }
+            } else if (eventDefinition instanceof TerminateEventDefinition) {
+            		TerminateEventDefinition terminateEventDefinition = (TerminateEventDefinition) eventDefinition;
+            		propertiesNode.put(PROPERTY_TERMINATE_ALL, terminateEventDefinition.isTerminateAll());
             }
         }
     }
@@ -513,18 +516,29 @@ public abstract class BaseBpmnJsonConverter implements EditorJsonConstants, Sten
                         formProperty.setType(getValueAsString(PROPERTY_FORM_TYPE, formNode));
                         formProperty.setExpression(getValueAsString(PROPERTY_FORM_EXPRESSION, formNode));
                         formProperty.setVariable(getValueAsString(PROPERTY_FORM_VARIABLE, formNode));
+                        
                         if ("date".equalsIgnoreCase(formProperty.getType())) {
                             formProperty.setDatePattern(getValueAsString(PROPERTY_FORM_DATE_PATTERN, formNode));
+                            
                         } else if ("enum".equalsIgnoreCase(formProperty.getType())) {
                             JsonNode enumValuesNode = formNode.get(PROPERTY_FORM_ENUM_VALUES);
                             if (enumValuesNode != null) {
                                 List<FormValue> formValueList = new ArrayList<FormValue>();
                                 for (JsonNode enumNode : enumValuesNode) {
-                                    if (enumNode.get("value") != null && enumNode.get("value").isNull() == false) {
-                                        FormValue formValue = new FormValue();
-                                        formValue.setName(enumNode.get("value").asText());
-                                        formValueList.add(formValue);
-                                    }
+                                  if (enumNode.get(PROPERTY_FORM_ENUM_VALUES_ID) != null && enumNode.get(PROPERTY_FORM_ENUM_VALUES_ID).isNull() == false &&
+                                      enumNode.get(PROPERTY_FORM_ENUM_VALUES_NAME) != null && enumNode.get(PROPERTY_FORM_ENUM_VALUES_NAME).isNull() == false) {
+                                    
+                                    FormValue formValue = new FormValue();
+                                    formValue.setId(enumNode.get(PROPERTY_FORM_ENUM_VALUES_ID).asText());
+                                    formValue.setName(enumNode.get(PROPERTY_FORM_ENUM_VALUES_NAME).asText());
+                                    formValueList.add(formValue);
+                                    
+                                  } else if (enumNode.get("value") != null && enumNode.get("value").isNull() == false) {
+                                    FormValue formValue = new FormValue();
+                                    formValue.setId(enumNode.get("value").asText());
+                                    formValue.setName(enumNode.get("value").asText());
+                                    formValueList.add(formValue);
+                                  }
                                 }
                                 formProperty.setFormValues(formValueList);
                             }
@@ -550,6 +564,7 @@ public abstract class BaseBpmnJsonConverter implements EditorJsonConstants, Sten
         String timeDate = getPropertyValueAsString(PROPERTY_TIMER_DATE, objectNode);
         String timeCycle = getPropertyValueAsString(PROPERTY_TIMER_CYCLE, objectNode);
         String timeDuration = getPropertyValueAsString(PROPERTY_TIMER_DURATON, objectNode);
+        String endDate = getPropertyValueAsString(PROPERTY_TIMER_CYCLE_END_DATE, objectNode);
 
         TimerEventDefinition eventDefinition = new TimerEventDefinition();
         if (StringUtils.isNotEmpty(timeDate)) {
@@ -560,6 +575,10 @@ public abstract class BaseBpmnJsonConverter implements EditorJsonConstants, Sten
 
         } else if (StringUtils.isNotEmpty(timeDuration)) {
             eventDefinition.setTimeDuration(timeDuration);
+        }
+      
+      if (StringUtils.isNotEmpty(endDate)) {
+            eventDefinition.setEndDate(endDate);
         }
 
         event.getEventDefinitions().add(eventDefinition);

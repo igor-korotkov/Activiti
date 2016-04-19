@@ -19,9 +19,7 @@ import java.util.List;
  * @author Tijs Rademakers
  */
 public abstract class Activity extends FlowNode {
-
-  protected boolean asynchronous;
-  protected boolean notExclusive;
+ 
   protected String defaultFlow;
   protected boolean forCompensation;
   protected MultiInstanceLoopCharacteristics loopCharacteristics;
@@ -30,24 +28,13 @@ public abstract class Activity extends FlowNode {
   protected List<DataAssociation> dataOutputAssociations = new ArrayList<DataAssociation>();
   protected List<BoundaryEvent> boundaryEvents = new ArrayList<BoundaryEvent>();
   protected String failedJobRetryTimeCycleValue;
+  protected List<MapExceptionEntry> mapExceptions = new ArrayList<MapExceptionEntry>(); 
 
-  public boolean isAsynchronous() {
-    return asynchronous;
-  }
-  public void setAsynchronous(boolean asynchronous) {
-    this.asynchronous = asynchronous;
-  }  
   public String getFailedJobRetryTimeCycleValue() {
-	return failedJobRetryTimeCycleValue;
+    return failedJobRetryTimeCycleValue;
   }
   public void setFailedJobRetryTimeCycleValue(String failedJobRetryTimeCycleValue) {
-	this.failedJobRetryTimeCycleValue = failedJobRetryTimeCycleValue;
-  }
-  public boolean isNotExclusive() {
-    return notExclusive;
-  }
-  public void setNotExclusive(boolean notExclusive) {
-    this.notExclusive = notExclusive;
+    this.failedJobRetryTimeCycleValue = failedJobRetryTimeCycleValue;
   }
   public boolean isForCompensation() {
     return forCompensation;
@@ -91,12 +78,16 @@ public abstract class Activity extends FlowNode {
   public void setDataOutputAssociations(List<DataAssociation> dataOutputAssociations) {
     this.dataOutputAssociations = dataOutputAssociations;
   }
+  public List<MapExceptionEntry> getMapExceptions() {
+    return mapExceptions;
+  }
+  public void setMapExceptions(List<MapExceptionEntry> mapExceptions) {
+    this.mapExceptions = mapExceptions;
+  }
   
   public void setValues(Activity otherActivity) {
     super.setValues(otherActivity);
-    setAsynchronous(otherActivity.isAsynchronous());
     setFailedJobRetryTimeCycleValue(otherActivity.getFailedJobRetryTimeCycleValue());
-    setNotExclusive(otherActivity.isNotExclusive());
     setDefaultFlow(otherActivity.getDefaultFlow());
     setForCompensation(otherActivity.isForCompensation());
     if (otherActivity.getLoopCharacteristics() != null) {
@@ -120,11 +111,9 @@ public abstract class Activity extends FlowNode {
       }
     }
     
-    boundaryEvents = new ArrayList<BoundaryEvent>();
-    if (otherActivity.getBoundaryEvents() != null && !otherActivity.getBoundaryEvents().isEmpty()) {
-      for (BoundaryEvent event : otherActivity.getBoundaryEvents()) {
-        boundaryEvents.add(event.clone());
-      }
+    boundaryEvents.clear();
+    for (BoundaryEvent event : otherActivity.getBoundaryEvents()) {
+      boundaryEvents.add(event);
     }
   }
 }

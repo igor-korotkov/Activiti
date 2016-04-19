@@ -140,7 +140,7 @@ public class SignalEventTest extends PluggableActivitiTestCase {
   }
   
   /**
-   * Verifies the solution of https://jira.codehaus.org/browse/ACT-1309
+   * Verifies the solution of https://activiti.atlassian.net/browse/ACT-1309
    */
   @Deployment
   public void testSignalBoundaryOnSubProcess() {
@@ -569,7 +569,7 @@ public class SignalEventTest extends PluggableActivitiTestCase {
 	}
 	
 	/**
-	 * Test case for http://jira.codehaus.org/browse/ACT-1978
+	 * Test case for https://activiti.atlassian.net/browse/ACT-1978
 	 */
 	public void testSignalDeleteOnRedeploy() {
 		
@@ -595,6 +595,23 @@ public class SignalEventTest extends PluggableActivitiTestCase {
   	for (org.activiti.engine.repository.Deployment deployment : repositoryService.createDeploymentQuery().list()) {
   		repositoryService.deleteDeployment(deployment.getId(), true);
   	}
+	}
+	
+	@Deployment
+	public void testSignalWaitOnUserTaskBoundaryEvent() {
+	  ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("signal-wait");
+	  Execution execution = runtimeService.createExecutionQuery().processInstanceId(processInstance.getId())
+	      .signalEventSubscriptionName("waitsig")
+	      .singleResult();
+	  assertNotNull(execution);
+	  runtimeService.signalEventReceived("waitsig", execution.getId());
+	  execution = runtimeService.createExecutionQuery().processInstanceId(processInstance.getId())
+        .signalEventSubscriptionName("waitsig")
+        .singleResult();
+	  assertNull(execution);
+	  Task task = taskService.createTaskQuery().processInstanceId(processInstance.getId()).singleResult();
+	  assertNotNull(task);
+	  assertEquals("Wait2", task.getName());
 	}
 
 }

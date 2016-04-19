@@ -15,6 +15,7 @@ package org.activiti.engine.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.ActivitiIllegalArgumentException;
@@ -38,12 +39,14 @@ public class ProcessDefinitionQueryImpl extends AbstractQuery<ProcessDefinitionQ
   
   private static final long serialVersionUID = 1L;
   protected String id;
+  protected Set<String> ids;
   protected String category;
   protected String categoryLike;
   protected String categoryNotEquals;
   protected String name;
   protected String nameLike;
   protected String deploymentId;
+  protected Set<String> deploymentIds;
   protected String key;
   protected String keyLike;
   protected String resourceName;
@@ -74,6 +77,12 @@ public class ProcessDefinitionQueryImpl extends AbstractQuery<ProcessDefinitionQ
   public ProcessDefinitionQueryImpl processDefinitionId(String processDefinitionId) {
     this.id = processDefinitionId;
     return this;
+  }
+  
+  @Override
+  public ProcessDefinitionQuery processDefinitionIds(Set<String> processDefinitionIds) {
+  	this.ids = processDefinitionIds;
+  	return this;
   }
   
   public ProcessDefinitionQueryImpl processDefinitionCategory(String category) {
@@ -121,6 +130,14 @@ public class ProcessDefinitionQueryImpl extends AbstractQuery<ProcessDefinitionQ
       throw new ActivitiIllegalArgumentException("id is null");
     }
     this.deploymentId = deploymentId;
+    return this;
+  }
+  
+  public ProcessDefinitionQueryImpl deploymentIds(Set<String> deploymentIds) {
+    if (deploymentIds == null) {
+      throw new ActivitiIllegalArgumentException("ids are null");
+    }
+    this.deploymentIds = deploymentIds;
     return this;
   }
 
@@ -304,8 +321,14 @@ public class ProcessDefinitionQueryImpl extends AbstractQuery<ProcessDefinitionQ
   public String getDeploymentId() {
     return deploymentId;
   }
+  public Set<String> getDeploymentIds() {
+    return deploymentIds;
+  }
   public String getId() {
     return id;
+  }
+  public Set<String> getIds() {
+    return ids;
   }
   public String getName() {
     return name;
@@ -347,13 +370,13 @@ public class ProcessDefinitionQueryImpl extends AbstractQuery<ProcessDefinitionQ
     return categoryNotEquals;
   }
   public String getTenantId() {
-		return tenantId;
-	}
-	public String getTenantIdLike() {
-		return tenantIdLike;
-	}
-	public boolean isWithoutTenantId() {
-		return withoutTenantId;
+    return tenantId;
+  }
+  public String getTenantIdLike() {
+    return tenantIdLike;
+  }
+  public boolean isWithoutTenantId() {
+    return withoutTenantId;
 	}
 
 	public ProcessDefinitionQueryImpl startableByUser(String userId) {

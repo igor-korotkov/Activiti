@@ -1,49 +1,88 @@
+/* Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.activiti.engine.impl.asyncexecutor;
 
 import org.activiti.engine.impl.interceptor.CommandExecutor;
 import org.activiti.engine.impl.persistence.entity.JobEntity;
 
+/**
+ * @author Tijs Rademakers
+ * @author Joram Barrez
+ */
 public interface AsyncExecutor {
+  
+  /**
+   * Starts the Async Executor: jobs will be acquired and executed.
+   */
+  void start();
+  
+  /**
+   * Stops executing jobs.
+   */
+  void shutdown();
 
-  public void executeAsyncJob(JobEntity job);
+  /**
+   * Offers the provided {@link JobEntity} to this {@link AsyncExecutor} instance
+   * to execute. If the offering does not work for some reason, false 
+   * will be returned (For example when the job queue is full in the {@link DefaultAsyncJobExecutor}). 
+   */
+  boolean executeAsyncJob(JobEntity job);
   
-  public void setCommandExecutor(CommandExecutor commandExecutor);
   
-  public CommandExecutor getCommandExecutor();
+  /* Getters and Setters */
   
-  public boolean isAutoActivate();
+  void setCommandExecutor(CommandExecutor commandExecutor);
+  
+  CommandExecutor getCommandExecutor();
+  
+  boolean isAutoActivate();
 
-  public void setAutoActivate(boolean isAutoActivate);
+  void setAutoActivate(boolean isAutoActivate);
   
-  public boolean isActive();
+  boolean isActive();
   
-  public void start();
+  String getLockOwner();
   
-  public void shutdown();
+  int getTimerLockTimeInMillis();
   
-  public String getLockOwner();
+  void setTimerLockTimeInMillis(int lockTimeInMillis);
   
-  public int getTimerLockTimeInMillis();
+  int getAsyncJobLockTimeInMillis();
   
-  public void setTimerLockTimeInMillis(int lockTimeInMillis);
+  void setAsyncJobLockTimeInMillis(int lockTimeInMillis);
   
-  public int getAsyncJobLockTimeInMillis();
+  int getDefaultTimerJobAcquireWaitTimeInMillis();
   
-  public void setAsyncJobLockTimeInMillis(int lockTimeInMillis);
+  void setDefaultTimerJobAcquireWaitTimeInMillis(int waitTimeInMillis);
   
-  public int getDefaultTimerJobAcquireWaitTimeInMillis();
+  int getDefaultAsyncJobAcquireWaitTimeInMillis();
   
-  public void setDefaultTimerJobAcquireWaitTimeInMillis(int waitTimeInMillis);
+  void setDefaultAsyncJobAcquireWaitTimeInMillis(int waitTimeInMillis);
   
-  public int getDefaultAsyncJobAcquireWaitTimeInMillis();
+  public int getDefaultQueueSizeFullWaitTimeInMillis();
+
+  public void setDefaultQueueSizeFullWaitTimeInMillis(int defaultQueueSizeFullWaitTimeInMillis);
   
-  public void setDefaultAsyncJobAcquireWaitTimeInMillis(int waitTimeInMillis);
+  int getMaxAsyncJobsDuePerAcquisition();
   
-  public int getMaxAsyncJobsDuePerAcquisition();
+  void setMaxAsyncJobsDuePerAcquisition(int maxJobs);
   
-  public void setMaxAsyncJobsDuePerAcquisition(int maxJobs);
+  int getMaxTimerJobsPerAcquisition();
   
-  public int getMaxTimerJobsPerAcquisition();
+  void setMaxTimerJobsPerAcquisition(int maxJobs);
   
-  public void setMaxTimerJobsPerAcquisition(int maxJobs);
+  int getRetryWaitTimeInMillis();
+  
+  void setRetryWaitTimeInMillis(int retryWaitTimeInMillis);
+  
 }

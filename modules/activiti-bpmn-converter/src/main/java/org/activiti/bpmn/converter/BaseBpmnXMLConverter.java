@@ -30,6 +30,7 @@ import org.activiti.bpmn.model.Activity;
 import org.activiti.bpmn.model.Artifact;
 import org.activiti.bpmn.model.BaseElement;
 import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.CancelEventDefinition;
 import org.activiti.bpmn.model.CompensateEventDefinition;
 import org.activiti.bpmn.model.DataObject;
 import org.activiti.bpmn.model.ErrorEventDefinition;
@@ -38,6 +39,7 @@ import org.activiti.bpmn.model.EventDefinition;
 import org.activiti.bpmn.model.ExtensionAttribute;
 import org.activiti.bpmn.model.ExtensionElement;
 import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.FlowNode;
 import org.activiti.bpmn.model.FormProperty;
 import org.activiti.bpmn.model.FormValue;
 import org.activiti.bpmn.model.Gateway;
@@ -58,6 +60,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Tijs Rademakers
+ * @author Joram Barrez
  */
 public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
 
@@ -91,9 +94,8 @@ public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
       Artifact currentArtifact = (Artifact) parsedElement;
       currentArtifact.setId(elementId);
 
-      if (isInSubProcess(activeSubProcessList)) {
-        final SubProcess currentSubProcess = activeSubProcessList.get(activeSubProcessList.size() - 2);
-        currentSubProcess.addArtifact(currentArtifact);
+      if (!activeSubProcessList.isEmpty()) {
+        activeSubProcessList.get(activeSubProcessList.size() - 1).addArtifact(currentArtifact);
 
       } else {
         activeProcess.addArtifact(currentArtifact);
@@ -106,28 +108,29 @@ public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
       currentFlowElement.setId(elementId);
       currentFlowElement.setName(elementName);
       
-      if (currentFlowElement instanceof Activity) {
+      if (currentFlowElement instanceof FlowNode) {
+        FlowNode flowNode = (FlowNode) currentFlowElement;
+        flowNode.setAsynchronous(async);
+        flowNode.setNotExclusive(notExclusive);
         
-        Activity activity = (Activity) currentFlowElement;
-        activity.setAsynchronous(async);
-        activity.setNotExclusive(notExclusive);
-        activity.setForCompensation(isForCompensation);
-        if(StringUtils.isNotEmpty(defaultFlow)) {
-          activity.setDefaultFlow(defaultFlow);
+        if (currentFlowElement instanceof Activity) {
+          
+          Activity activity = (Activity) currentFlowElement;
+          activity.setForCompensation(isForCompensation);
+          if (StringUtils.isNotEmpty(defaultFlow)) {
+            activity.setDefaultFlow(defaultFlow);
+          }
+        }
+        
+        if (currentFlowElement instanceof Gateway) {
+          Gateway gateway = (Gateway) currentFlowElement;
+          if (StringUtils.isNotEmpty(defaultFlow)) {
+            gateway.setDefaultFlow(defaultFlow);
+          }
         }
       }
       
-      if (currentFlowElement instanceof Gateway) {
-        Gateway gateway = (Gateway) currentFlowElement;
-        if (StringUtils.isNotEmpty(defaultFlow)) {
-          gateway.setDefaultFlow(defaultFlow);
-        }
-        
-        gateway.setAsynchronous(async);
-        gateway.setNotExclusive(notExclusive);
-      }
-      
-      if(currentFlowElement instanceof DataObject) {
+      if (currentFlowElement instanceof DataObject) {
         if (!activeSubProcessList.isEmpty()) {
           activeSubProcessList.get(activeSubProcessList.size() - 1).getDataObjects().add((ValuedDataObject)parsedElement);
         } else {
@@ -135,7 +138,7 @@ public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
         }
       }
 
-      if(!activeSubProcessList.isEmpty()) {
+      if (!activeSubProcessList.isEmpty()) {
         activeSubProcessList.get(activeSubProcessList.size() - 1).addFlowElement(currentFlowElement);
       } else {
         activeProcess.addFlowElement(currentFlowElement);
@@ -151,37 +154,35 @@ public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
       writeDefaultAttribute(ATTRIBUTE_NAME, ((FlowElement) baseElement).getName(), xtw);
     }
     
-    if (baseElement instanceof Activity) {
-      final Activity activity = (Activity) baseElement;
-      if (activity.isAsynchronous()) {
+    if (baseElement instanceof FlowNode) {
+      final FlowNode flowNode = (FlowNode) baseElement;
+      if (flowNode.isAsynchronous()) {
         writeQualifiedAttribute(ATTRIBUTE_ACTIVITY_ASYNCHRONOUS, ATTRIBUTE_VALUE_TRUE, xtw);
-        if (activity.isNotExclusive()) {
+        if (flowNode.isNotExclusive()) {
           writeQualifiedAttribute(ATTRIBUTE_ACTIVITY_EXCLUSIVE, ATTRIBUTE_VALUE_FALSE, xtw);
         }
       }
-      if (activity.isForCompensation()) {
-    	writeDefaultAttribute(ATTRIBUTE_ACTIVITY_ISFORCOMPENSATION, ATTRIBUTE_VALUE_TRUE, xtw);
-      }
-      if (StringUtils.isNotEmpty(activity.getDefaultFlow())) {
-        FlowElement defaultFlowElement = model.getFlowElement(activity.getDefaultFlow());
-        if (defaultFlowElement instanceof SequenceFlow) {
-          writeDefaultAttribute(ATTRIBUTE_DEFAULT, activity.getDefaultFlow(), xtw);
+      
+      if (baseElement instanceof Activity) {
+        final Activity activity = (Activity) baseElement;
+        if (activity.isForCompensation()) {
+          writeDefaultAttribute(ATTRIBUTE_ACTIVITY_ISFORCOMPENSATION, ATTRIBUTE_VALUE_TRUE, xtw);
+        }
+        if (StringUtils.isNotEmpty(activity.getDefaultFlow())) {
+          FlowElement defaultFlowElement = model.getFlowElement(activity.getDefaultFlow());
+          if (defaultFlowElement instanceof SequenceFlow) {
+            writeDefaultAttribute(ATTRIBUTE_DEFAULT, activity.getDefaultFlow(), xtw);
+          }
         }
       }
-    }
-    
-    if (baseElement instanceof Gateway) {
-      final Gateway gateway = (Gateway) baseElement;
-      if (gateway.isAsynchronous()) {
-        writeQualifiedAttribute(ATTRIBUTE_ACTIVITY_ASYNCHRONOUS, ATTRIBUTE_VALUE_TRUE, xtw);
-        if (gateway.isNotExclusive()) {
-          writeQualifiedAttribute(ATTRIBUTE_ACTIVITY_EXCLUSIVE, ATTRIBUTE_VALUE_FALSE, xtw);
-        }
-      }
-      if (StringUtils.isNotEmpty(gateway.getDefaultFlow())) {
-        FlowElement defaultFlowElement = model.getFlowElement(gateway.getDefaultFlow());
-        if (defaultFlowElement instanceof SequenceFlow) {
-          writeDefaultAttribute(ATTRIBUTE_DEFAULT, gateway.getDefaultFlow(), xtw);
+      
+      if (baseElement instanceof Gateway) {
+        final Gateway gateway = (Gateway) baseElement;
+        if (StringUtils.isNotEmpty(gateway.getDefaultFlow())) {
+          FlowElement defaultFlowElement = model.getFlowElement(gateway.getDefaultFlow());
+          if (defaultFlowElement instanceof SequenceFlow) {
+            writeDefaultAttribute(ATTRIBUTE_DEFAULT, gateway.getDefaultFlow(), xtw);
+          }
         }
       }
     }
@@ -313,14 +314,6 @@ public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
     return BpmnXMLUtil.parseDelimitedList(expression);
   }
   
-  private boolean isInSubProcess(List<SubProcess> subProcessList) {
-    if(subProcessList.size() > 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  
   // To XML converter convenience methods
   
   protected String convertToDelimitedString(List<String> stringList) {
@@ -399,6 +392,8 @@ public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
         writeErrorDefinition(parentEvent, (ErrorEventDefinition) eventDefinition, xtw);
       } else if (eventDefinition instanceof TerminateEventDefinition) {
         writeTerminateDefinition(parentEvent, (TerminateEventDefinition) eventDefinition, xtw);
+      } else if (eventDefinition instanceof CancelEventDefinition) {
+        writeCancelDefinition(parentEvent, (CancelEventDefinition) eventDefinition, xtw);
       } else if (eventDefinition instanceof CompensateEventDefinition) {
         writeCompensateDefinition(parentEvent, (CompensateEventDefinition) eventDefinition, xtw);
       }
@@ -418,6 +413,11 @@ public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
       
     } else if (StringUtils.isNotEmpty(timerDefinition.getTimeCycle())) {
       xtw.writeStartElement(ATTRIBUTE_TIMER_CYCLE);
+
+      if (StringUtils.isNotEmpty(timerDefinition.getEndDate())) {
+        xtw.writeAttribute(ACTIVITI_EXTENSIONS_PREFIX, ACTIVITI_EXTENSIONS_NAMESPACE,ATTRIBUTE_END_DATE,timerDefinition.getEndDate());
+      }
+
       xtw.writeCharacters(timerDefinition.getTimeCycle());
       xtw.writeEndElement();
       
@@ -443,15 +443,24 @@ public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
     xtw.writeEndElement();
   }
   
+  protected void writeCancelDefinition(Event parentEvent, CancelEventDefinition cancelEventDefinition, XMLStreamWriter xtw) throws Exception {
+    xtw.writeStartElement(ELEMENT_EVENT_CANCELDEFINITION);
+    boolean didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(cancelEventDefinition, false, xtw);
+    if (didWriteExtensionStartElement) {
+      xtw.writeEndElement();
+    }
+    xtw.writeEndElement();
+  }
+  
   protected void writeCompensateDefinition(Event parentEvent, CompensateEventDefinition compensateEventDefinition, XMLStreamWriter xtw) throws Exception {
-	    xtw.writeStartElement(ELEMENT_EVENT_COMPENSATEDEFINITION);
-	    writeDefaultAttribute(ATTRIBUTE_COMPENSATE_ACTIVITYREF, compensateEventDefinition.getActivityRef(), xtw);
-	    boolean didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(compensateEventDefinition, false, xtw);
-	    if (didWriteExtensionStartElement) {
-	      xtw.writeEndElement();
-	    }
-	    xtw.writeEndElement();
-	  }
+    xtw.writeStartElement(ELEMENT_EVENT_COMPENSATEDEFINITION);
+    writeDefaultAttribute(ATTRIBUTE_COMPENSATE_ACTIVITYREF, compensateEventDefinition.getActivityRef(), xtw);
+    boolean didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(compensateEventDefinition, false, xtw);
+    if (didWriteExtensionStartElement) {
+      xtw.writeEndElement();
+    }
+    xtw.writeEndElement();
+  }
   
   protected void writeMessageDefinition(Event parentEvent, MessageEventDefinition messageDefinition, BpmnModel model, XMLStreamWriter xtw) throws Exception {
     xtw.writeStartElement(ELEMENT_EVENT_MESSAGEDEFINITION);
@@ -492,6 +501,11 @@ public abstract class BaseBpmnXMLConverter implements BpmnXMLConstants {
   
   protected void writeTerminateDefinition(Event parentEvent, TerminateEventDefinition terminateDefinition, XMLStreamWriter xtw) throws Exception {
     xtw.writeStartElement(ELEMENT_EVENT_TERMINATEDEFINITION);
+    
+    if (terminateDefinition.isTerminateAll()) {
+    	writeQualifiedAttribute(ATTRIBUTE_TERMINATE_ALL, "true", xtw);
+    }
+    
     boolean didWriteExtensionStartElement = BpmnXMLUtil.writeExtensionElements(terminateDefinition, false, xtw);
     if (didWriteExtensionStartElement) {
       xtw.writeEndElement();

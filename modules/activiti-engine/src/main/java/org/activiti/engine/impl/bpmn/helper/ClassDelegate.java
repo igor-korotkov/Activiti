@@ -18,8 +18,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.activiti.bpmn.model.MapExceptionEntry;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.ActivitiIllegalArgumentException;
+import org.activiti.engine.DynamicBpmnConstants;
 import org.activiti.engine.delegate.BpmnError;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.DelegateTask;
@@ -38,6 +40,9 @@ import org.activiti.engine.impl.pvm.delegate.ActivityExecution;
 import org.activiti.engine.impl.pvm.delegate.SignallableActivityBehavior;
 import org.activiti.engine.impl.pvm.delegate.SubProcessActivityBehavior;
 import org.activiti.engine.impl.util.ReflectUtil;
+import org.apache.commons.lang3.StringUtils;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 /**
@@ -47,6 +52,7 @@ import org.activiti.engine.impl.util.ReflectUtil;
  * 
  * @author Joram Barrez
  * @author Falko Menge
+ * @author Saeid Mirzaei
  */
 public class ClassDelegate extends AbstractBpmnActivityBehavior implements TaskListener, ExecutionListener, SubProcessActivityBehavior {
   
@@ -56,13 +62,21 @@ public class ClassDelegate extends AbstractBpmnActivityBehavior implements TaskL
   protected TaskListener taskListenerInstance;
   protected ActivityBehavior activityBehaviorInstance;
   protected Expression skipExpression;
+  protected List<MapExceptionEntry> mapExceptions;
+  protected String serviceTaskId;
 
   public ClassDelegate(String className, List<FieldDeclaration> fieldDeclarations, Expression skipExpression) {
     this.className = className;
     this.fieldDeclarations = fieldDeclarations;
     this.skipExpression = skipExpression;
   }
-  
+
+  public ClassDelegate(String id, String className, List<FieldDeclaration> fieldDeclarations, Expression skipExpression, List<MapExceptionEntry> mapExceptions) {
+    this(className, fieldDeclarations, skipExpression);
+    this.serviceTaskId = id;
+    this.mapExceptions = mapExceptions;
+  }
+
   public ClassDelegate(String className, List<FieldDeclaration> fieldDeclarations) {
     this(className, fieldDeclarations, null);
   }
@@ -125,6 +139,17 @@ public class ClassDelegate extends AbstractBpmnActivityBehavior implements TaskL
     if (!isSkipExpressionEnabled || 
             (isSkipExpressionEnabled && !SkipExpressionUtil.shouldSkipFlowElement(execution, skipExpression))) {
       
+      if (Context.getProcessEngineConfiguration().isEnableProcessDefinitionInfoCache()) {
+        ObjectNode taskElementProperties = Context.getBpmnOverrideElementProperties(serviceTaskId, execution.getProcessDefinitionId());
+        if (taskElementProperties != null && taskElementProperties.has(DynamicBpmnConstants.SERVICE_TASK_CLASS_NAME)) {
+          String overrideClassName = taskElementProperties.get(DynamicBpmnConstants.SERVICE_TASK_CLASS_NAME).asText();
+          if (StringUtils.isNotEmpty(overrideClassName) && overrideClassName.equals(className) == false) {
+            className = overrideClassName;
+            activityBehaviorInstance = null;
+          }
+        }
+      }
+      
       if (activityBehaviorInstance == null) {
         activityBehaviorInstance = getActivityBehaviorInstance(execution);
       }
@@ -133,6 +158,10 @@ public class ClassDelegate extends AbstractBpmnActivityBehavior implements TaskL
         activityBehaviorInstance.execute(execution);
       } catch (BpmnError error) {
         ErrorPropagation.propagateError(error, execution);
+      } catch (Exception e) {
+        if (!ErrorPropagation.mapException(e, execution, mapExceptions)) {
+            throw e;
+        }
       }
     }
   }
@@ -199,13 +228,17 @@ public class ClassDelegate extends AbstractBpmnActivityBehavior implements TaskL
     return delegateInstance;
   }
   
-  // --HELPER METHODS (also usable by external classes) ----------------------------------------
-  
-  public static Object instantiateDelegate(Class<?> clazz, List<FieldDeclaration> fieldDeclarations) {
-    return instantiateDelegate(clazz.getName(), fieldDeclarations);
+  protected Object instantiateDelegate(String className, List<FieldDeclaration> fieldDeclarations) {
+    return ClassDelegate.defaultInstantiateDelegate(className, fieldDeclarations);
   }
   
-  public static Object instantiateDelegate(String className, List<FieldDeclaration> fieldDeclarations) {
+  // --HELPER METHODS (also usable by external classes) ----------------------------------------
+  
+  public static Object defaultInstantiateDelegate(Class<?> clazz, List<FieldDeclaration> fieldDeclarations) {
+    return defaultInstantiateDelegate(clazz.getName(), fieldDeclarations);
+  }
+  
+  public static Object defaultInstantiateDelegate(String className, List<FieldDeclaration> fieldDeclarations) {
     Object object = ReflectUtil.instantiate(className);
     applyFieldDeclaration(fieldDeclarations, object);
     return object;

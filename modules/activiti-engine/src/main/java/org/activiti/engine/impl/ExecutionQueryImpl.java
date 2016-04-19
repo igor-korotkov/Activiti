@@ -14,13 +14,21 @@ package org.activiti.engine.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.activiti.engine.ActivitiIllegalArgumentException;
+import org.activiti.engine.DynamicBpmnConstants;
+import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.impl.interceptor.CommandContext;
 import org.activiti.engine.impl.interceptor.CommandExecutor;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.persistence.entity.SuspensionState;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ExecutionQuery;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 /**
@@ -44,6 +52,8 @@ public class ExecutionQueryImpl extends AbstractVariableQueryImpl<ExecutionQuery
   protected String tenantId;
   protected String tenantIdLike;
   protected boolean withoutTenantId;
+  protected String locale;
+  protected boolean withLocalizationFallback;
   
   // Not used by end-users, but needed for dynamic ibatis query
   protected String superProcessInstanceId;
@@ -54,6 +64,8 @@ public class ExecutionQueryImpl extends AbstractVariableQueryImpl<ExecutionQuery
   protected boolean includeChildExecutionsWithBusinessKeyQuery;
   protected boolean isActive;
   protected String involvedUser;
+  protected Set<String> processDefinitionKeys;
+  protected Set<String> processDefinitionIds;
 
   // Not exposed in API, but here for the ProcessInstanceQuery support, since the name lives on the
   // Execution entity/table
@@ -62,7 +74,7 @@ public class ExecutionQueryImpl extends AbstractVariableQueryImpl<ExecutionQuery
   protected String nameLikeIgnoreCase;
   protected String deploymentId;
   protected List<String> deploymentIds;
-  protected ExecutionQueryImpl orQueryObject;
+  protected List<ExecutionQueryImpl> orQueryObjects = new ArrayList<ExecutionQueryImpl>();
   
   public ExecutionQueryImpl() {
   }
@@ -131,6 +143,14 @@ public class ExecutionQueryImpl extends AbstractVariableQueryImpl<ExecutionQuery
       this.includeChildExecutionsWithBusinessKeyQuery = includeChildExecutions;
       return this;
     }
+  }
+  
+  public ExecutionQuery processDefinitionKeys(Set<String> processDefinitionKeys) {
+    if (processDefinitionKeys == null) {
+      throw new ActivitiIllegalArgumentException("Process definition keys is null");
+    }
+    this.processDefinitionKeys = processDefinitionKeys;
+    return this;
   }
   
   public ExecutionQueryImpl executionId(String executionId) {
@@ -221,9 +241,27 @@ public class ExecutionQueryImpl extends AbstractVariableQueryImpl<ExecutionQuery
     return variableValueEqualsIgnoreCase(name, value, false);
   }
 
-  @Override
   public ExecutionQuery processVariableValueNotEqualsIgnoreCase(String name, String value) {
     return variableValueNotEqualsIgnoreCase(name, value, false);
+  }
+  
+  public ExecutionQuery processVariableValueLike(String name, String value) {
+    return variableValueLike(name, value, false);
+  }
+  
+  public ExecutionQuery processVariableValueLikeIgnoreCase(String name, String value) {
+    return variableValueLikeIgnoreCase(name, value, false);
+  }
+  
+  @Override
+  public ExecutionQuery locale(String locale) {
+    this.locale = locale;
+    return this;
+  }
+
+  public ExecutionQuery withLocalizationFallback() {
+    withLocalizationFallback = true;
+    return this;
   }
 
   //ordering ////////////////////////////////////////////////////
@@ -258,13 +296,54 @@ public class ExecutionQueryImpl extends AbstractVariableQueryImpl<ExecutionQuery
       .findExecutionCountByQueryCriteria(this);
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @SuppressWarnings({ "unchecked" })
   public List<Execution> executeList(CommandContext commandContext, Page page) {
     checkQueryOk();
     ensureVariablesInitialized();
-    return (List) commandContext
-      .getExecutionEntityManager()
-      .findExecutionsByQueryCriteria(this, page);
+    List<?> executions = commandContext.getExecutionEntityManager().findExecutionsByQueryCriteria(this, page);
+    
+    for (ExecutionEntity execution : (List<ExecutionEntity>) executions) {
+      String activityId = null;
+      if (execution.getId().equals(execution.getProcessInstanceId())) {
+        if (execution.getProcessDefinitionId() != null) {
+          ProcessDefinitionEntity processDefinition = commandContext.getProcessEngineConfiguration()
+              .getDeploymentManager()
+              .findDeployedProcessDefinitionById(execution.getProcessDefinitionId());
+          activityId = processDefinition.getKey();
+        }
+        
+      } else {
+        activityId = execution.getActivityId();
+      }
+
+      if (activityId != null) {
+        localize(execution, activityId);
+      }
+    }
+
+    return (List<Execution>) executions;
+  }
+  
+  protected void localize(Execution execution, String activityId) {
+    ExecutionEntity executionEntity = (ExecutionEntity) execution;
+    executionEntity.setLocalizedName(null);
+    executionEntity.setLocalizedDescription(null);
+
+    String processDefinitionId = executionEntity.getProcessDefinitionId();
+    if (locale != null && processDefinitionId != null) {
+      ObjectNode languageNode = Context.getLocalizationElementProperties(locale, activityId, processDefinitionId, withLocalizationFallback);
+      if (languageNode != null) {
+        JsonNode languageNameNode = languageNode.get(DynamicBpmnConstants.LOCALIZATION_NAME);
+        if (languageNameNode != null && languageNameNode.isNull() == false) {
+          executionEntity.setLocalizedName(languageNameNode.asText());
+        }
+
+        JsonNode languageDescriptionNode = languageNode.get(DynamicBpmnConstants.LOCALIZATION_DESCRIPTION);
+        if (languageDescriptionNode != null && languageDescriptionNode.isNull() == false) {
+          executionEntity.setLocalizedDescription(languageDescriptionNode.asText());
+        }
+      }
+    }
   }
   
   //getters ////////////////////////////////////////////////////
@@ -329,6 +408,12 @@ public class ExecutionQueryImpl extends AbstractVariableQueryImpl<ExecutionQuery
   }
   public void setInvolvedUser(String involvedUser) {
     this.involvedUser = involvedUser;
+  }
+  public Set<String> getProcessDefinitionIds() {
+    return processDefinitionIds;
+  }
+  public Set<String> getProcessDefinitionKeys() {
+    return processDefinitionKeys;
   }
   public String getParentId() {
     return parentId;

@@ -26,6 +26,8 @@ public interface StencilConstants {
 
   final String STENCIL_EVENT_END_NONE = "EndNoneEvent";
   final String STENCIL_EVENT_END_ERROR = "EndErrorEvent";
+  final String STENCIL_EVENT_END_CANCEL = "EndCancelEvent";
+  final String STENCIL_EVENT_END_TERMINATE = "EndTerminateEvent";
 
   final String STENCIL_SUB_PROCESS = "SubProcess";
   final String STENCIL_EVENT_SUB_PROCESS = "EventSubProcess";
@@ -55,6 +57,8 @@ public interface StencilConstants {
   final String STENCIL_EVENT_BOUNDARY_ERROR = "BoundaryErrorEvent";
   final String STENCIL_EVENT_BOUNDARY_SIGNAL = "BoundarySignalEvent";
   final String STENCIL_EVENT_BOUNDARY_MESSAGE = "BoundaryMessageEvent";
+  final String STENCIL_EVENT_BOUNDARY_CANCEL = "BoundaryCancelEvent";
+  final String STENCIL_EVENT_BOUNDARY_COMPENSATION = "BoundaryCompensationEvent";
 
   final String STENCIL_EVENT_CATCH_SIGNAL = "CatchSignalEvent";
   final String STENCIL_EVENT_CATCH_TIMER = "CatchTimerEvent";
@@ -88,6 +92,12 @@ public interface StencilConstants {
   final String PROPERTY_TIMER_DURATON = "timerdurationdefinition";
   final String PROPERTY_TIMER_DATE = "timerdatedefinition";
   final String PROPERTY_TIMER_CYCLE = "timercycledefinition";
+  final String PROPERTY_TIMER_CYCLE_END_DATE = "timerenddatedefinition";
+
+  final String PROPERTY_MESSAGES = "messages";
+  final String PROPERTY_MESSAGE_ID = "message_id";
+  final String PROPERTY_MESSAGE_NAME = "message_name";
+  final String PROPERTY_MESSAGE_ITEM_REF = "message_item_ref";
 
   final String PROPERTY_MESSAGEREF = "messageref";
 
@@ -167,6 +177,8 @@ public interface StencilConstants {
   final String PROPERTY_FORM_READABLE = "readable";
   final String PROPERTY_FORM_WRITABLE = "writable";
   final String PROPERTY_FORM_ENUM_VALUES = "enumValues";
+  final String PROPERTY_FORM_ENUM_VALUES_NAME = "name";
+  final String PROPERTY_FORM_ENUM_VALUES_ID = "id";
   
   final String PROPERTY_DATA_PROPERTIES = "dataproperties";
   final String PROPERTY_DATA_ID = "dataproperty_id";
@@ -206,6 +218,19 @@ public interface StencilConstants {
   final String PROPERTY_MULETASK_PAYLOAD_EXPRESSION= "muletaskpayloadexpression";
   final String PROPERTY_MULETASK_RESULT_VARIABLE= "muletaskresultvariable";
 
+  final String PROPERTY_SEQUENCEFLOW_DEFAULT = "defaultflow";
   final String PROPERTY_SEQUENCEFLOW_CONDITION = "conditionsequenceflow";
   final String PROPERTY_SEQUENCEFLOW_ORDER = "sequencefloworder";
+  
+  final String PROPERTY_MESSAGE_DEFINITIONS = "messagedefinitions";
+  final String PROPERTY_MESSAGE_DEFINITION_ID = "id";
+  final String PROPERTY_MESSAGE_DEFINITION_NAME = "name";
+  final String PROPERTY_MESSAGE_DEFINITION_ITEM_REF = "message_item_ref";
+
+  final String PROPERTY_SIGNAL_DEFINITIONS = "signaldefinitions";
+  final String PROPERTY_SIGNAL_DEFINITION_ID = "id";
+  final String PROPERTY_SIGNAL_DEFINITION_NAME = "name";
+  final String PROPERTY_SIGNAL_DEFINITION_SCOPE = "scope";
+  
+  final String PROPERTY_TERMINATE_ALL = "terminateall";
 }

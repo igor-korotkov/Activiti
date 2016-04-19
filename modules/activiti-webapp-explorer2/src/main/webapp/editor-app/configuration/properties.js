@@ -72,10 +72,6 @@ KISBPM.PROPERTY_CONFIG =
         "readModeTemplateUrl": "editor-app/configuration/properties/subprocess-reference-display-template.html",
         "writeModeTemplateUrl": "editor-app/configuration/properties/subprocess-reference-write-template.html"
     },
-    "oryx-formreference-complex": {
-        "readModeTemplateUrl": "editor-app/configuration/properties/form-reference-display-template.html",
-        "writeModeTemplateUrl": "editor-app/configuration/properties/form-reference-write-template.html"
-    },
     "oryx-sequencefloworder-complex" : {
         "readModeTemplateUrl": "editor-app/configuration/properties/sequenceflow-order-display-template.html",
         "writeModeTemplateUrl": "editor-app/configuration/properties/sequenceflow-order-write-template.html"
@@ -83,5 +79,21 @@ KISBPM.PROPERTY_CONFIG =
     "oryx-conditionsequenceflow-complex" : {
         "readModeTemplateUrl": "editor-app/configuration/properties/condition-expression-display-template.html",
         "writeModeTemplateUrl": "editor-app/configuration/properties/condition-expression-write-template.html"
+    },
+    "oryx-signaldefinitions-multiplecomplex" : {
+        "readModeTemplateUrl": "editor-app/configuration/properties/signal-definitions-display-template.html",
+        "writeModeTemplateUrl": "editor-app/configuration/properties/signal-definitions-write-template.html"
+    },
+    "oryx-signalref-string" : {
+        "readModeTemplateUrl": "editor-app/configuration/properties/default-value-display-template.html",
+        "writeModeTemplateUrl": "editor-app/configuration/properties/signal-property-write-template.html"
+    },
+    "oryx-messagedefinitions-multiplecomplex" : {
+        "readModeTemplateUrl": "editor-app/configuration/properties/message-definitions-display-template.html",
+        "writeModeTemplateUrl": "editor-app/configuration/properties/message-definitions-write-template.html"
+    },
+    "oryx-messageref-string" : {
+        "readModeTemplateUrl": "editor-app/configuration/properties/default-value-display-template.html",
+        "writeModeTemplateUrl": "editor-app/configuration/properties/message-property-write-template.html"
     }
 };

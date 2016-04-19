@@ -32,12 +32,14 @@ import org.activiti.engine.impl.jobexecutor.AsyncContinuationJobHandler;
 import org.activiti.engine.impl.jobexecutor.JobAddedNotification;
 import org.activiti.engine.impl.jobexecutor.JobExecutor;
 import org.activiti.engine.impl.jobexecutor.TimerCatchIntermediateEventJobHandler;
+import org.activiti.engine.impl.jobexecutor.TimerEventHandler;
 import org.activiti.engine.impl.jobexecutor.TimerExecuteNestedActivityJobHandler;
 import org.activiti.engine.impl.jobexecutor.TimerStartEventJobHandler;
 import org.activiti.engine.impl.persistence.deploy.DeploymentManager;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.JobEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.persistence.entity.TimerEntity;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +70,7 @@ public class JobRetryCmd implements Command<Object> {
     ProcessEngineConfiguration processEngineConfig = commandContext.getProcessEngineConfiguration();
    
     if (activity == null || activity.getFailedJobRetryTimeCycleValue() == null) {
-      log.error("activitiy or FailedJobRetryTimerCycleValue is null in job " + jobId + "'. only decrementing retries.");
+      log.debug("activitiy or FailedJobRetryTimerCycleValue is null in job " + jobId + "'. only decrementing retries.");
       job.setRetries(job.getRetries() - 1);
       job.setLockOwner(null);
       job.setLockExpirationTime(null);
@@ -152,11 +154,23 @@ public class JobRetryCmd implements Command<Object> {
       }
     } else if (TimerStartEventJobHandler.TYPE.equals(type)) {
     	DeploymentManager deploymentManager = commandContext.getProcessEngineConfiguration().getDeploymentManager();
-      ProcessDefinitionEntity processDefinition =  
-      		deploymentManager.findDeployedLatestProcessDefinitionByKeyAndTenantId(job.getJobHandlerConfiguration(), job.getTenantId());
+      String processId = job.getJobHandlerConfiguration();
+      if (job instanceof TimerEntity) {
+         processId = TimerEventHandler.getActivityIdFromConfiguration(job.getJobHandlerConfiguration());
+      }
+      
+      
+      ProcessDefinitionEntity processDefinition = null;
+      if (job.getTenantId() != null && job.getTenantId().length() > 0) {
+        processDefinition = deploymentManager.findDeployedLatestProcessDefinitionByKeyAndTenantId(processId, job.getTenantId());
+      } else {
+        processDefinition = deploymentManager.findDeployedLatestProcessDefinitionByKey(processId);
+      }
+      
       if (processDefinition != null) {
         activity = processDefinition.getInitial();
       }
+      
     } else if (AsyncContinuationJobHandler.TYPE.equals(type)) {
       ExecutionEntity execution = fetchExecutionEntity(commandContext, job.getExecutionId());
       if (execution != null) {
