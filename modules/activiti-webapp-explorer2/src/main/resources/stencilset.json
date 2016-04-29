@@ -31,7 +31,7 @@
       "value" : "",
       "description" : "The descriptive name of the BPMN element.",
       "popular" : true,
-      "refToView" : "text_name"
+      "refToView" : ["text_name"]
     } ]
   }, {
     "name" : "documentationpackage",
@@ -472,7 +472,7 @@
       "value" : "false",
       "description" : "Define the sequence flow as default",
       "popular" : true,
-      "refToView" : "default"
+      "refToView" : ["default"]
     } ]
   }, {
     "name" : "conditionalflowpackage",
@@ -584,7 +584,7 @@
       "value" : "",
       "description" : "The text of the text annotation.",
       "popular" : true,
-      "refToView" : "text"
+      "refToView" : ["text"]
     } ]
   }, {
     "name" : "multiinstance_typepackage",
@@ -595,7 +595,7 @@
       "value" : "None",
       "description" : "Repeated activity execution (parallel or sequential) can be displayed through different loop types",
       "popular" : true,
-      "refToView" : "multiinstance"
+      "refToView" : ["multiinstance"]
     } ]
   }, {
     "name" : "multiinstance_cardinalitypackage",
@@ -646,7 +646,7 @@
       "value" : "false",
       "description" : "A flag that identifies whether this activity is intended for the purposes of compensation.",
       "popular" : true,
-      "refToView" : "compensation"
+      "refToView" : ["compensation"]
     } ]
   }, {
     "name" : "sequencefloworderpackage",
@@ -687,7 +687,7 @@
       "value" : "false",
       "description" : "A flag that identifies whether this sub process is of type transaction.",
       "popular" : true,
-      "refToView" : "border"
+      "refToView" : ["border"]
     } ]
   }, {
     "name" : "terminateAllpackage",
@@ -799,7 +799,7 @@
           "value": "",
           "description": "Model",
           "popular": true,
-          "refToView": "text_name"
+          "refToView": ["text_name"]
         }
       ]
     } ],

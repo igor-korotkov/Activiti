@@ -141,7 +141,13 @@ angular.module('activitiModeler')
                         stencilItem.customIcon = true;
                         stencilItem.icon = data.stencils[stencilIndex].customIconId;
                     }
-                    
+
+                    if (stencilItem.customIcon) {
+                        stencilItem.iconUrl = CUBA.CONFIG.modelerRoot() + "/icon?f=" + stencilItem.icon;
+                    } else {
+                        stencilItem.iconUrl = "editor-app/stencilsets/bpmn2.0/icons/" + stencilItem.icon;
+                    }
+
                     if (!removed) {
                         if (quickMenuDefinition.indexOf(stencilItem.id) >= 0) {
                         	quickMenuItems[quickMenuDefinition.indexOf(stencilItem.id)] = stencilItem;

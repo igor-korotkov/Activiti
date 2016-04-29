@@ -425,7 +425,7 @@ ORYX.Core.AbstractShape = ORYX.Core.UIObject.extend(
                 return shape.toJSON();
             })
         };
-        
+
         if(this.getOutgoingShapes){
             json.outgoing = this.getOutgoingShapes().map(function(shape){
                 return {
@@ -447,6 +447,10 @@ ORYX.Core.AbstractShape = ORYX.Core.UIObject.extend(
                 d.getDocker = function(){return docker;};
                 return d;
             });
+        }
+
+        if (this._stencil._custom) {
+            json.custom = this._stencil._custom;
         }
         
         jQuery.extend(json, ORYX.Core.AbstractShape.JSONHelper);

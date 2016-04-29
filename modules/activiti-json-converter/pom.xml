@@ -23,7 +23,7 @@
     </activiti.osgi.export.additional>
     <cuba.repository.url>http://repository.haulmont.com:8587/nexus/content/repositories/releases</cuba.repository.url>
     <cuba.repository.id>haulmont-nexus</cuba.repository.id>
-    <cuba.modeler.version>5.17.0.cuba.0-SNAPSHOT</cuba.modeler.version>
+    <cuba.modeler.version>5.19.0.2.cuba.1</cuba.modeler.version>
   </properties>
 
   <build>

@@ -25,7 +25,7 @@ KISBPM.URL = {
     },
 
     getStencilSet: function() {
-        return CUBA.CONFIG.modelerRoot() + '/editor-app/stencilset.json?version=' + Date.now();
+        return CUBA.CONFIG.modelerRoot() + '/stencilset';
     },
 
     putModel: function(modelId) {
