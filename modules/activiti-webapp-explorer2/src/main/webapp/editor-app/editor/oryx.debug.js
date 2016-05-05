@@ -5644,7 +5644,6 @@ ORYX.Core.StencilSet.Stencil = {
 		this._view;
 		this._properties = new Hash();
         this._mainPropertiesIds = [];
-        this._custom = {};
 
 		// check stencil consistency and set defaults.
 		/*with(this._jsonStencil) {
