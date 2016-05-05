@@ -14,10 +14,6 @@
 
     <files>
         <file>
-            <source>src/main/resources/stencilset.json</source>
-            <outputDirectory>modeler/editor-app</outputDirectory>
-        </file>
-        <file>
             <source>src/main/webapp/modeler.html</source>
             <outputDirectory>modeler</outputDirectory>
         </file>

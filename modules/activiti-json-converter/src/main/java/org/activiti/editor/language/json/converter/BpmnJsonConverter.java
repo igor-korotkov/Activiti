@@ -132,9 +132,9 @@ public class BpmnJsonConverter implements EditorJsonConstants, StencilConstants,
         DataStoreJsonConverter.fillTypes(convertersToBpmnMap, convertersToJsonMap);
     }
 
-    private static final List<String> DI_CIRCLES = new ArrayList<String>();
-    private static final List<String> DI_RECTANGLES = new ArrayList<String>();
-    private static final List<String> DI_GATEWAY = new ArrayList<String>();
+    protected static final List<String> DI_CIRCLES = new ArrayList<String>();
+    protected static final List<String> DI_RECTANGLES = new ArrayList<String>();
+    protected static final List<String> DI_GATEWAY = new ArrayList<String>();
 
     static {
         DI_CIRCLES.add(STENCIL_EVENT_START_ERROR);

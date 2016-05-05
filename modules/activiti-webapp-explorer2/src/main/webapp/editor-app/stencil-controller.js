@@ -137,7 +137,7 @@ angular.module('activitiModeler')
                         'canConnectTo': false,
                         'canConnectAssociation': false};
                     
-                    if (data.stencils[stencilIndex].customIconId && data.stencils[stencilIndex].customIconId > 0) {
+                    if (data.stencils[stencilIndex].customIconId) {
                         stencilItem.customIcon = true;
                         stencilItem.icon = data.stencils[stencilIndex].customIconId;
                     }
