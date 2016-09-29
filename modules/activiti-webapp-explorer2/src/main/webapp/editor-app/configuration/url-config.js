@@ -38,5 +38,9 @@ KISBPM.URL = {
 
     getAllModels: function() {
         return CUBA.CONFIG.modelerRoot() + '/model';
+    },
+
+    getLocales: function() {
+        return CUBA.CONFIG.modelerRoot() + '/locales';
     }
 };

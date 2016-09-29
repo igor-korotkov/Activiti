@@ -10,7 +10,7 @@ var KisBpmLocalizationCtrl = [ '$scope', '$modal', '$timeout', '$translate', fun
     $modal(opts);
 }];
 
-var KisBpmLocalizationPopupCtrl = ['$scope', '$q', '$translate', function($scope, $q, $translate) {
+var KisBpmLocalizationPopupCtrl = ['$scope', '$q', '$translate', '$http', function($scope, $q, $translate, $http) {
 
     // Put json representing task outcomes on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null && $scope.property.value.length > 0) {
@@ -26,7 +26,12 @@ var KisBpmLocalizationPopupCtrl = ['$scope', '$q', '$translate', function($scope
         $scope.messages = [];
     }
 
-    $scope.locales = ['en', 'ru'];
+    $http.get(KISBPM.URL.getLocales())
+        .success(function(data) {
+            $scope.locales = data;
+        }).error(function(data) {
+            $scope.locales = ['en', 'ru'];
+        });
 
     // Array to contain selected properties (yes - we only can select one, but ng-grid isn't smart enough)
     $scope.selectedMessages = [];

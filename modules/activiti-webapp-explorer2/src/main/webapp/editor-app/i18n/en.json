@@ -323,6 +323,8 @@
     "PROPERTY.LOCALIZATION.VALUE" : "Localization defined",
     "PROPERTY.LOCALIZATION.EMPTY" : "Localization not defined",
     "PROPERTY.LOCALIZATION.MSG.KEY" : "Message key",
+    "PROPERTY.LOCALIZATION.MSG.KEY.PLACEHOLDER": "Enter message key here",
+    "PROPERTY.LOCALIZATION.MSG.VALUE.PLACEHOLDER": "Enter message value here",
 
     "PROPERTY.FLOWCONDITION.NOT_AVAILABLE" : "You can edit condition description only for nodes that goes from exclusive gateway and have a userTask before the gateway",
     "PROPERTY.FLOWCONDITION.OUTCOME" : "Task outcome",
