@@ -131,15 +131,19 @@ public class CubaBpmnJsonConverterUtil {
     public static void parseFlowOutcome(JsonNode descriptionNode, SequenceFlow flow, Map<String, JsonNode> shapeMap) {
         descriptionNode = BpmnJsonConverterUtil.validateIfNodeIsTextual(descriptionNode);
         String taskResourceId = descriptionNode.get("taskResourceId").asText();
-        String outcome = descriptionNode.get("outcome").asText();
+        JsonNode outcomeNode = descriptionNode.get("outcome");
 
-        JsonNode taskNode = shapeMap.get(taskResourceId);
-        JsonNode overrideidNode = taskNode.get("properties").get("overrideid");
-        String taskId = taskResourceId;
-        if (overrideidNode != null && !overrideidNode.asText().isEmpty())  {
-            taskId = overrideidNode.asText();
+        String expression = null;
+        if (!outcomeNode.isNull()) {
+            String outcome = outcomeNode.asText();
+            JsonNode taskNode = shapeMap.get(taskResourceId);
+            JsonNode overrideidNode = taskNode.get("properties").get("overrideid");
+            String taskId = taskResourceId;
+            if (overrideidNode != null && !overrideidNode.asText().isEmpty()) {
+                taskId = overrideidNode.asText();
+            }
+            expression = "${" + taskId.replace("-", "") + "_result.count('" + outcome + "') > 0}";
         }
-        String expression = "${" + taskId.replace("-", "") + "_result.count('" + outcome + "') > 0}";
         flow.setConditionExpression(expression);
     }
 
