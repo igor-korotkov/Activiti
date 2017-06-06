@@ -112,4 +112,8 @@ var KisBpmTextPropertyPopupCtrl = ['$scope', function($scope) {
         $scope.property.mode = 'read';
         $scope.$hide();
     };
+	
+	$scope.getPropertyValue=function(){
+		return $scope.property.value;	
+	}
 }];
