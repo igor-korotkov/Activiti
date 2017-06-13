@@ -6,8 +6,9 @@
         <h3>{{'PROPERTY.PROPERTY.EDIT.TITLE' | translate:property}}</h3>
       </div>
       <div class="modal-body">
-        <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:340px;visibility:hidden;" ng-change="doTest()"></textarea>
-        <div id="editor" auto-focus="" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0;height:444px;"></div>
+        <select id="templateSelect"></select>
+        <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:360px;visibility:hidden;" ng-change="doTest()"></textarea>
+        <div id="editor" auto-focus="" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0;height:424px;margin-top:60px;"></div>
       </div>
       <div id="footer-wrapper">
         <div class="modal-footer">
@@ -19,22 +20,4 @@
 </div>
 <script src="editor-app/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="editor-app/ace/ext-language_tools.js"></script>
-
-<script>
-  ace.require("ace/ext/language_tools");
-  var editor = ace.edit("editor");
-  editor.setOptions({
-    enableBasicAutocompletion: true
-  });
-  editor.getSession().on('change', function() {
-    var value = editor.getSession().getValue();
-    document.getElementById("textarea").value = value;
-    jQuery("textarea").change();
-  });
-  editor.setTheme("ace/theme/monokai");
-  editor.getSession().setMode("ace/mode/groovy");
-
-  var val = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
-  editor.setValue(val, 1);
-  editor.focus();
-</script>
+<script src="editor-app/configuration/properties/text-popup.js"></script>
