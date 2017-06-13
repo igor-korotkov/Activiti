@@ -1,7 +1,18 @@
-httpGetAsync(getBeanNames(), function(responseText) {
-  fillDropDownList('beanSelect', 'beanName', responseText)
-  jQuery("#beanSelect").prop("selectedIndex", -1);
+var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
+if (jsonString) {
+  var jsonObject = JSON.parse(jsonString);
+  console.log(jsonString)
+}
 
+jQuery('#methodSelect').change(function() {
+  var selectedMethod = jQuery('#methodSelect').val();
+  var sv = document.getElementById('methodSelect').value;
+  httpGetAsync(getMethodArguments(), function(responseText) {
+    clearTable();
+    fillTable(responseText);
+    changeJson();
+    jsonObject = null;
+  });
 })
 
 jQuery('#beanSelect').change(function() {
@@ -10,27 +21,27 @@ jQuery('#beanSelect').change(function() {
     httpGetAsync(getBeanMethods(selectedValue), function(responseText) {
       clearOptions('#methodSelect');
       fillDropDownList('methodSelect', 'methodName', responseText)
-      jQuery("#methodSelect").prop("selectedIndex", -1);
-      changeJson();
       clearTable();
+      changeJson();
+      if (jsonObject) {
+        jQuery('#methodSelect').val(jsonObject.methodName);
+        jQuery('#methodSelect').change();
+      } else {
+        jQuery("#methodSelect").prop("selectedIndex", -1);
+      }
     });
   }
 })
 
-jQuery('#methodSelect').change(function() {
-  var selectedMethod = jQuery('#methodSelect').val();
-
-  if (selectedMethod) {
-    httpGetAsync(getMethodArguments(), function(responseText) {
-      clearTable();
-      changeJson();
-      fillTable(responseText);
-    });
+httpGetAsync(getBeanNames(), function(responseText) {
+  fillDropDownList('beanSelect', 'beanName', responseText)
+  if (jsonObject) {
+    jQuery('#beanSelect').val(jsonObject.beanName);
+    jQuery('#beanSelect').change();
+  } else {
+    jQuery("#beanSelect").prop("selectedIndex", -1);
   }
 })
-
-var argNames = [];
-var clickedValue;
 
 function fillTable(responseText) {
   var args = JSON.parse(responseText);
@@ -43,23 +54,24 @@ function fillTable(responseText) {
     var type = row.insertCell(1);
     var value = row.insertCell(2);
     value.id = 'val' + i;
-    value.addEventListener("click", function(evt) {
-      clickedValue = this.id
-    });
 
+
+    name.innerHTML = this.argName;
+    var currentArgName = this.argName;
+    type.innerHTML = this.argType;
+    value.innerHTML = "<input type=\"text\" id='val'" + i + ">";
+    if (jsonObject && jsonObject.args) {
+      jsonObject.args.forEach(function(item, i, arr) {
+        if (item.paramName == currentArgName) {
+          console.log(item.paramValue);
+          value.innerHTML = "<input type=\"text\" id='val" + i + "' value=\"" + item.paramValue + "\">";
+        }
+      });
+    }
     value.addEventListener("input", function(evt) {
       changeJson();
     });
-
-    name.innerHTML = this.argName;
-    type.innerHTML = this.argType;
-    value.innerHTML = "<div id='val'" + i + " contenteditable></div>";
     i++;
-  });
-  jQuery('div[contenteditable]').keydown(function(e) {
-    if (e.keyCode == 13) {
-      return false;
-    }
   });
 }
 
@@ -74,80 +86,45 @@ function clearOptions(elementId) {
   jQuery(elementId).empty();
 }
 
+function getTableValueMap() {
+  var table = document.getElementById("argTable");
+  var result = [];
+  var y = 1;
+  for (var i = table.rows.length - 1; i > 0; i--) {
+    var paramName = table.rows[i].cells[0].innerHTML;
+    var paramValue = table.rows[i].cells[2].firstChild.value;
+    var obj = new Object();
+    obj.paramName = paramName;
+    obj.paramValue = paramValue;
+    result.push(obj);
+  }
+  return result;
+}
+
+function argsMapAsString() {
+  var arr = getTableValueMap();
+  var result = "";
+  arr.forEach(function(item, i, arr) {
+    var paramName = item.paramName;
+    var paramValue = item.paramValue;
+    result = result + "{\"paramName\": \"" + paramName + "\", \"paramValue\": \"" + paramValue + "\"}";
+    if (i < arr.size() - 1) {
+      result = result + ",";
+    }
+  });
+  return result;
+}
+
 function changeJson() {
-  // var obj = new Object();
-  // obj.bean = jQuery("#beanSelect").val();
-  // obj.method = jQuery("#methodSelect").val();
-  // obj.args = [];
-
-
-  // var arg = {
-  //   args: []
-  // };
-
-  var ValuesArray = [{
-    "key": "29",
-    "value": "Country"
-  }, {
-    "key": "30",
-    "value": "4,3,5"
-  }];
-ValuesArray  = ValuesArray instanceof Array ? ValuesArray : [ValuesArray];
-  var obj = {
-    "JSObject": ValuesArray
-  };
-
-  // var table = document.getElementById("argTable");
-  // var y = 1;
-  // for (var i = table.rows.length - 1; i > 0; i--) {
-  //
-  //   var paramName = table.rows[i].cells[0].innerHTML;
-  //   var paramValue = table.rows[i].cells[2].firstChild.innerText;
-  //
-  //   var tobj = new Object();
-  //   tobj.paramName = paramName;
-  //   tobj.paramValue = paramValue;
-  //   console.log(tobj);
-  //   //
-  //
-  //   //var tObj = JSON.parse('{"' + table.rows[i].cells[0].innerHTML.replace('"', '') + '":"' + table.rows[i].cells[2].firstChild.innerText + '"}')
-  //   // var myArray = new Array();
-  //   // myArray.push({
-  //   //   key: "29",
-  //   //   value: "hello"
-  //   // });
-  //   obj['args'].push({
-  //     "teamId": "4",
-  //     "status": "pending"
-  //   });
-  //
-  //   obj.args.push(tobj);
-  //   // var tobj = new Object();
-  //   // tobj.argName = table.rows[i].cells[0].innerHTML;
-  //   // tobj.argValue = table.rows[i].cells[2].firstChild.innerText;
-  //   // obj.args.push(tobj);
-  //   // var tobj = new Array();
-  //   // tobj[y].argName = table.rows[i].cells[0].innerHTML;
-  //   // tobj[y].argValue = table.rows[i].cells[2].firstChild.innerText;
-  //   // args.push(tobj)
-  //   y++;
-  //   // var ob = new Object();
-  //   // ob.argName = table.rows[i].cells[0].innerHTML;
-  //   // ob.argValue = table.rows[i].cells[2].firstChild.innerText;
-  //   // args.push(ob);
-  //   // args.push({
-  //   // 'argName': table.rows[i].cells[0].innerHTML,
-  //   //   argValue: table.rows[i].cells[2].firstChild.innerText
-  //   // });
-  //   // console.log(table.rows[i].cells[0].innerHTML + " " + i);
-  //   // console.log(table.rows[i].cells[2].firstChild.innerText + " " + i);
-  // }
-
-  // obj.args = arg;
-  var jsonString = jQuery.toJSON(obj);
-  alert(jsonString);
-  console.log(jsonString)
-  document.getElementById("textarea").value = jsonString;
+  var beanName = jQuery("#beanSelect").val();
+  var methodName = jQuery("#methodSelect").val();
+  var argsString = argsMapAsString();
+  var JSONString = "{" + "\"beanName\":\"" + beanName + "\", " +
+    "\"methodName\":\"" + methodName + "\", " +
+    "\"args\":[" +
+    argsString +
+    "]" + "}";
+  document.getElementById("textarea").value = JSONString;
   jQuery('#textarea').change();
 }
 
@@ -164,7 +141,7 @@ function fillDropDownList(selectId, parameterName, jsonString) {
 
 
 function getBeanNames() {
-  var controller = "/getBeanNames";
+  var controller = "getBeanNames";
   return getPath(controller);
 }
 
