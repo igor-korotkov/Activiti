@@ -36,7 +36,6 @@
 						  <th>Default value</th>
 					  </tr>
 					  <tr ng-repeat=" inParameter in inputParameters">
-						  <td>Input</td>
 						  <td>{{inParameter.name}}</td>
 						  <td>{{inParameter.parameterType}}</td>
 						  <td>{{inParameter.constant}}</td>
@@ -45,7 +44,6 @@
 					  <tr ng-if="outputParameters.length > 0">
 						  <th>Output name</th>
 						  <th>Type</th>
-						  <th>Is constant</th>
 						  <th colspan="2">Default value</th>
 					  </tr>
 					  <tr ng-repeat="outParameter in outputParameters">
