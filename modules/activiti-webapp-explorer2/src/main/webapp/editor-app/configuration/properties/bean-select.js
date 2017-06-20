@@ -1,7 +1,6 @@
 var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
 if (jsonString) {
   var jsonObject = JSON.parse(jsonString);
-  console.log(jsonString)
 }
 
 jQuery('#methodSelect').change(function() {
@@ -33,10 +32,15 @@ jQuery('#beanSelect').change(function() {
   }
 })
 
+document.getElementById('outputVariableName').addEventListener("input", function(evt) {
+  changeJson();
+});
+
 httpGetAsync(getBeanNames(), function(responseText) {
   fillDropDownList('beanSelect', 'beanName', responseText)
   if (jsonObject) {
     jQuery('#beanSelect').val(jsonObject.beanName);
+    jQuery('#outputVariableName').val(jsonObject.outputName);
     jQuery('#beanSelect').change();
   } else {
     jQuery("#beanSelect").prop("selectedIndex", -1);
@@ -92,12 +96,15 @@ function getTableValueMap() {
   var y = 1;
   for (var i = table.rows.length - 1; i > 0; i--) {
     var paramName = table.rows[i].cells[0].innerHTML;
+    var paramType = table.rows[i].cells[1].innerHTML;
     var paramValue = table.rows[i].cells[2].firstChild.value;
     var obj = new Object();
     obj.paramName = paramName;
     obj.paramValue = paramValue;
+    obj.paramType = paramType;
     result.push(obj);
   }
+  result = result.reverse();
   return result;
 }
 
@@ -107,7 +114,8 @@ function argsMapAsString() {
   arr.forEach(function(item, i, arr) {
     var paramName = item.paramName;
     var paramValue = item.paramValue;
-    result = result + "{\"paramName\": \"" + paramName + "\", \"paramValue\": \"" + paramValue + "\"}";
+    var paramType = item.paramType;
+    result = result + "{\"paramName\": \"" + paramName + "\", \"paramValue\": \"" + paramValue + "\", \"paramType\": \"" + paramType + "\"}";
     if (i < arr.size() - 1) {
       result = result + ",";
     }
@@ -118,9 +126,11 @@ function argsMapAsString() {
 function changeJson() {
   var beanName = jQuery("#beanSelect").val();
   var methodName = jQuery("#methodSelect").val();
+  var outputVariableName = jQuery("#outputVariableName").val();
   var argsString = argsMapAsString();
   var JSONString = "{" + "\"beanName\":\"" + beanName + "\", " +
     "\"methodName\":\"" + methodName + "\", " +
+    "\"outputName\":\"" + outputVariableName + "\", " +
     "\"args\":[" +
     argsString +
     "]" + "}";
