@@ -40,7 +40,10 @@ angular.module('activitiModeler')
 
         // Code that is dependent on an initialised Editor is wrapped in a promise for the editor
         $scope.editorFactory.promise.then(function () {
-        	
+
+            var inputParameters = $rootScope.inputParameters;
+            var outputParameters = $rootScope.outputParameters;
+
             /* Build stencil item list */
 
             // Build simple json representation of stencil set

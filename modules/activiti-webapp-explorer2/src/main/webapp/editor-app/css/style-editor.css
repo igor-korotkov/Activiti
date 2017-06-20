@@ -637,3 +637,23 @@ ul.list>li:hover .actions {
 	line-height: 40px;
 	margin-left: 0px;	
 }
+
+
+.variables {
+	font-size: 100%;
+}
+
+.variables .table {
+	border: 1px;
+	border-color: #1a1a1a;
+	border-spacing: 2px;
+	padding: 1px;
+}
+
+.variables .tr {
+	padding: 2px;
+}
+
+.variables .th, .td {
+	padding: 2px;
+}
