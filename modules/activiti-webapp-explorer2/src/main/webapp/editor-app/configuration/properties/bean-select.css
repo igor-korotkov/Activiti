@@ -3,6 +3,7 @@ table, th, td {
   border-collapse: collapse;
 }
 
+<<<<<<< Updated upstream
 input[type="text"] {
   width: 100%;
 }
@@ -11,4 +12,14 @@ input[type="text"] {
   position: absolute;
   top: 15px;
   right: 105px;
+=======
+  table,
+  th,
+  td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+input[type="text"]{
+	width:100%;
+>>>>>>> Stashed changes
 }
