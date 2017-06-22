@@ -96,7 +96,7 @@ function getTableValueMap() {
   for (var i = table.rows.length - 1; i > 0; i--) {
     var paramName = table.rows[i].cells[0].innerHTML;
     var paramType = table.rows[i].cells[1].innerHTML;
-    var paramValue = table.rows[i].cells[2].firstChild.value;
+    var paramValue = table.rows[i].cells[3].firstChild.value;
     var obj = new Object();
     obj.paramName = paramName;
     obj.paramValue = paramValue;
