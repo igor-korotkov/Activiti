@@ -9,7 +9,6 @@
     document.getElementById("textarea").value = value;
     jQuery("textarea").change();
   });
-  editor.setTheme("ace/theme/monokai");
   editor.getSession().setMode("ace/mode/groovy");
 
   var val = angular.element(document.getElementById('textarea')).scope().getPropertyValue();

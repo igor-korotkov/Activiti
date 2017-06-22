@@ -3,10 +3,10 @@ if (jsonString) {
   var jsonObject = JSON.parse(jsonString);
 }
 
-jQuery('#methodSelect').change(function() {
+jQuery('#methodSelect').change(function () {
   var selectedMethod = jQuery('#methodSelect').val();
   var sv = document.getElementById('methodSelect').value;
-  httpGetAsync(getMethodArguments(), function(responseText) {
+  httpGetAsync(getMethodArguments(), function (responseText) {
     clearTable();
     fillTable(responseText);
     changeJson();
@@ -14,10 +14,10 @@ jQuery('#methodSelect').change(function() {
   });
 })
 
-jQuery('#beanSelect').change(function() {
+jQuery('#beanSelect').change(function () {
   var selectedValue = jQuery('#beanSelect').val();
   if (selectedValue) {
-    httpGetAsync(getBeanMethods(selectedValue), function(responseText) {
+    httpGetAsync(getBeanMethods(selectedValue), function (responseText) {
       clearOptions('#methodSelect');
       fillDropDownList('methodSelect', 'methodName', responseText)
       clearTable();
@@ -32,11 +32,11 @@ jQuery('#beanSelect').change(function() {
   }
 })
 
-document.getElementById('outputVariableName').addEventListener("input", function(evt) {
+document.getElementById('outputVariableName').addEventListener("input", function (evt) {
   changeJson();
 });
 
-httpGetAsync(getBeanNames(), function(responseText) {
+httpGetAsync(getBeanNames(), function (responseText) {
   fillDropDownList('beanSelect', 'beanName', responseText)
   if (jsonObject) {
     jQuery('#beanSelect').val(jsonObject.beanName);
@@ -51,7 +51,7 @@ function fillTable(responseText) {
   var args = JSON.parse(responseText);
   var table = document.getElementById("argTable");
   var i = 1;
-  jQuery.each(args, function() {
+  jQuery.each(args, function () {
     var row = table.insertRow(i);
     var name = row.insertCell(0);
     name.id = 'name' + i;
@@ -65,14 +65,13 @@ function fillTable(responseText) {
     type.innerHTML = this.argType;
     value.innerHTML = "<input type=\"text\" id='val'" + i + ">";
     if (jsonObject && jsonObject.args) {
-      jsonObject.args.forEach(function(item, i, arr) {
+      jsonObject.args.forEach(function (item, i, arr) {
         if (item.paramName == currentArgName) {
-          console.log(item.paramValue);
-          value.innerHTML = "<input type=\"text\" id='val" + i + "' value=\"" + item.paramValue + "\">";
+          value.innerHTML = '<input type=\"text\" id="val' + i + '" value=\"' + utility.unescapeQuotes(item.paramValue) + '\">'
         }
       });
     }
-    value.addEventListener("input", function(evt) {
+    value.addEventListener("input", function (evt) {
       changeJson();
     });
     i++;
@@ -111,17 +110,28 @@ function getTableValueMap() {
 function argsMapAsString() {
   var arr = getTableValueMap();
   var result = "";
-  arr.forEach(function(item, i, arr) {
+  arr.forEach(function (item, i, arr) {
     var paramName = item.paramName;
     var paramValue = item.paramValue;
     var paramType = item.paramType;
-    result = result + "{\"paramName\": \"" + paramName + "\", \"paramValue\": \"" + paramValue + "\", \"paramType\": \"" + paramType + "\"}";
+    result = result + "{\"paramName\": \"" + paramName + "\", \"paramValue\": \"" + utility.escapeQuotes(paramValue) + "\", \"paramType\": \"" + paramType + "\"}";
     if (i < arr.size() - 1) {
       result = result + ",";
     }
   });
   return result;
 }
+
+var utility = {
+  escapeQuotes: function (string) {
+    return string.replace(/"/g, '\\"');
+  },
+  unescapeQuotes: function (string) {
+    return string.replace(/"/g, '&quot;');
+  }
+};
+
+
 
 function changeJson() {
   var beanName = jQuery("#beanSelect").val();
@@ -141,7 +151,7 @@ function changeJson() {
 function fillDropDownList(selectId, parameterName, jsonString) {
   var jsonValues = JSON.parse(jsonString);
   var selectElement = document.getElementById(selectId);
-  jQuery.each(jsonValues, function() {
+  jQuery.each(jsonValues, function () {
     var opt = document.createElement('option');
     opt.innerHTML = this[parameterName];
     opt.value = this[parameterName];
@@ -174,7 +184,7 @@ function getPath(controllerName) {
 
 function httpGetAsync(theUrl, callback) {
   var xmlHttp = new XMLHttpRequest();
-  xmlHttp.onreadystatechange = function() {
+  xmlHttp.onreadystatechange = function () {
     if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
       callback(xmlHttp.responseText);
   }
