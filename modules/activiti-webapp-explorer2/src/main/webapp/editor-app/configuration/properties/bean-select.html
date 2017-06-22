@@ -21,15 +21,16 @@
           <input id="outputVariableName" type="text" style="width:100px" />
         </div>
         <div id="arguments-table" style="margin-top:10px;">
-          <table id="argTable" style="width:75%">
+          <table id="argTable" style="width:100%">
             <tr>
               <th>Name</th>
               <th>Type</th>
+              <th>Description</th>
               <th>Value</th>
             </tr>
           </table>
         </div>
-        <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:360px;" ng-change="doTest()"></textarea>
+        <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:360px; visibility: hidden;" ng-change="doTest()"></textarea>
       </div>
       <div id="footer-wrapper">
         <div class="modal-footer">

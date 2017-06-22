@@ -56,13 +56,13 @@ function fillTable(responseText) {
     var name = row.insertCell(0);
     name.id = 'name' + i;
     var type = row.insertCell(1);
-    var value = row.insertCell(2);
+    var descr = row.insertCell(2);
+    var value = row.insertCell(3);
     value.id = 'val' + i;
-
-
     name.innerHTML = this.argName;
     var currentArgName = this.argName;
     type.innerHTML = this.argType;
+    descr.innerHTML = this.description;
     value.innerHTML = "<input type=\"text\" id='val'" + i + ">";
     if (jsonObject && jsonObject.args) {
       jsonObject.args.forEach(function (item, i, arr) {
