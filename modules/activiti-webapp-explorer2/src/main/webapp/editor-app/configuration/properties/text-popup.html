@@ -1,17 +1,23 @@
-
 <div class="modal" ng-controller="KisBpmTextPropertyPopupCtrl">
-    <div class="modal-dialog">
-        <div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;</button>
-			    <h3>{{'PROPERTY.PROPERTY.EDIT.TITLE' | translate:property}}</h3>
-			</div>
-			<div class="modal-body">
-				<p><textarea auto-focus class="form-control" ng-model="property.value" style="width:70%; height:100%; max-width: 100%; max-height: 100%; min-height: 200px"/></p>
-			</div>
-			<div class="modal-footer">
-				<button ng-click="save()" class="btn btn-primary" translate >ACTION.SAVE</button>
-			</div>
-		</div>
-	</div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;</button>
+        <h3>{{'PROPERTY.PROPERTY.EDIT.TITLE' | translate:property}}</h3>
+      </div>
+      <div class="modal-body">
+        <select id="templateSelect"></select>
+        <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:360px;visibility:hidden;" ng-change="doTest()"></textarea>
+        <div id="editor" auto-focus="" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0;height:424px;margin-top:60px;"></div>
+      </div>
+      <div id="footer-wrapper">
+        <div class="modal-footer">
+          <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+<script src="editor-app/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="editor-app/ace/ext-language_tools.js"></script>
+<script src="editor-app/configuration/properties/text-popup.js"></script>
