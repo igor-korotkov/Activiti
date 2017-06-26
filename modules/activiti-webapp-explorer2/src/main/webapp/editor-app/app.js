@@ -94,18 +94,29 @@ activitiModeler
 
             /* Helper method to fetch model from server (always needed) */
             function fetchModel(modelId) {
-
                 var modelUrl = KISBPM.URL.getModel(modelId);
+                $http({method: 'GET', url: modelUrl}).success(function (data, status, headers, config) {
+                    $rootScope.editor = new ORYX.Editor(data);
+                    $rootScope.modelData = angular.fromJson(data);
+                    $rootScope.modelName = $rootScope.modelData.model.properties.name;
+                    $rootScope.editorFactory.resolve();
+                    fetchModelParameters($rootScope.sessionId)
+                }).error(function (data, status, headers, config) {
+                    console.log('Error loading model with id ' + modelId + ' ' + data);
+                });
 
-                $http({method: 'GET', url: modelUrl}).
-                    success(function (data, status, headers, config) {
-                        $rootScope.editor = new ORYX.Editor(data);
-                        $rootScope.modelData = angular.fromJson(data);
-                        $rootScope.editorFactory.resolve();
-                    }).
-                    error(function (data, status, headers, config) {
-                      console.log('Error loading model with id ' + modelId + ' ' + data);
-                    });
+
+            }
+
+            function fetchModelParameters(sessionId) {
+                var modelName = $rootScope.modelName.toString();
+                var modelUrl = KISBPM.URL.getVariables(sessionId, modelName);
+                $http({method: 'GET', url: modelUrl}).success(function (data, status, headers, config) {
+                    $rootScope.inputParameters = angular.fromJson(data).inputParameters;
+                    $rootScope.outputParameters = angular.fromJson(data).outPutParameters;
+                }).error(function (data, status, headers, config) {
+                    console.log('Error loading model information for name ' + modelName);
+                });
             }
 
 
@@ -178,9 +189,12 @@ activitiModeler
 	            if (!$rootScope.editorInitialized) {
 
 	            	ORYX._loadPlugins();
-	
+
+                    $rootScope.sessionId = EDITOR.UTIL.getParameterByName('s');
 	                var modelId = EDITOR.UTIL.getParameterByName('modelId');
 	                fetchModel(modelId);
+                    // var sessionId = $rootScope.sessionId;
+                    // fetchModelParameters(sessionId);
 	
 	                $rootScope.window = {};
 	                var updateWindowSize = function() {

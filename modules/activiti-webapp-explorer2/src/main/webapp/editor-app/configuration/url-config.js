@@ -42,5 +42,9 @@ KISBPM.URL = {
 
     getLocales: function() {
         return CUBA.CONFIG.modelerRoot() + '/locales';
+    },
+
+    getVariables: function (sessionId, modelName) {
+        return CUBA.CONFIG.appRoot() + "/models/" + modelName + "?s=" + sessionId;
     }
 };
