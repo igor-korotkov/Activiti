@@ -6,8 +6,12 @@
         <h3>{{'PROPERTY.PROPERTY.EDIT.TITLE' | translate:property}}</h3>
       </div>
       <div class="modal-body">
-        <select id="templateSelect"></select>
-        <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:360px;visibility:hidden;" ng-change="doTest()"></textarea>
+        <div id="templateSelectDiv">
+          Script template: 
+          <select id="templateSelect"></select>
+        </div>
+        <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:360px;visibility:hidden;"
+          ng-change="doTest()"></textarea>
         <div id="editor" auto-focus="" style="position: absolute;top: 0;right: 0;bottom: 0;left: 0;height:424px;margin-top:60px;"></div>
       </div>
       <div id="footer-wrapper">
