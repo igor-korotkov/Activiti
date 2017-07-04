@@ -424,6 +424,11 @@ table.history tr.current td {
 	width: 1000px;	
 }
 
+.modal-dialog {
+    width: 900px;
+    margin: 30px auto;
+  }
+
 .modal-dialog.modal-wide {
     width: 1000px;  
 }
@@ -639,21 +644,10 @@ ul.list>li:hover .actions {
 }
 
 
-.variables {
-	font-size: 100%;
-}
-
-.variables .table {
-	border: 1px;
-	border-color: #1a1a1a;
-	border-spacing: 2px;
-	padding: 1px;
-}
-
-.variables .tr {
-	padding: 2px;
-}
-
-.variables .th, .td {
-	padding: 2px;
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 3px;
 }
