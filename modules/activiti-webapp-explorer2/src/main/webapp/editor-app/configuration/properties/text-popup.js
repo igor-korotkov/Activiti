@@ -52,7 +52,13 @@ httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
     }
   }
   if (jsonObject) {
-    editor.setValue(utility.unescapeQuotes(jsonObject.script), 1);
+    var scriptRows = jsonObject.script;
+    var scriptValue = ''
+    for (var i = 0; i < scriptRows.length; i++) {
+      scriptValue = scriptValue + scriptRows[i] + '\n';
+    }
+    123
+    editor.setValue(utility.unescapeQuotes(scriptValue), 1);
     jsonObject.vars.forEach(function (item, i, arr) {
       jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = "' + item.name + '"></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = "' + item.type + '"></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = "' + item.description + '"></td></tr>')
     })
@@ -110,7 +116,18 @@ function textChanged() {
 
 function changeJson() {
   var script = editor.getSession().getValue();
-  var JSONString = "{" + "\"script\":\"" + utility.escapeQuotes(script) + "\", " +
+
+  var scriptLines = script.split('\n');
+  var scriptLinesString = '';
+  for (var i = 0; i < scriptLines.length; i++) {
+    var line = utility.escapeQuotes(scriptLines[i]);
+    scriptLinesString = scriptLinesString + '"' + line + '"';
+    if (i + 1 < scriptLines.length) {
+      scriptLinesString = scriptLinesString + ',';
+    }
+  }
+  console.log(scriptLinesString)
+  var JSONString = "{" + "\"script\":[" + scriptLinesString + "], " +
     "\"vars\":[" +
     getOutVariablesTableJson() +
     "]" + "}";

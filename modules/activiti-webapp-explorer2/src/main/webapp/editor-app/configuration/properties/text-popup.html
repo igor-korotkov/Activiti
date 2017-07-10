@@ -34,25 +34,25 @@
 							</table>
 						</div>
 					</div>
-
-					<div id="variables" ng-if="inputParameters.length > 0 || outputParameters.length > 0" class="variables">
-						Available Variables
-						<table class="variables" style="width:100%">
-							<tr ng-if="inputParameters.length > 0">
-								<th>Input name</th>
-								<th>Type</th>
-								<th>Is constant</th>
-								<th>Default value</th>
-							</tr>
-							<tr ng-repeat="inParameter in inputParameters">
-								<td>{{inParameter.name}}</td>
-								<td>{{inParameter.parameterType}}</td>
-								<td>{{inParameter.constant}}</td>
-								<td>{{inParameter.valueStr}}</td>
-							</tr>
-						</table>
+					<div id="inputVariablesWrapper" style="margin-top: 190px;">
+						<div id="variables" ng-if="inputParameters.length > 0 || outputParameters.length > 0" class="variables">
+							Available Variables
+							<table class="variables" style="width:100%">
+								<tr ng-if="inputParameters.length > 0">
+									<th>Input name</th>
+									<th>Type</th>
+									<th>Is constant</th>
+									<th>Default value</th>
+								</tr>
+								<tr ng-repeat="inParameter in inputParameters">
+									<td>{{inParameter.name}}</td>
+									<td>{{inParameter.parameterType}}</td>
+									<td>{{inParameter.constant}}</td>
+									<td>{{inParameter.valueStr}}</td>
+								</tr>
+							</table>
+						</div>
 					</div>
-
 				</div>
 			</div>
 			<div id="footer-wrapper">
