@@ -4,16 +4,44 @@ if (jsonString) {
 }
 
 
+
 ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
-editor.setOptions({
-  enableBasicAutocompletion: true
-});
+
+
+
+
+var variablesWordCompleter = {
+  getCompletions : function (editor, session, pos, prefix, callback) {
+    var wordList = [];
+    var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
+    for (var i = 0; i < inputParams.length; i++) {
+      wordList.push(inputParams[i].name);
+    }
+    callback(null, wordList.map(function (word) {
+      return {
+        caption: word,
+        value: word,
+        meta: "static"
+      };
+    }));
+
+  }
+}
+var langTools = ace.require("ace/ext/language_tools");
 editor.getSession().on('change', function () {
   changeJson();
   jQuery("textarea").change();
 });
 editor.getSession().setMode("ace/mode/groovy");
+
+editor.setOptions({
+  enableBasicAutocompletion: true
+});
+console.log(editor.completers)
+editor.completers.push(variablesWordCompleter);
+
+console.log(editor.completers)
 
 
 
@@ -126,7 +154,6 @@ function changeJson() {
       scriptLinesString = scriptLinesString + ',';
     }
   }
-  console.log(scriptLinesString)
   var JSONString = "{" + "\"script\":[" + scriptLinesString + "], " +
     "\"vars\":[" +
     getOutVariablesTableJson() +
