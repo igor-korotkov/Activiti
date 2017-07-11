@@ -28,6 +28,11 @@ var variablesWordCompleter = {
 
   }
 }
+
+
+CubaStencilUtils.getAvailableVariablesForSelectedShape()
+
+
 var langTools = ace.require("ace/ext/language_tools");
 editor.getSession().on('change', function () {
   changeJson();
@@ -38,15 +43,9 @@ editor.getSession().setMode("ace/mode/groovy");
 editor.setOptions({
   enableBasicAutocompletion: true
 });
-console.log(editor.completers)
 editor.completers.push(variablesWordCompleter);
 
-console.log(editor.completers)
-
-
-
 var templateSelect = jQuery('#templateSelect');
-
 templateSelect.change(function () {
   var selectedValue = templateSelect.val();
   if (selectedValue) {
