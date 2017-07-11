@@ -9,29 +9,59 @@ ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
 
 
+var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
+var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
+var worlListForAutoComplete = [];
+fillWordList();
 
+function fillWordList() {
+  for (var i = 0; i < inputParams.length; i++) {
+    worlListForAutoComplete.push(inputParams[i].name);
+  }
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i]
+    var vars = node.vars
+    for (var y = 0; y < vars.length; y++) {
+      worlListForAutoComplete.push(nodes[i].vars[y].name);
+    }
+  }
+}
+
+fillInTable();
+
+function fillInTable() {
+  //nodes = node id and variables from prev nodes
+  //input params = process input params
+
+  if (!nodes.length && !inputParams.length) {
+    jQuery("#inputVariablesWrapper").hide();
+  } else {
+    jQuery("#inputVariablesWrapper").show();
+  }
+  for (var i = 0; i < inputParams.length; i++) {
+    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '</td><td>' + inputParams[i].constant + '</td><td>' + inputParams[i].valueStr + '</td></tr>')
+  }
+
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i]
+    var vars = node.vars
+    for (var y = 0; y < vars.length; y++) {
+      jQuery("#inTable").append('<tr><td>' + nodes[i].vars[y].name + '</td><td>' + nodes[i].vars[y].type + '</td><td>' + '</td><td>' + '</td></tr>')
+    }
+  }
+}
 
 var variablesWordCompleter = {
-  getCompletions : function (editor, session, pos, prefix, callback) {
-    var wordList = [];
-    var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
-    for (var i = 0; i < inputParams.length; i++) {
-      wordList.push(inputParams[i].name);
-    }
-    callback(null, wordList.map(function (word) {
+  getCompletions: function (editor, session, pos, prefix, callback) {
+    callback(null, worlListForAutoComplete.map(function (word) {
       return {
         caption: word,
         value: word,
         meta: "static"
       };
     }));
-
   }
 }
-
-
-CubaStencilUtils.getAvailableVariablesForSelectedShape()
-
 
 var langTools = ace.require("ace/ext/language_tools");
 editor.getSession().on('change', function () {
@@ -56,13 +86,11 @@ templateSelect.change(function () {
       editor.focus();
     });
   }
-
 })
 
 httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
   var names = JSON.parse(responseText);
   var sel = document.getElementById('templateSelect');
-
   var opt = document.createElement('option');
   opt.innerHTML = '';
   opt.value = '';
@@ -84,7 +112,6 @@ httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
     for (var i = 0; i < scriptRows.length; i++) {
       scriptValue = scriptValue + scriptRows[i] + '\n';
     }
-    123
     editor.setValue(utility.unescapeQuotes(scriptValue), 1);
     jsonObject.vars.forEach(function (item, i, arr) {
       jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = "' + item.name + '"></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = "' + item.type + '"></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = "' + item.description + '"></td></tr>')

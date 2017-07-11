@@ -32,36 +32,37 @@
             Output variable name:
             <input id="outputVariableName" type="text" style="width:100px" />
           </div>
-        </div>
-        <div id="variablesWrapper">
-          <div id="variables" ng-if="inputParameters.length > 0 || outputParameters.length > 0" class="variables">
-            Available Variables
-            <table class="variables" style="width:100%">
-              <tr ng-if="inputParameters.length > 0">
-                <th>Input name</th>
-                <th>Type</th>
-                <th>Is constant</th>
-                <th>Default value</th>
-              </tr>
-              <tr ng-repeat="inParameter in inputParameters">
-                <td>{{inParameter.name}}</td>
-                <td>{{inParameter.parameterType}}</td>
-                <td>{{inParameter.constant}}</td>
-                <td>{{inParameter.valueStr}}</td>
-              </tr>
-            </table>
+          <div id="outputTypeWrapper">
+            Output variable type:
+            <div id="outputType">
+            </div>
           </div>
         </div>
-        <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:360px; visibility: hidden;"
-          ng-change="doTest()"></textarea>
-      </div>
-      <div id="footer-wrapper">
-        <div class="modal-footer">
-          <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
+        <div id="variablesWrapper">
+          <div id="inputVariablesWrapper">
+            <div id="variables">
+              Available Variables
+              <div id="table-scroll">
+                <table id="inTable" style="width:100%">
+                  <tr>
+                    <th>Input name</th>
+                    <th>Type</th>
+                    <th>Is constant</th>
+                    <th>Default value</th>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:360px; visibility: hidden;"
+              ng-change="doTest()"></textarea>
+          </div>
+          <div id="footer-wrapper">
+            <div class="modal-footer">
+              <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-<script src="editor-app/configuration/properties/bean-select.js"></script>
-<link rel="stylesheet" type="text/css" href="editor-app/configuration/properties/bean-select.css">
+    <script src="editor-app/configuration/properties/bean-select.js"></script>
+    <link rel="stylesheet" type="text/css" href="editor-app/configuration/properties/bean-select.css">
