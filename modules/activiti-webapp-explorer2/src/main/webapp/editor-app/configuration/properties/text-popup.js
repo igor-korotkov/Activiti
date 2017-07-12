@@ -1,9 +1,10 @@
 var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
+var jsonObject;
 if (jsonString) {
-  var jsonObject = JSON.parse(jsonString);
+  jsonObject = JSON.parse(jsonString);
+} else {
+  jsonObject = null;
 }
-
-
 
 ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
@@ -222,3 +223,7 @@ var utility = {
 jQuery("#outTable tr").not(':first').click(function () {
   jQuery(this).addClass('selected').siblings().removeClass('selected');
 })
+
+if (!jsonString) {
+  changeJson();
+}

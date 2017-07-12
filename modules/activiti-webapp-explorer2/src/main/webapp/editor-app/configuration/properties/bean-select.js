@@ -1,6 +1,9 @@
 var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
+var jsonObject;
 if (jsonString) {
-  var jsonObject = JSON.parse(jsonString);
+  jsonObject = JSON.parse(jsonString);
+} else {
+  jsonObject = null;
 }
 
 var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
@@ -235,4 +238,8 @@ function httpGetAsync(theUrl, callback) {
   }
   xmlHttp.open("GET", theUrl, true);
   xmlHttp.send(null);
+}
+
+if (!jsonString) {
+  changeJson();
 }
