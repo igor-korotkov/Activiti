@@ -87,7 +87,7 @@ function parseJson(string) {
     try {
         result = JSON.parse(string);
     } catch (e) {
-        console.error('Parsing JSON error (IT IS OK, IF WE GOT NEW ELEMENT IN NODE GRAPH): ' + e.name + ":" + e.message + "\n" + e.stack)
+        console.log('Parsing JSON error (IT IS OK, IF WE GOT NEW ELEMENT IN NODE GRAPH): ' + e.name + ":" + e.message + "\n" + e.stack)
     }
     return result;
 }
