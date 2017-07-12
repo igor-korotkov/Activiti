@@ -63,17 +63,31 @@ function getVariables(shape) {
     switch (type) {
         case 'ScriptTask':
             var text = shape.properties.scripttext;
-            var scriptJson = JSON.parse(text);
-            vars = scriptJson.vars;
+            var scriptJson = parseJson(text);
+            if (scriptJson) {
+                vars = scriptJson.vars;
+            }
             break;
         case 'IntegrationNode':
             var text = shape.properties.beanselect;
-            var beanJson = JSON.parse(text);
+            var beanJson = parseJson(text);
             var variable = {}
-            variable.name = beanJson.outputName
-            variable.type = beanJson.outputType
-            vars.push(variable)
+            if (beanJson) {
+                variable.name = beanJson.outputName
+                variable.type = beanJson.outputType
+                vars.push(variable)
+            }
             break;
     }
     return vars;
+}
+
+function parseJson(string) {
+    var result;
+    try {
+        result = JSON.parse(string);
+    } catch (e) {
+        console.error('Parsing JSON error (IT IS OK, IF WE GOT NEW ELEMENT IN NODE GRAPH): ' + e.name + ":" + e.message + "\n" + e.stack)
+    }
+    return result;
 }
