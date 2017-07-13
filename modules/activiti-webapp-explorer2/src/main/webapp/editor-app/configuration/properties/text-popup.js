@@ -6,6 +6,8 @@ if (jsonString) {
   jsonObject = null;
 }
 
+var typeList = ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
+
 ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
 
@@ -111,16 +113,20 @@ httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
     var scriptRows = jsonObject.script;
     var scriptValue = ''
     for (var i = 0; i < scriptRows.length; i++) {
-      scriptValue = scriptValue + scriptRows[i] + '\n';
+      scriptValue = scriptValue + scriptRows[i];
+      if (i + 1 != scriptRows.length) {
+        scriptValue = scriptValue + '\n';
+      }
     }
     editor.setValue(utility.unescapeQuotes(scriptValue), 1);
     jsonObject.vars.forEach(function (item, i, arr) {
-      jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = "' + item.name + '"></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = "' + item.type + '"></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = "' + item.description + '"></td></tr>')
+      jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.name) + '\"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.type) + '\"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.description) + '\"></td></tr>')
     })
     changeJson();
     jQuery("#outTable tr").not(':first').click(function () {
       jQuery(this).addClass('selected').siblings().removeClass('selected');
     })
+    initAutoComplete();
     editor.focus();
   }
 });
@@ -150,19 +156,18 @@ function httpGetAsync(theUrl, callback) {
   xmlHttp.send(null);
 }
 
-
-
 jQuery("#removeBtn").click(function () {
   jQuery('.selected').remove();
   changeJson();
 })
 
 jQuery("#addBtn").click(function () {
-  jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td></tr>')
+  jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td></tr>')
   jQuery("#outTable tr").unbind("click");
   jQuery("#outTable tr").not(':first').click(function () {
     jQuery(this).addClass('selected').siblings().removeClass('selected');
   })
+  initAutoComplete();
 })
 
 function textChanged() {
@@ -222,7 +227,56 @@ var utility = {
 
 jQuery("#outTable tr").not(':first').click(function () {
   jQuery(this).addClass('selected').siblings().removeClass('selected');
+
 })
+
+var comboplets = []
+
+function initAutoComplete() {
+  var input = document.getElementsByClassName("inType");
+  for (var i = 0; i < input.length; i++) {
+    if (!input[i].parentElement.classList.contains('awesomplete')) {
+      var comboplete = new Awesomplete(input[i], {
+        minChars: 1,
+        list: ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
+      });
+      var dropdownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
+      var obj = {}
+      obj.c = comboplete
+      obj.b = dropdownBtn
+      comboplets.push(obj);
+      initDropDownListeners();
+    }
+  }
+}
+
+function initDropDownListeners() {
+  comboplets.each(function (item, i, arr) {
+    if (!item.added) {
+      item.added = true;
+      item.b.addEventListener("click", function () {
+        closeAllOtherComboplets(item.c);
+        var comboplete = item.c;
+        if (comboplete.ul.childNodes.length === 0) {
+          comboplete.minChars = 0;
+          comboplete.evaluate();
+        } else if (comboplete.ul.hasAttribute('hidden')) {
+          comboplete.open();
+        } else {
+          comboplete.close();
+        }
+      })
+    }
+  })
+}
+
+function closeAllOtherComboplets(item) {
+  comboplets.each(function (obj, i, arr) {
+    if (!obj.c.ul.hasAttribute('hidden') && obj.c !== item) {
+      obj.c.close();
+    }
+  })
+}
 
 if (!jsonString) {
   changeJson();

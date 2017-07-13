@@ -105,7 +105,7 @@ function fillTable(responseText) {
     if (jsonObject && jsonObject.args) {
       jsonObject.args.forEach(function (item, i, arr) {
         if (item.paramName == currentArgName) {
-          value.innerHTML = '<input type=\"text\" id="val' + i + '" value=\"' + utility.unescapeQuotes(item.paramValue) + '\">'
+          value.innerHTML = '<input type=\"text\" id="val' + i + '" value=\"' + utility.unescapeQuotesToQuotChr(item.paramValue) + '\">'
         }
       });
     }
@@ -164,7 +164,7 @@ var utility = {
   escapeQuotes: function (string) {
     return string.replace(/"/g, '\\"');
   },
-  unescapeQuotes: function (string) {
+  unescapeQuotesToQuotChr: function (string) {
     return string.replace(/"/g, '&quot;');
   }
 };
