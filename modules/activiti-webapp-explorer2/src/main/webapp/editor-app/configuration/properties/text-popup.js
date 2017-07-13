@@ -270,6 +270,30 @@ function initDropDownListeners() {
   })
 }
 
+jQuery("#filterInput").keyup(function () {
+  console.log('pressed')
+    var data = this.value.split(" ");
+    var trSelector = jQuery("#inTable").find('tr').not(':first');
+    if (this.value == "") {
+        trSelector.show();
+        return;
+    }
+    trSelector.hide();
+    trSelector.filter(function (i, v) {
+        var $t = jQuery(this);
+        for (var d = 0; d < data.length; ++d) {
+            if ($t.is(":contains('" + data[d] + "')")) {
+                return true;
+            }
+        }
+        return false;
+    })
+    .show();
+})
+
+
+
+
 function closeAllOtherComboplets(item) {
   comboplets.each(function (obj, i, arr) {
     if (!obj.c.ul.hasAttribute('hidden') && obj.c !== item) {

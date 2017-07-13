@@ -31,3 +31,9 @@ input[type="text"] {
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+#filter {
+    display: inline-block;
+    float: right;
+    margin-bottom: 3px;
+}

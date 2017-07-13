@@ -58,3 +58,9 @@
 .caret {
     margin-left: 6px;
 }
+
+#filter {
+    display: inline-block;
+    float: right;
+    margin-bottom: 3px;
+}
