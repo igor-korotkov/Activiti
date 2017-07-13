@@ -1,0 +1,48 @@
+#outVariables {
+    height: 34px;
+    width: 100%;
+}
+
+.selected {
+    background-color: brown;
+    color: black;
+}
+
+#variables {
+    width: 100%;
+}
+
+#removeBtn {
+    padding: 2px;
+    display: inline-block;
+    float: right;
+    border: 1px solid black;
+    height: 22px;
+    width: 47px;
+    margin: 2px;
+}
+
+#addBtn {
+    padding: 2px;
+    display: inline-block;
+    float: right;
+    border: 1px solid black;
+    height: 22px;
+    width: 27px;
+    margin: 2px;
+}
+
+#variablesWrapper,
+#scriptTemplate {
+    width: 49%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#table-scroll {
+    display: inline-block;
+    width: 105%;
+    height: 175px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}

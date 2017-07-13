@@ -10,8 +10,12 @@ input[type="text"] {
   width: 100%;
 }
 
-#outputName {
-  position: absolute;
-  top: 15px;
-  right: 105px;
+#beanSelectWrapper,
+#variablesWrapper {
+  width: 49%;
+  display: inline-block;
+  vertical-align: top;
+}
+#outputName{
+  margin-top: 8px;
 }

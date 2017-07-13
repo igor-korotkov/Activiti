@@ -6,31 +6,54 @@
         <h3>{{'PROPERTY.PROPERTY.EDIT.TITLE' | translate:property}}</h3>
       </div>
       <div class="modal-body">
-        <div id="beanSelectDiv">
-          Bean select:
-          <select id="beanSelect"></select>
-        </div>
+        <div id="beanSelectWrapper">
+          <div id="beanSelectDiv">
+            Bean select:
+            <select id="beanSelect"></select>
+          </div>
 
-        <div id="methodSelectDiv" style="margin-top:10px;">
-          Method select:
-          <select id="methodSelect"></select>
-        </div>
+          <div id="methodSelectDiv" style="margin-top:10px;">
+            Method select:
+            <select id="methodSelect"></select>
+          </div>
 
-        <div id="outputName">
-          Output variable name:
-          <input id="outputVariableName" type="text" style="width:100px" />
+
+          <div id="arguments-table" style="margin-top:10px;">
+            <table id="argTable" style="width:100%">
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Value</th>
+              </tr>
+            </table>
+          </div>
+          <div id="outputName">
+            Output variable name:
+            <input id="outputVariableName" type="text" style="width:100px" />
+          </div>
         </div>
-        <div id="arguments-table" style="margin-top:10px;">
-          <table id="argTable" style="width:100%">
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-              <th>Value</th>
-            </tr>
-          </table>
+        <div id="variablesWrapper">
+          <div id="variables" ng-if="inputParameters.length > 0 || outputParameters.length > 0" class="variables">
+            Available Variables
+            <table class="variables" style="width:100%">
+              <tr ng-if="inputParameters.length > 0">
+                <th>Input name</th>
+                <th>Type</th>
+                <th>Is constant</th>
+                <th>Default value</th>
+              </tr>
+              <tr ng-repeat="inParameter in inputParameters">
+                <td>{{inParameter.name}}</td>
+                <td>{{inParameter.parameterType}}</td>
+                <td>{{inParameter.constant}}</td>
+                <td>{{inParameter.valueStr}}</td>
+              </tr>
+            </table>
+          </div>
         </div>
-        <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:360px; visibility: hidden;" ng-change="doTest()"></textarea>
+        <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:360px; visibility: hidden;"
+          ng-change="doTest()"></textarea>
       </div>
       <div id="footer-wrapper">
         <div class="modal-footer">
