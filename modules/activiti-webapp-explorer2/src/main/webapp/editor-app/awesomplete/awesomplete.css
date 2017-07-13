@@ -9,6 +9,7 @@
 
 .awesomplete {
 	display: inline-block;
+	width: 117px;
 }
 
 .awesomplete>input {

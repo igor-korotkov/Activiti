@@ -46,3 +46,15 @@
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+.dropdown-btn {
+    display: inline-block;
+    background: lightgray;
+    width: 20px;
+    height: 23px;
+    padding-top: 3px;
+}
+
+.caret {
+    margin-left: 6px;
+}

@@ -120,7 +120,7 @@ httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
     }
     editor.setValue(utility.unescapeQuotes(scriptValue), 1);
     jsonObject.vars.forEach(function (item, i, arr) {
-      jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.name) + '\"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.type) + '\"></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.description) + '\"></td></tr>')
+      jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.name) + '\"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.type) + '\"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.description) + '\"></td></tr>')
     })
     changeJson();
     jQuery("#outTable tr").not(':first').click(function () {
@@ -162,7 +162,7 @@ jQuery("#removeBtn").click(function () {
 })
 
 jQuery("#addBtn").click(function () {
-  jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text"></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td></tr>')
+  jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td></tr>')
   jQuery("#outTable tr").unbind("click");
   jQuery("#outTable tr").not(':first').click(function () {
     jQuery(this).addClass('selected').siblings().removeClass('selected');
@@ -227,16 +227,43 @@ var utility = {
 
 jQuery("#outTable tr").not(':first').click(function () {
   jQuery(this).addClass('selected').siblings().removeClass('selected');
+
 })
+
+var comboplets = []
 
 function initAutoComplete() {
   var input = document.getElementsByClassName("inType");
   for (var i = 0; i < input.length; i++) {
-    new Awesomplete(input[i], {
+    var comboplete = new Awesomplete(input[i], {
       minChars: 1,
       list: ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
     });
+    comboplets.push(comboplete);
+    var dropdownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
+    console.log(input[i].parentElement.parentElement)
+    if (dropdownBtn) {
+      dropdownBtn.addEventListener("click", function () {
+        closeAllComboplets();
+        if (comboplete.ul.childNodes.length === 0) {
+          comboplete.minChars = 0;
+          comboplete.evaluate();
+        } else if (comboplete.ul.hasAttribute('hidden')) {
+          comboplete.open();
+        } else {
+          comboplete.close();
+        }
+      })
+    }
   }
+}
+
+function closeAllComboplets() {
+  comboplets.each(function (comboplete, i, arr) {
+    if (!comboplete.ul.hasAttribute('hidden')) {
+      comboplete.close();
+    }
+  })
 }
 
 if (!jsonString) {
