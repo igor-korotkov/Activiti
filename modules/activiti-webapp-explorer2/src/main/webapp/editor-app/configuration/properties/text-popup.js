@@ -235,16 +235,28 @@ var comboplets = []
 function initAutoComplete() {
   var input = document.getElementsByClassName("inType");
   for (var i = 0; i < input.length; i++) {
-    var comboplete = new Awesomplete(input[i], {
-      minChars: 1,
-      list: ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
-    });
-    comboplets.push(comboplete);
-    var dropdownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
-    console.log(input[i].parentElement.parentElement)
-    if (dropdownBtn) {
-      dropdownBtn.addEventListener("click", function () {
-        closeAllComboplets();
+    if (!input[i].parentElement.classList.contains('awesomplete')) {
+      var comboplete = new Awesomplete(input[i], {
+        minChars: 1,
+        list: ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
+      });
+      var dropdownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
+      var obj = {}
+      obj.c = comboplete
+      obj.b = dropdownBtn
+      comboplets.push(obj);
+      initDropDownListeners();
+    }
+  }
+}
+
+function initDropDownListeners() {
+  comboplets.each(function (item, i, arr) {
+    if (!item.added) {
+      item.added = true;
+      item.b.addEventListener("click", function () {
+        closeAllOtherComboplets(item.c);
+        var comboplete = item.c;
         if (comboplete.ul.childNodes.length === 0) {
           comboplete.minChars = 0;
           comboplete.evaluate();
@@ -255,13 +267,13 @@ function initAutoComplete() {
         }
       })
     }
-  }
+  })
 }
 
-function closeAllComboplets() {
-  comboplets.each(function (comboplete, i, arr) {
-    if (!comboplete.ul.hasAttribute('hidden')) {
-      comboplete.close();
+function closeAllOtherComboplets(item) {
+  comboplets.each(function (obj, i, arr) {
+    if (!obj.c.ul.hasAttribute('hidden') && obj.c !== item) {
+      obj.c.close();
     }
   })
 }
