@@ -1,7 +1,38 @@
 var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
+var jsonObject;
 if (jsonString) {
-  var jsonObject = JSON.parse(jsonString);
+  jsonObject = JSON.parse(jsonString);
+} else {
+  jsonObject = null;
 }
+
+var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
+var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
+
+fillInTable();
+
+function fillInTable() {
+  //nodes = node id and variables from prev nodes
+  //input params = process input params
+
+  if (!nodes.length && !inputParams.length) {
+    jQuery("#inputVariablesWrapper").hide();
+  } else {
+    jQuery("#inputVariablesWrapper").show();
+  }
+  for (var i = 0; i < inputParams.length; i++) {
+    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '</td><td>' + inputParams[i].constant + '</td><td>' + inputParams[i].valueStr + '</td></tr>')
+  }
+
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i]
+    var vars = node.vars
+    for (var y = 0; y < vars.length; y++) {
+      jQuery("#inTable").append('<tr><td>' + nodes[i].vars[y].name + '</td><td>' + nodes[i].vars[y].type + '</td><td>' + '</td><td>' + '</td></tr>')
+    }
+  }
+}
+
 
 jQuery('#methodSelect').change(function () {
   var selectedMethod = jQuery('#methodSelect').val();
@@ -12,6 +43,13 @@ jQuery('#methodSelect').change(function () {
     changeJson();
     jsonObject = null;
   });
+
+  httpGetAsync(getMethodReturnType(), function (responseText) {
+    var ob = JSON.parse(responseText);
+    jQuery('#outputType').text(ob.returnType);
+    changeJson();
+  });
+
 })
 
 jQuery('#beanSelect').change(function () {
@@ -137,10 +175,12 @@ function changeJson() {
   var beanName = jQuery("#beanSelect").val();
   var methodName = jQuery("#methodSelect").val();
   var outputVariableName = jQuery("#outputVariableName").val();
+  var outputVariableType = jQuery("#outputType").text();
   var argsString = argsMapAsString();
   var JSONString = "{" + "\"beanName\":\"" + beanName + "\", " +
     "\"methodName\":\"" + methodName + "\", " +
     "\"outputName\":\"" + outputVariableName + "\", " +
+    "\"outputType\":\"" + outputVariableType + "\", " +
     "\"args\":[" +
     argsString +
     "]" + "}";
@@ -177,6 +217,14 @@ function getMethodArguments() {
   return getPath(controller);
 }
 
+function getMethodReturnType() {
+  var selectedBean = jQuery('#beanSelect').val();
+  var selectedMethod = jQuery('#methodSelect').val();
+  var controller = "getBeanMethodReturnType?beanName=" + selectedBean + "&methodName=" + selectedMethod;
+  return getPath(controller);
+}
+
+
 function getPath(controllerName) {
   var splittedHref = window.location.href.split('dispatch');
   return splittedHref[0] + 'dispatch/' + controllerName;
@@ -190,4 +238,8 @@ function httpGetAsync(theUrl, callback) {
   }
   xmlHttp.open("GET", theUrl, true);
   xmlHttp.send(null);
+}
+
+if (!jsonString) {
+  changeJson();
 }
