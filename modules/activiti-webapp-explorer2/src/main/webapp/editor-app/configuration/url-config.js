@@ -41,7 +41,6 @@ KISBPM.URL = {
     },
 
     getLocales: function() {
-        console.log('called get locales')
         return CUBA.CONFIG.modelerRoot() + '/locales';
     },
 
