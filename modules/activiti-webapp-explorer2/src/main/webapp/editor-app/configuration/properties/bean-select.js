@@ -44,20 +44,24 @@ jQuery('#methodSelect').change(function () {
     jsonObject = null;
   });
 
-  httpGetAsync(getMethodReturnType(), function (responseText) {
-    var ob = JSON.parse(responseText);
-    jQuery('#outputType').text(ob.returnType);
-    changeJson();
-  });
+    httpGetAsync(getMethodReturnType(), function (responseText) {
+        var ob = JSON.parse(responseText);
+        var outputType = ob.returnType;
+        alert(outputType);
+        jQuery('#outputType').text(outputType);
+        changeJson();
+        updateOutputTypeDescription(outputType);
+    });
 
-})
+
+});
 
 jQuery('#beanSelect').change(function () {
   var selectedValue = jQuery('#beanSelect').val();
   if (selectedValue) {
     httpGetAsync(getBeanMethods(selectedValue), function (responseText) {
       clearOptions('#methodSelect');
-      fillDropDownList('methodSelect', 'methodName', responseText)
+        fillDropDownList('methodSelect', 'methodName', responseText);
       clearTable();
       changeJson();
       if (jsonObject) {
@@ -68,7 +72,15 @@ jQuery('#beanSelect').change(function () {
       }
     });
   }
-})
+});
+
+function updateInputTypeDescription(inputClassName) {
+    document.getElementById('input_description_frame').src = KISBPM.URL.getStubsDocs(inputClassName);
+}
+
+function updateOutputTypeDescription(outputClassName) {
+    document.getElementById('output_description_frame').src = KISBPM.URL.getStubsDocs(outputClassName);
+}
 
 document.getElementById('outputVariableName').addEventListener("input", function (evt) {
   changeJson();
@@ -83,7 +95,7 @@ httpGetAsync(getBeanNames(), function (responseText) {
   } else {
     jQuery("#beanSelect").prop("selectedIndex", -1);
   }
-})
+});
 
 function fillTable(responseText) {
   var args = JSON.parse(responseText);
@@ -94,6 +106,7 @@ function fillTable(responseText) {
     var name = row.insertCell(0);
     name.id = 'name' + i;
     var type = row.insertCell(1);
+    updateInputTypeDescription(this.argType);
     var descr = row.insertCell(2);
     var value = row.insertCell(3);
     value.id = 'val' + i;
@@ -176,6 +189,7 @@ function changeJson() {
   var methodName = jQuery("#methodSelect").val();
   var outputVariableName = jQuery("#outputVariableName").val();
   var outputVariableType = jQuery("#outputType").text();
+  updateOutputTypeDescription(outputVariableType);
   var argsString = argsMapAsString();
   var JSONString = "{" + "\"beanName\":\"" + beanName + "\", " +
     "\"methodName\":\"" + methodName + "\", " +

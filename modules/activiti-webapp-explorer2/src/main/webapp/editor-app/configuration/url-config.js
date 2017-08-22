@@ -47,5 +47,9 @@ KISBPM.URL = {
 
     getVariables: function (sessionId, modelName) {
         return CUBA.CONFIG.appRoot() + "/models/" + modelName + "?s=" + sessionId;
+    },
+
+    getStubsDocs: function (className) {
+        return CUBA.CONFIG.appRoot() + "/get_stub_doc/" + className;
     }
 };
