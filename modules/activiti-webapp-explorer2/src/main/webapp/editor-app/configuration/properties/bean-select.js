@@ -47,10 +47,8 @@ jQuery('#methodSelect').change(function () {
     httpGetAsync(getMethodReturnType(), function (responseText) {
         var ob = JSON.parse(responseText);
         var outputType = ob.returnType;
-        alert(outputType);
         jQuery('#outputType').text(outputType);
         changeJson();
-        updateOutputTypeDescription(outputType);
     });
 
 
@@ -74,12 +72,10 @@ jQuery('#beanSelect').change(function () {
   }
 });
 
-function updateInputTypeDescription(inputClassName) {
-    document.getElementById('input_description_frame').src = KISBPM.URL.getStubsDocs(inputClassName);
-}
-
 function updateOutputTypeDescription(outputClassName) {
-    document.getElementById('output_description_frame').src = KISBPM.URL.getStubsDocs(outputClassName);
+    if (/\S/.test(outputClassName)) {
+        document.getElementById('output_description_frame').src = KISBPM.URL.getStubsDocs(outputClassName);
+    }
 }
 
 document.getElementById('outputVariableName').addEventListener("input", function (evt) {
@@ -180,8 +176,6 @@ var utility = {
     return string.replace(/"/g, '&quot;');
   }
 };
-
-
 
 function changeJson() {
   var beanName = jQuery("#beanSelect").val();
