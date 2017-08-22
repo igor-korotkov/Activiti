@@ -1,5 +1,6 @@
 var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
 var jsonObject;
+var outputType;
 if (jsonString) {
   jsonObject = JSON.parse(jsonString);
 } else {
@@ -35,8 +36,6 @@ function fillInTable() {
 
 
 jQuery('#methodSelect').change(function () {
-  var selectedMethod = jQuery('#methodSelect').val();
-  var sv = document.getElementById('methodSelect').value;
   httpGetAsync(getMethodArguments(), function (responseText) {
     clearTable();
     fillTable(responseText);
@@ -46,12 +45,9 @@ jQuery('#methodSelect').change(function () {
 
     httpGetAsync(getMethodReturnType(), function (responseText) {
         var ob = JSON.parse(responseText);
-        var outputType = ob.returnType;
-        jQuery('#outputType').text(outputType);
-        changeJson();
+        outputType = ob.returnType;
+        changeJsonWithOutputType(outputType);
     });
-
-
 });
 
 jQuery('#beanSelect').change(function () {
@@ -73,8 +69,10 @@ jQuery('#beanSelect').change(function () {
 });
 
 function updateOutputTypeDescription(outputClassName) {
-    if (/\S/.test(outputClassName)) {
-        document.getElementById('output_description_frame').src = KISBPM.URL.getStubsDocs(outputClassName);
+    if (outputClassName) {
+        if (/\S/.test(outputClassName)) {
+            jQuery('#outputType').html("<a target='_blank' href='" + KISBPM.URL.getStubsDocs(outputType) + "'>" + outputType + "</a>");
+        }
     }
 }
 
@@ -181,18 +179,34 @@ function changeJson() {
   var beanName = jQuery("#beanSelect").val();
   var methodName = jQuery("#methodSelect").val();
   var outputVariableName = jQuery("#outputVariableName").val();
-  var outputVariableType = jQuery("#outputType").text();
-  updateOutputTypeDescription(outputVariableType);
+    updateOutputTypeDescription(outputType);
   var argsString = argsMapAsString();
   var JSONString = "{" + "\"beanName\":\"" + beanName + "\", " +
     "\"methodName\":\"" + methodName + "\", " +
     "\"outputName\":\"" + outputVariableName + "\", " +
-    "\"outputType\":\"" + outputVariableType + "\", " +
+      "\"outputType\":\"" + outputType + "\", " +
     "\"args\":[" +
     argsString +
     "]" + "}";
   document.getElementById("textarea").value = JSONString;
   jQuery('#textarea').change();
+}
+
+function changeJsonWithOutputType(outputTypeValue) {
+    outputType = outputTypeValue
+    var beanName = jQuery("#beanSelect").val();
+    var methodName = jQuery("#methodSelect").val();
+    updateOutputTypeDescription(outputType);
+    var argsString = argsMapAsString();
+    var JSONString = "{" + "\"beanName\":\"" + beanName + "\", " +
+        "\"methodName\":\"" + methodName + "\", " +
+        "\"outputName\":\"" + outputType + "\", " +
+        "\"outputType\":\"" + outputType + "\", " +
+        "\"args\":[" +
+        argsString +
+        "]" + "}";
+    document.getElementById("textarea").value = JSONString;
+    jQuery('#textarea').change();
 }
 
 function fillDropDownList(selectId, parameterName, jsonString) {
