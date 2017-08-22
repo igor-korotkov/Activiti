@@ -41,6 +41,19 @@ KISBPM.URL = {
     },
 
     getLocales: function() {
+        console.log('called get locales')
         return CUBA.CONFIG.modelerRoot() + '/locales';
+    },
+
+    getVariables: function (sessionId, modelName) {
+        return CUBA.CONFIG.appRoot() + "/models/" + modelName + "?s=" + sessionId;
+    },
+
+    getStubDocsLink:function () {
+        return CUBA.CONFIG.appRoot() + "/get_stub_doc/"
+    },
+
+    getStubsDocs: function (className) {
+        return CUBA.CONFIG.appRoot() + "/get_stub_doc/" + className;
     }
 };

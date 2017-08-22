@@ -27,7 +27,6 @@ KISBPM.TOOLBAR.ACTIONS["saveModel"] = function(services) {
     var modelMetaData = $scope.editor.getModelMetaData();
     var json = $scope.editor.getJSON();
     json = JSON.stringify(json);
-
     var params = {
         modeltype: modelMetaData.model.modelType,
         json_xml: json,

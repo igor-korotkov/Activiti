@@ -27,7 +27,33 @@
   <div class="full">
       <div class="row row-no-gutter">
 	      <div id="paletteHelpWrapper" class="col-xs-3">
-	      	<div class="stencils" id="paletteSection">
+			  <div id="variables" ng-if="inputParameters.length > 0 || outputParameters.length > 0" class="variables">
+				  <table class="variables">
+					  <tr ng-if="inputParameters.length > 0">
+						  <th>Input name</th>
+						  <th>Type</th>
+						  <th>Is constant</th>
+						  <th>Default value</th>
+					  </tr>
+					  <tr ng-repeat=" inParameter in inputParameters">
+						  <td>{{inParameter.name}}</td>
+						  <td>{{inParameter.parameterType}}</td>
+						  <td>{{inParameter.constant}}</td>
+						  <td>{{inParameter.valueStr}}</td>
+					  </tr>
+					  <tr ng-if="outputParameters.length > 0">
+						  <th>Output name</th>
+						  <th>Type</th>
+						  <th colspan="2">Default value</th>
+					  </tr>
+					  <tr ng-repeat="outParameter in outputParameters">
+						  <td>{{outParameter.name}}</td>
+						  <td>{{outParameter.parameterType}}</td>
+						  <td colspan="2">{{outParameter.valueStr}}</td>
+					  </tr>
+				  </table>
+			  </div>
+			  <div class="stencils" id="paletteSection">
 			    <div ng-if="stencilItemGroups.length > 1">
                     <div ng-repeat="group in stencilItemGroups">
 

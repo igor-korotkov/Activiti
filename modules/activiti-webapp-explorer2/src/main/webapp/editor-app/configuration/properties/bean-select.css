@@ -1,0 +1,33 @@
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 3px;
+}
+
+input[type="text"] {
+  width: 100%;
+}
+
+#beanSelectWrapper,
+#variablesWrapper {
+  width: 49%;
+  display: inline-block;
+  vertical-align: top;
+}
+#outputName{
+  margin-top: 8px;
+}
+
+#outputType{
+  display: inline-block;
+}
+
+#table-scroll {
+    display: inline-block;
+    width: 105%;
+    height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
