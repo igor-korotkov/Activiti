@@ -10182,7 +10182,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
           in code to provide a nicer API/ implementation!!! */
         
         var addShape = function(shape, parent){
-           // Create a new Stencil
+            // Create a new Stencil
             var stencil = ORYX.Core.StencilSet.stencil(this.getStencil().namespace() + shape.stencil.id );
 
             // Create a new Shape
@@ -11592,7 +11592,7 @@ ORYX.Editor = {
 		
 			var type = option.serialize.find(function(obj){return (obj.prefix+"-"+obj.name) == "oryx-type"});
 			var stencil = ORYX.Core.StencilSet.stencil(type.value);
-
+			
 			if(stencil.type() == 'node'){
 				var newShapeObject = new ORYX.Core.Node({'eventHandlerCallback':this.handleEvents.bind(this)}, stencil, this._getPluginFacade());	
 			} else {
@@ -11613,7 +11613,7 @@ ORYX.Editor = {
 
 		// Get the shape type
 		var shapetype = option.type;
-			
+
 		// Get the stencil set
 		var sset = ORYX.Core.StencilSet.stencilSet(option.namespace);
 		// Create an New Shape, dependents on an Edge or a Node
@@ -11622,7 +11622,7 @@ ORYX.Editor = {
 		} else {
 			newShapeObject = new ORYX.Core.Edge({'eventHandlerCallback':this.handleEvents.bind(this)}, sset.stencil(shapetype), this._getPluginFacade())
 		}
-	
+		
 		// when there is a template, inherit the properties.
 		if(option.template) {
 
@@ -11637,7 +11637,6 @@ ORYX.Editor = {
 			canvas.add(newShapeObject);
 		}
 		
-		generateEmptyJson(newShapeObject, option);
 		
 		// Set the position
 		var point = option.position ? option.position : {x:100, y:200};
@@ -18188,7 +18187,6 @@ ORYX.Plugins.RenameShapes = Clazz.extend({
         this.facade = facade;
       	
         this.facade.registerOnEvent(ORYX.CONFIG.EVENT_CANVAS_SCROLL, this.hideField.bind(this)); 
-		this.facade.registerOnEvent(ORYX.CONFIG.EVENT_DBLCLICK, this.actOnDBLClick.bind(this)); 
 		this.facade.offer({
 		 keyCodes: [{
 				keyCode: 113, // F2-Key
@@ -18444,6 +18442,47 @@ ORYX.Plugins.RenameShapes = Clazz.extend({
 		}
 	}
 });
+if (!ORYX.Plugins)
+	ORYX.Plugins = new Object();
+
+ORYX.Plugins.OpenEdit = Clazz.extend({
+	facade: undefined,
+
+	construct: function (facade) {
+
+		this.facade = facade;
+
+		this.facade.registerOnEvent(ORYX.CONFIG.EVENT_DBLCLICK, this.actOnDBLClick.bind(this));
+	},
+	actOnDBLClick: function (evt, shape) {
+		
+		var func = null;
+		var sc = null;
+		var mod = null;
+		if( !(shape instanceof ORYX.Core.Shape) ){ return; }
+		
+		if (shape.properties['oryx-beanselect'] !== undefined) {
+			func = KisBpmBeanSelectCtrl[2]
+			var sc = this.getScope("beanselect", shape)
+		} else if (shape.properties['oryx-scripttext'] !== undefined) {
+			func = KisBpmTextPropertyCtrl[2];
+			var sc = this.getScope("scripttext", shape)
+		} else {
+			return;
+		}
+		var mod = sc.getModal();
+		func(sc, mod);
+	},
+
+	getScope: function (id, shape) {
+		var props = shape.getStencil().properties()
+		for (var i = 0; i < props.length; i++) {
+			if(props[i]._jsonProp.id == id)	{
+				return angular.element(document.getElementsByClassName('title ng-scope ng-binding')[i]).scope();
+			}
+		}
+	}
+})
 if(!ORYX.Plugins)
 	ORYX.Plugins = new Object();
 
@@ -23978,19 +24017,10 @@ new function(){
                        
                 return changes;
         }
+       
 	});
 
 		
 	ORYX.Plugins.BPMN2_0 = ORYX.Plugins.AbstractPlugin.extend(ORYX.Plugins.BPMN2_0);
 	
-
 }()	
-
-function generateEmptyJson(shape, option) {
-	var type = option.type;
-	if (type.includes('IntegrationNode')) {
-		shape.properties['oryx-beanselect'] = '{"beanName":"", "methodName":"", "outputName":"", "outputType":"", "args":[]}';
-	} else if (type.includes('ScriptTask')) {
-		shape.properties['oryx-scripttext'] = '{"script":[""], "vars":[]}';
-	}
-}

@@ -602,6 +602,10 @@ angular.module('activitiModeler')
             return $scope.selectedItem.properties[index].writeModeTemplateUrl;
         };
 
+        $scope.getModal = function(){
+            return $modal;
+        }
+
         /* Method available to all sub controllers (for property controllers) to update the internal Oryx model */
         $scope.updatePropertyInModel = function (property, shapeId) {
 
