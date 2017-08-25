@@ -43,7 +43,13 @@ function getAffectedNodesForSelectedShape() {
             var outgoingShapes = currentShape.outgoing
             for (var y = 0; y < outgoingShapes.length; y++) {
                 if (outgoingShapes[y].resourceId == nodeId) {
-                    if (!result.includes(currentShape.resourceId)) {
+                    var alreadyContainVarsFromShape = false;
+                    for (var z = 0; z < result.length; z++) {
+                        if (result[z].id == currentShape.resourceId) {
+                            alreadyContainVarsFromShape = true;
+                        }
+                    }
+                    if (!alreadyContainVarsFromShape) {
                         var nodeVariblesWrapper = {}
                         nodeVariblesWrapper.id = currentShape.resourceId
                         nodeVariblesWrapper.vars = getVariables(currentShape)
@@ -85,7 +91,9 @@ function getVariables(shape) {
 function parseJson(string) {
     var result;
     try {
-        result = JSON.parse(string);
+        if (string) {
+            result = JSON.parse(string);
+        }
     } catch (e) {
         console.log('Parsing JSON error (IT IS OK, IF WE GOT NEW ELEMENT IN NODE GRAPH): ' + e.name + ":" + e.message + "\n" + e.stack)
     }
