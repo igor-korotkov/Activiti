@@ -47,14 +47,18 @@
     overflow-x: hidden;
 }
 
+.inType {
+    width: 100%;
+    height: 23px;
+}
+
 .dropdown-btn {
     display: inline-block;
     background: lightgray;
-    width: 20px;
+    width: 17%;
     height: 23px;
     padding-top: 3px;
 }
-
 .caret {
     margin-left: 6px;
 }

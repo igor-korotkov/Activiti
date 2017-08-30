@@ -42,6 +42,9 @@ function fillInTable() {
     jQuery("#inputVariablesWrapper").show();
   }
   for (var i = 0; i < inputParams.length; i++) {
+    if (!inputParams[i].valueStr) {
+      inputParams[i].valueStr = ''
+    }
     jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '</td><td>' + inputParams[i].constant + '</td><td>' + inputParams[i].valueStr + '</td></tr>')
   }
 
