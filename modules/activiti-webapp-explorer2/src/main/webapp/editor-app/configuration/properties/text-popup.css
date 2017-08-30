@@ -4,7 +4,7 @@
 }
 
 .selected {
-    background-color: brown;
+    background-color: #36a7c4;
     color: black;
 }
 
@@ -12,38 +12,53 @@
     width: 100%;
 }
 
+.custombtn {
+    padding: 4px 8px;
+    float: right;
+    background-color: #36a7c4;
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
 #removeBtn {
-    padding: 2px;
-    display: inline-block;
-    float: right;
-    border: 1px solid black;
-    height: 22px;
-    width: 47px;
-    margin: 2px;
+    margin-left: 5px;
+    margin-right: 10px;
 }
 
-#addBtn {
-    padding: 2px;
-    display: inline-block;
-    float: right;
-    border: 1px solid black;
-    height: 22px;
-    width: 27px;
-    margin: 2px;
-}
+#addBtn {}
 
-#variablesWrapper,
-#scriptTemplate {
-    width: 49%;
+#variablesWrapper {
+    border-left: 1px solid #e5e5e5;
+    width: 397px;
     display: inline-block;
     vertical-align: top;
+    background-color: RGB(232, 237, 241);
+    padding-top: 8px;
 }
 
-#table-scroll {
+#scriptTemplate {
+    width: 500px;
     display: inline-block;
-    width: 105%;
+    vertical-align: top;
+    height: 1px;
+}
+
+#table-scroll-out {
+    font-size: 12px;
+    margin-top: 4px;
+    display: inline-block;
+    width: 397px;
     height: 175px;
-    overflow-y: scroll;
+    overflow-y: overlay;
+    overflow-x: hidden;
+}
+#table-scroll-in {
+    font-size: 12px;
+    margin-top: 4px;
+    display: inline-block;
+    width: 387px;
+    height: 175px;
+    overflow-y: overlay;
     overflow-x: hidden;
 }
 
@@ -54,13 +69,64 @@
 
 .dropdown-btn {
     display: inline-block;
-    background: lightgray;
-    width: 17%;
+    width: 16px;
     height: 23px;
     padding-top: 3px;
 }
-.caret {
-    margin-left: 6px;
+
+#outTable {
+    display: inline-table;
+    width: 93%;
+    table-layout: fixed;
+    margin-left: 10px;
+    line-height: 2.02;
+}
+
+#inTable {
+    display: inline-table;
+    width: 95%;
+    table-layout: fixed;
+    line-height: 2.02;
+}
+
+table,
+th,
+td {
+    border: 1px solid #b5b5b5;
+    border-collapse: collapse;
+    padding: 3px;
+    background: #f5faff;
+}
+
+th {
+    font-weight: bold;
+    background-color: #EAEAEA;
+}
+
+.modal-body {
+    position: relative;
+    padding: 0px;
+}
+
+.modal-footer {
+    margin-top: 0px;
+    padding: 10px 15px 10px;
+    text-align: right;
+    border-top: 1px solid #e5e5e5;
+}
+
+.modal-header {
+    padding: 8px 30px;
+    padding-right: 10px;
+}
+
+#variables {
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+input {
+    width: 115px;
 }
 
 #filter {
