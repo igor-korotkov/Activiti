@@ -33,6 +33,19 @@ CubaStencilUtils = {
 function getAffectedNodesForSelectedShape() {
     var result = [];
     var selectedShapeId = angScope.selectedShape.resourceId
+
+    var selectedShapeValue = angScope.selectedShape;
+    if (selectedShapeValue._stencil._jsonStencil.id.includes("IntegrationNode")) {
+        var beforeText = selectedShapeValue.properties['oryx-beforeexecutionscripttext']
+        var beforeJson = parseJson(beforeText)
+        if (beforeJson.vars) {
+            var nodeVariblesWrapper = {}
+            nodeVariblesWrapper.id = 'root'
+            nodeVariblesWrapper.vars = beforeJson.vars
+            result.push(nodeVariblesWrapper)
+        }
+    }
+
     var jsonModel = angScope.editor.getJSON();
     childShapes = jsonModel.childShapes
     var queue = [selectedShapeId];
@@ -77,6 +90,19 @@ function getVariables(shape) {
         case 'IntegrationNode':
             var text = shape.properties.beanselect;
             var beanJson = parseJson(text);
+
+            var afterText = shape.properties.afterexecutionscripttext
+            var afterJson = parseJson(afterText);
+            if (afterJson.vars) {
+                vars = vars.concat(afterJson.vars)
+            }
+
+            var beforeText = shape.properties.beforeexecutionscripttext
+            var beforeJson = parseJson(beforeText)
+            if (beforeJson.vars) {
+                vars = vars.concat(beforeJson.vars)
+            }
+
             var variable = {}
             if (beanJson) {
                 variable.name = beanJson.outputName
