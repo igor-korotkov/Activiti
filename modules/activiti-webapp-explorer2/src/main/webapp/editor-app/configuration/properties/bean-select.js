@@ -234,6 +234,28 @@ function getPath(controllerName) {
   return splittedHref[0] + 'dispatch/' + controllerName;
 }
 
+jQuery("#filterInput").keyup(function () {
+  console.log('pressed')
+    var data = this.value.split(" ");
+    var trSelector = jQuery("#inTable").find('tr').not(':first');
+    if (this.value == "") {
+        trSelector.show();
+        return;
+    }
+    trSelector.hide();
+    trSelector.filter(function (i, v) {
+        var $t = jQuery(this);
+        for (var d = 0; d < data.length; ++d) {
+            if ($t.is(":contains('" + data[d] + "')")) {
+                return true;
+            }
+        }
+        return false;
+    })
+    .show();
+})
+
+
 function httpGetAsync(theUrl, callback) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
