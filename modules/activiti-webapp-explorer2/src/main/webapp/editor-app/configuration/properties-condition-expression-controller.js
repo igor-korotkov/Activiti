@@ -55,4 +55,8 @@ var KisBpmConditionExpressionPopupCtrl = [ '$scope', '$translate', '$http', func
     	$scope.property.mode = 'read';
     	$scope.$hide();
     };
+	
+	$scope.getPropertyValue=function(){
+		return $scope.conditionExpression.value;
+	}
 }];
