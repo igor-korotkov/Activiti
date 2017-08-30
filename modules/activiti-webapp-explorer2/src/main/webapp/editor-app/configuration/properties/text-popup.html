@@ -13,7 +13,7 @@
 						<select id="templateSelect"></select>
 					</div>
 					<div id="editor" auto-focus="" style="top: 0;right: 0;bottom: 0;left: 0;height:424px;margin-top:10px;"></div>
-					<textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="" ng-change="doTest()"></textarea>
+					<textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" ng-change="doTest()" style="visibility:hidden"></textarea>
 				</div>
 
 
@@ -21,7 +21,7 @@
 				<div id="variablesWrapper">
 
 					<div id="outVariables">
-						<div style="display:inline-block; float:left;">Outup variables</div>
+						<div style="display:inline-block; float:left;">Output variables</div>
 						<div id="removeBtn">Remove</div>
 						<div id="addBtn">Add</div>
 						<div id="table-scroll">
@@ -46,8 +46,6 @@
 									<tr>
 										<th>Input name</th>
 										<th>Type</th>
-										<th>Is constant</th>
-										<th>Default value</th>
 									</tr>
 								</table>
 							</div>

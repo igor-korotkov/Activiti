@@ -26,18 +26,17 @@ function fillInTable() {
     jQuery("#inputVariablesWrapper").show();
   }
   for (var i = 0; i < inputParams.length; i++) {
-    console.log(inputParams[i].valueStr)
     if (!inputParams[i].valueStr) {
       inputParams[i].valueStr = ''
     }
-    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '</td><td>' + inputParams[i].constant + '</td><td>' + inputParams[i].valueStr + '</td></tr>')
+    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '</td></tr>')
   }
 
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i]
     var vars = node.vars
     for (var y = 0; y < vars.length; y++) {
-      jQuery("#inTable").append('<tr><td>' + nodes[i].vars[y].name + '</td><td>' + nodes[i].vars[y].type + '</td><td>' + '</td><td>' + '</td></tr>')
+      jQuery("#inTable").append('<tr><td>' + nodes[i].vars[y].name + '</td><td>' + nodes[i].vars[y].type + '</td></tr>')
     }
   }
 }
