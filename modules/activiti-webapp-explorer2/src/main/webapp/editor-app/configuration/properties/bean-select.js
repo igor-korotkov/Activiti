@@ -1,5 +1,6 @@
 var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
 var jsonObject;
+var outputType;
 if (jsonString) {
   try {
     jsonObject = JSON.parse(jsonString);
@@ -43,8 +44,6 @@ function fillInTable() {
 
 
 jQuery('#methodSelect').change(function () {
-  var selectedMethod = jQuery('#methodSelect').val();
-  var sv = document.getElementById('methodSelect').value;
   httpGetAsync(getMethodArguments(), function (responseText) {
     clearTable();
     fillTable(responseText);
@@ -52,20 +51,19 @@ jQuery('#methodSelect').change(function () {
     jsonObject = null;
   });
 
-  httpGetAsync(getMethodReturnType(), function (responseText) {
-    var ob = JSON.parse(responseText);
-    jQuery('#outputType').text(ob.returnType);
-    changeJson();
-  });
-
-})
+    httpGetAsync(getMethodReturnType(), function (responseText) {
+        var ob = JSON.parse(responseText);
+        outputType = ob.returnType;
+        changeJsonWithOutputType(outputType);
+    });
+});
 
 jQuery('#beanSelect').change(function () {
   var selectedValue = jQuery('#beanSelect').val();
   if (selectedValue) {
     httpGetAsync(getBeanMethods(selectedValue), function (responseText) {
       clearOptions('#methodSelect');
-      fillDropDownList('methodSelect', 'methodName', responseText)
+        fillDropDownList('methodSelect', 'methodName', responseText);
       clearTable();
       changeJson();
       if (jsonObject) {
@@ -76,7 +74,15 @@ jQuery('#beanSelect').change(function () {
       }
     });
   }
-})
+});
+
+function updateOutputTypeDescription(outputClassName) {
+    if (outputClassName) {
+        if (/\S/.test(outputClassName)) {
+            jQuery('#outputType').html("<a target='_blank' href='" + KISBPM.URL.getStubsDocs(outputType) + "'>" + outputType + "</a>");
+        }
+    }
+}
 
 document.getElementById('outputVariableName').addEventListener("input", function (evt) {
   changeJson();
@@ -91,7 +97,7 @@ httpGetAsync(getBeanNames(), function (responseText) {
   } else {
     jQuery("#beanSelect").prop("selectedIndex", -1);
   }
-})
+});
 
 function fillTable(responseText) {
   var args = JSON.parse(responseText);
@@ -107,7 +113,7 @@ function fillTable(responseText) {
     value.id = 'val' + i;
     name.innerHTML = this.argName;
     var currentArgName = this.argName;
-    type.innerHTML = this.argType;
+    type.innerHTML = "<a target='_blank' href='" + KISBPM.URL.getStubsDocs(this.argType) + "'>" + this.argType + "</a>";
     descr.innerHTML = this.description;
     value.innerHTML = "<input type=\"text\" id='val'" + i + ">";
     if (jsonObject && jsonObject.args) {
@@ -177,23 +183,38 @@ var utility = {
   }
 };
 
-
-
 function changeJson() {
   var beanName = jQuery("#beanSelect").val();
   var methodName = jQuery("#methodSelect").val();
   var outputVariableName = jQuery("#outputVariableName").val();
-  var outputVariableType = jQuery("#outputType").text();
+    updateOutputTypeDescription(outputType);
   var argsString = argsMapAsString();
   var JSONString = "{" + "\"beanName\":\"" + beanName + "\", " +
     "\"methodName\":\"" + methodName + "\", " +
     "\"outputName\":\"" + outputVariableName + "\", " +
-    "\"outputType\":\"" + outputVariableType + "\", " +
+      "\"outputType\":\"" + outputType + "\", " +
     "\"args\":[" +
     argsString +
     "]" + "}";
   document.getElementById("textarea").value = JSONString;
   jQuery('#textarea').change();
+}
+
+function changeJsonWithOutputType(outputTypeValue) {
+    outputType = outputTypeValue
+    var beanName = jQuery("#beanSelect").val();
+    var methodName = jQuery("#methodSelect").val();
+    updateOutputTypeDescription(outputType);
+    var argsString = argsMapAsString();
+    var JSONString = "{" + "\"beanName\":\"" + beanName + "\", " +
+        "\"methodName\":\"" + methodName + "\", " +
+        "\"outputName\":\"" + outputType + "\", " +
+        "\"outputType\":\"" + outputType + "\", " +
+        "\"args\":[" +
+        argsString +
+        "]" + "}";
+    document.getElementById("textarea").value = JSONString;
+    jQuery('#textarea').change();
 }
 
 function fillDropDownList(selectId, parameterName, jsonString) {
