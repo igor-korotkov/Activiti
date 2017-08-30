@@ -56,6 +56,11 @@ function fillInTable() {
 
 var variablesWordCompleter = {
   getCompletions: function (editor, session, pos, prefix, callback) {
+    console.log(editor)
+    console.log(session)
+    console.log(pos)
+    console.log(prefix)
+    console.log(callback)
     callback(null, worlListForAutoComplete.map(function (word) {
       return {
         caption: word,
