@@ -1,7 +1,11 @@
 var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
 var jsonObject;
 if (jsonString) {
-  jsonObject = JSON.parse(jsonString);
+  try {
+    jsonObject = JSON.parse(jsonString);
+  } catch (e) {
+    jsonObject = null;
+  }
 } else {
   jsonObject = null;
 }

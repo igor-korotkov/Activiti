@@ -10182,7 +10182,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
           in code to provide a nicer API/ implementation!!! */
         
         var addShape = function(shape, parent){
-            // Create a new Stencil
+           // Create a new Stencil
             var stencil = ORYX.Core.StencilSet.stencil(this.getStencil().namespace() + shape.stencil.id );
 
             // Create a new Shape
@@ -11592,7 +11592,7 @@ ORYX.Editor = {
 		
 			var type = option.serialize.find(function(obj){return (obj.prefix+"-"+obj.name) == "oryx-type"});
 			var stencil = ORYX.Core.StencilSet.stencil(type.value);
-			
+
 			if(stencil.type() == 'node'){
 				var newShapeObject = new ORYX.Core.Node({'eventHandlerCallback':this.handleEvents.bind(this)}, stencil, this._getPluginFacade());	
 			} else {
@@ -11613,7 +11613,7 @@ ORYX.Editor = {
 
 		// Get the shape type
 		var shapetype = option.type;
-
+			
 		// Get the stencil set
 		var sset = ORYX.Core.StencilSet.stencilSet(option.namespace);
 		// Create an New Shape, dependents on an Edge or a Node
@@ -11622,7 +11622,7 @@ ORYX.Editor = {
 		} else {
 			newShapeObject = new ORYX.Core.Edge({'eventHandlerCallback':this.handleEvents.bind(this)}, sset.stencil(shapetype), this._getPluginFacade())
 		}
-		
+	
 		// when there is a template, inherit the properties.
 		if(option.template) {
 
@@ -11637,6 +11637,7 @@ ORYX.Editor = {
 			canvas.add(newShapeObject);
 		}
 		
+		generateEmptyJson(newShapeObject, option);
 		
 		// Set the position
 		var point = option.position ? option.position : {x:100, y:200};
@@ -23977,10 +23978,19 @@ new function(){
                        
                 return changes;
         }
-       
 	});
 
 		
 	ORYX.Plugins.BPMN2_0 = ORYX.Plugins.AbstractPlugin.extend(ORYX.Plugins.BPMN2_0);
 	
+
 }()	
+
+function generateEmptyJson(shape, option) {
+	var type = option.type;
+	if (type.includes('IntegrationNode')) {
+		shape.properties['oryx-beanselect'] = '{"beanName":"", "methodName":"", "outputName":"", "outputType":"", "args":[]}';
+	} else if (type.includes('ScriptTask')) {
+		shape.properties['oryx-scripttext'] = '{"script":[""], "vars":[]}';
+	}
+}
