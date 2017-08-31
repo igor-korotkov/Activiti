@@ -15,11 +15,7 @@
 					<div id="editor" auto-focus="" style="top: 0;right: 0;bottom: 0;left: 0;height:424px;margin-top:10px;"></div>
 					<textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="visibility: hidden;" ng-change="doTest()"></textarea>
 				</div>
-
-
-
 				<div id="variablesWrapper">
-
 					<div id="outVariables">
 						<div style="display:inline-block; float:left; margin-left:10px;font-size:14px;">Output variables</div>
 						<div id="removeBtn" class="custombtn btn btn-primary">Remove</div>
@@ -37,14 +33,12 @@
 					<div id="inputVariablesWrapper" style="margin-top: 190px;">
 						<div id="variables">
 							Available Variables
-							<div id="table-scroll-in">
-								<table id="inTable">
 							<div id="filter">
 								Filter
 								<input id="filterInput">
 							</div>
-							<div id="table-scroll">
-								<table id="inTable" style="width:100%">
+							<div id="table-scroll-in">
+								<table id="inTable">
 									<tr>
 										<th>Input name</th>
 										<th>Type</th>
@@ -55,20 +49,19 @@
 						</div>
 					</div>
 				</div>
-			</div>
-			<div id="footer-wrapper">
-				<div class="modal-footer">
-					<button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
+				<div id="footer-wrapper">
+					<div class="modal-footer">
+						<button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<link rel="stylesheet" href="editor-app/awesomplete/awesomplete.css" />
-<script src="editor-app/awesomplete/awesomplete.js" async></script>
+	<link rel="stylesheet" href="editor-app/awesomplete/awesomplete.css" />
+	<script src="editor-app/awesomplete/awesomplete.js" async></script>
 
-<script src="editor-app/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="editor-app/ace/ext-language_tools.js"></script>
-<script src="editor-app/configuration/properties/text-popup.js"></script>
-<link rel="stylesheet" type="text/css" href="editor-app/configuration/properties/text-popup.css">
+	<script src="editor-app/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="editor-app/ace/ext-language_tools.js"></script>
+	<script src="editor-app/configuration/properties/text-popup.js"></script>
+	<link rel="stylesheet" type="text/css" href="editor-app/configuration/properties/text-popup.css">

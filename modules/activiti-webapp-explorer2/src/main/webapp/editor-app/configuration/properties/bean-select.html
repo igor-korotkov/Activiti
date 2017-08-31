@@ -7,18 +7,19 @@
       </div>
       <div class="modal-body">
         <div id="beanSelectWrapper">
-          <div id="beanSelectDiv">
+          <div id="beanSelectDiv" style="font-size:14px;float: right;">
             Integration service:
             <select id="beanSelect"></select>
           </div>
 
-          <div id="methodSelectDiv" style="margin-top:10px;">
+          <div id="methodSelectDiv" style="margin-top:10px;font-size:14px;float: right;margin-bottom: 10px;">
             Service method:
             <select id="methodSelect"></select>
           </div>
 
 
           <div id="arguments-table" style="margin-top:10px;">
+            <div id="argTableHeader" style="font-size:16px;">Method arguments</div>
             <table id="argTable" style="width:100%">
               <tr>
                 <th>Name</th>
@@ -30,7 +31,7 @@
           </div>
           <div id="outputName">
             Output variable name:
-            <input id="outputVariableName" type="text" style="width:100px" />
+            <input id="outputVariableName" type="text" style="width: 290px;" />
           </div>
           <div id="outputTypeWrapper">
             Output variable type:
@@ -43,26 +44,30 @@
             <div id="variables">
               Available Variables
               <div id="filter">
-								Filter
-								<input id="filterInput">
-							</div>
-              <div id="table-scroll">
-                <table id="inTable" style="width:100%">
-                  <tr>
-                    <th>Input name</th>
-                    <th>Type</th>
-                  </tr>
-                </table>
+                Filter
+                <input id="filterInput">
               </div>
             </div>
+            <div id="table-scroll">
+              <table id="inTable">
+                <tr>
+                  <th>Input name</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+              </table>
+            </div>
+
             <textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="property.value" style="margin-top:360px; visibility: hidden;"
               ng-change="doTest()"></textarea>
           </div>
-          <div id="footer-wrapper">
-            <div class="modal-footer">
-              <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
-            </div>
-          </div>
+
+        </div>
+
+      </div>
+      <div id="footer-wrapper">
+        <div class="modal-footer">
+          <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
         </div>
       </div>
     </div>
