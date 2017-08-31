@@ -41,7 +41,9 @@ function fillInTable() {
   } else {
     jQuery("#inputVariablesWrapper").show();
   }
+
   for (var i = 0; i < inputParams.length; i++) {
+    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>'+'</td></tr>')
     if (!inputParams[i].valueStr) {
       inputParams[i].valueStr = ''
     }
@@ -52,18 +54,13 @@ function fillInTable() {
     var node = nodes[i]
     var vars = node.vars
     for (var y = 0; y < vars.length; y++) {
-      jQuery("#inTable").append('<tr><td>' + nodes[i].vars[y].name + '</td><td>' + nodes[i].vars[y].type + '</td></tr>')
+      jQuery("#inTable").append('<tr><td>' + nodes[i].vars[y].name + '</td><td>' + nodes[i].vars[y].type + '</td>' + '<td>' + nodes[i].vars[y].description +'</td></tr>')
     }
   }
 }
 
 var variablesWordCompleter = {
   getCompletions: function (editor, session, pos, prefix, callback) {
-    console.log(editor)
-    console.log(session)
-    console.log(pos)
-    console.log(prefix)
-    console.log(callback)
     callback(null, worlListForAutoComplete.map(function (word) {
       return {
         caption: word,
@@ -82,6 +79,7 @@ editor.getSession().on('change', function () {
 editor.getSession().setMode("ace/mode/groovy");
 
 editor.setOptions({
+  theme: 'ace/theme/crimson_editor',
   enableBasicAutocompletion: true
 });
 editor.completers.push(variablesWordCompleter);
@@ -165,7 +163,10 @@ function httpGetAsync(theUrl, callback) {
 }
 
 jQuery("#removeBtn").click(function () {
-  jQuery('.selected').remove();
+  var selected = jQuery('.selected')
+  var next = selected.next();
+  selected.remove();
+  next.addClass('selected');
   changeJson();
 })
 

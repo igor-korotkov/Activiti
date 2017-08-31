@@ -9,7 +9,7 @@
 
 .awesomplete {
 	display: inline-block;
-	width: 80%;
+	width: 95px;
 }
 
 .awesomplete>input {
@@ -44,7 +44,7 @@
 
 @supports (transform: scale(0)) {
 	.awesomplete>ul {
-		margin-left: 585px;
+		margin-left: 640px;
 		transition: .3s cubic-bezier(.4, .2, .5, 1.4);
 		transform-origin: 1.43em -.43em;
 	}

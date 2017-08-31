@@ -38,7 +38,7 @@ function getAffectedNodesForSelectedShape() {
     if (selectedShapeValue._stencil._jsonStencil.id.includes("IntegrationNode")) {
         var beforeText = selectedShapeValue.properties['oryx-beforeexecutionscripttext']
         var beforeJson = parseJson(beforeText)
-        if (beforeJson.vars) {
+        if (beforeJson && beforeJson.vars) {
             var nodeVariblesWrapper = {}
             nodeVariblesWrapper.id = 'root'
             nodeVariblesWrapper.vars = beforeJson.vars
@@ -93,13 +93,13 @@ function getVariables(shape) {
 
             var afterText = shape.properties.afterexecutionscripttext
             var afterJson = parseJson(afterText);
-            if (afterJson.vars) {
+            if (afterJson && afterJson.vars) {
                 vars = vars.concat(afterJson.vars)
             }
 
             var beforeText = shape.properties.beforeexecutionscripttext
             var beforeJson = parseJson(beforeText)
-            if (beforeJson.vars) {
+            if (beforeJson && beforeJson.vars) {
                 vars = vars.concat(beforeJson.vars)
             }
 
