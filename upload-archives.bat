@@ -1,4 +1,4 @@
-set MODELER_VERSION=5.20.bespoke.2-SNAPSHOT
+set MODELER_VERSION=5.20.bespoke.4-SNAPSHOT
 
 cd modules\activiti-webapp-explorer2
 rem call mvn assembly:single -Dcuba.modeler.version=%MODELER_VERSION% -P cuba --settings settings.xml
