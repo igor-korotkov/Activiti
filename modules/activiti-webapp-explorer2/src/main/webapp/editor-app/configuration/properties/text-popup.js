@@ -43,11 +43,10 @@ function fillInTable() {
   }
 
   for (var i = 0; i < inputParams.length; i++) {
-    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>'+'</td></tr>')
     if (!inputParams[i].valueStr) {
       inputParams[i].valueStr = ''
     }
-    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '</td></tr>')
+    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>'+'</td></tr>')
   }
 
   for (var i = 0; i < nodes.length; i++) {
@@ -280,26 +279,27 @@ function initDropDownListeners() {
 }
 
 jQuery("#filterInput").keyup(function () {
-  console.log('pressed')
-    var data = this.value.split(" ");
-    var trSelector = jQuery("#inTable").find('tr').not(':first');
-    if (this.value == "") {
-        trSelector.show();
-        return;
-    }
-    trSelector.hide();
-    trSelector.filter(function (i, v) {
-        var $t = jQuery(this);
-        for (var d = 0; d < data.length; ++d) {
-            if ($t.is(":contains('" + data[d] + "')")) {
-                return true;
-            }
+  var data = this.value.split(" ");
+  var trSelector = jQuery("#inTable").find('tr').not(':first');
+  if (this.value == "") {
+    trSelector.show();
+    return;
+  }
+  trSelector.hide();
+  trSelector.filter(function (i, v) {
+      var $t = jQuery(this);
+
+      for (var d = 0; d < data.length; ++d) {
+        var inputText = data[d].toUpperCase()
+        var tableText = $t.text().toUpperCase()
+        if (tableText.indexOf(inputText) >= 0) {
+          return true;
         }
-        return false;
+      }
+      return false;
     })
     .show();
 })
-
 
 
 
