@@ -105,3 +105,9 @@ select {
 #inputVariablesWrapper{
   height: 100%;
 }
+
+#argTableDiv{
+  width: 100%;
+  overflow: overlay;
+  height: 220px;
+}
