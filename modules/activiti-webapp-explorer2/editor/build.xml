@@ -58,6 +58,7 @@
 				<file name="Plugins/loading.js" />
 				<file name="Plugins/canvasResize.js" />
 				<file name="Plugins/renameShapes.js" />
+				<file name="Plugins/openEdit.js" />
 				<file name="Plugins/processLink.js" />
 				<file name="Plugins/arrangement.js" />
 				<file name="Plugins/file.js" />

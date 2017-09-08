@@ -101,6 +101,17 @@ var KisBpmTextPropertyCtrl = [ '$scope', '$modal', function($scope, $modal) {
     $modal(opts);
 }];
 
+var KisBpmBeanSelectCtrl = [ '$scope', '$modal', function($scope, $modal) {
+
+    var opts = {
+        template:  'editor-app/configuration/properties/bean-select.html?version=' + Date.now(),
+        scope: $scope
+    };
+
+    // Open the dialog
+    $modal(opts);
+}];
+
 var KisBpmTextPropertyPopupCtrl = ['$scope', function($scope) {
     
     $scope.save = function() {
@@ -112,4 +123,8 @@ var KisBpmTextPropertyPopupCtrl = ['$scope', function($scope) {
         $scope.property.mode = 'read';
         $scope.$hide();
     };
+	
+	$scope.getPropertyValue=function(){
+		return $scope.property.value;	
+	}
 }];

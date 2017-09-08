@@ -424,6 +424,11 @@ table.history tr.current td {
 	width: 1000px;	
 }
 
+.modal-dialog {
+    width: 900px;
+    margin: 30px auto;
+  }
+
 .modal-dialog.modal-wide {
     width: 1000px;  
 }
@@ -636,4 +641,13 @@ ul.list>li:hover .actions {
 .message .loading {
 	line-height: 40px;
 	margin-left: 0px;	
+}
+
+
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 3px;
 }

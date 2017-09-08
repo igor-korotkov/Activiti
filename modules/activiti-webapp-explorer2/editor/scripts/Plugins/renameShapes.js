@@ -10,7 +10,6 @@ ORYX.Plugins.RenameShapes = Clazz.extend({
         this.facade = facade;
       	
         this.facade.registerOnEvent(ORYX.CONFIG.EVENT_CANVAS_SCROLL, this.hideField.bind(this)); 
-		this.facade.registerOnEvent(ORYX.CONFIG.EVENT_DBLCLICK, this.actOnDBLClick.bind(this)); 
 		this.facade.offer({
 		 keyCodes: [{
 				keyCode: 113, // F2-Key
