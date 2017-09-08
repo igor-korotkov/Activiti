@@ -14,18 +14,30 @@ var editor = ace.edit("editor");
 
 var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
-var worlListForAutoComplete = [];
+var wordlListForAutoComplete = [];
+var availableVariablesMap = [];
 fillWordList();
 
 function fillWordList() {
   for (var i = 0; i < inputParams.length; i++) {
-    worlListForAutoComplete.push(inputParams[i].name);
+    wordlListForAutoComplete.push(inputParams[i].name);
+
+    var variable = {};
+    variable.name = inputParams[i].name;
+    variable.type = inputParams[i].type;
+    availableVariablesMap.push(variable);
+
   }
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i]
     var vars = node.vars
     for (var y = 0; y < vars.length; y++) {
-      worlListForAutoComplete.push(nodes[i].vars[y].name);
+      wordlListForAutoComplete.push(nodes[i].vars[y].name);
+
+      var variable = {};
+      variable.name = nodes[i].vars[y].name;
+      variable.type = nodes[i].vars[y].type;
+      availableVariablesMap.push(variable);
     }
   }
 }
@@ -46,27 +58,53 @@ function fillInTable() {
     if (!inputParams[i].valueStr) {
       inputParams[i].valueStr = ''
     }
-    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>'+'</td></tr>')
+    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>' + '</td></tr>')
   }
 
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i]
     var vars = node.vars
     for (var y = 0; y < vars.length; y++) {
-      jQuery("#inTable").append('<tr><td>' + nodes[i].vars[y].name + '</td><td>' + nodes[i].vars[y].type + '</td>' + '<td>' + nodes[i].vars[y].description +'</td></tr>')
+      jQuery("#inTable").append('<tr><td>' + nodes[i].vars[y].name + '</td><td>' + nodes[i].vars[y].type + '</td>' + '<td>' + nodes[i].vars[y].description + '</td></tr>')
     }
   }
 }
 
 var variablesWordCompleter = {
   getCompletions: function (editor, session, pos, prefix, callback) {
-    callback(null, worlListForAutoComplete.map(function (word) {
-      return {
-        caption: word,
-        value: word,
-        meta: "static"
-      };
-    }));
+    var row = pos.row;
+    var column = pos.column;
+    var lineText = session.doc.$lines[row]
+    var extendedCallback = false;
+    for (var i = 0; i < availableVariablesMap.length; i++) {
+      var name = availableVariablesMap[i].name
+      if (lineText.indexOf(name) >= 0) {
+        var type = availableVariablesMap[i].type;
+        extendedCallback = true;
+        httpGetAsync("http://localhost:8080/scorecard/dispatch/getCodeAutocomplete?type=" + type + "&prefix=", function (responseText) {
+          var extendedAutocomplete = JSON.parse(responseText);
+          callback(null, extendedAutocomplete.map(function (word) {
+            return {
+              caption: word,
+              value: word,
+              score: 1000,
+              meta: "by type"
+            };
+          }));
+        });
+      }
+    }
+    var extendedExpression = '';
+    console.log(availableVariablesMap)
+    if (!extendedCallback) {
+      callback(null, wordlListForAutoComplete.map(function (word) {
+        return {
+          caption: word,
+          value: word,
+          meta: "static"
+        };
+      }));
+    }
   }
 }
 
