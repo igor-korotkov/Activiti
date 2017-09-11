@@ -11,6 +11,14 @@ var typeList = ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time
 ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
 
+var variableMethodsDefinition = "def addVariable(String name, Object value){\n" +
+    "execution.setVariable(name, value)\n" +
+    "} \n" +
+    "def addVariables(Map variables) { \n " +
+    "variables.each { k, v -> \n " +
+    " execution.setVariable(k,v) \n" +
+    " }}";
+
 
 var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
@@ -183,7 +191,7 @@ function textChanged() {
 }
 
 function changeJson() {
-  var script = editor.getSession().getValue();
+  var script = variableMethodsDefinition + editor.getSession().getValue();
 
   var scriptLines = script.split('\n');
   var scriptLinesString = '';
