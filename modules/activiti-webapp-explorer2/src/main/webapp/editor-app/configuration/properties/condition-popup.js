@@ -1,6 +1,6 @@
 var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
 
-var typeList = ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
+var typeList = ["Integer", "Double", "String", "Boolean", "BigDecimal", "Date", "Time", "DateTime", "Map", "Set", "List"]
 
 ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
@@ -91,7 +91,7 @@ function initAutoComplete() {
     if (!input[i].parentElement.classList.contains('awesomplete')) {
       var comboplete = new Awesomplete(input[i], {
         minChars: 1,
-        list: ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
+        list: ["Integer", "Double", "String", "Boolean", "BigDecimal", "Date", "Time", "DateTime", "Map", "Set", "List"]
       });
       var dropdownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
       var obj = {}
