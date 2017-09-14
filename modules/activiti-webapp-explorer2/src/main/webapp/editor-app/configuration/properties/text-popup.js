@@ -22,11 +22,11 @@ var variableMethodsDefinition = "def addVariable(String name, Object value){\n" 
     "  execution.setVariable(k,v) \n" +
     " }} \n" +
     "def addVariable(Object value) { //methodStub \n}\n" +
-    " String.metaClass.\"<<\" {String name -> execution.setVariable(name, delegate)} \n" +
+    " String.metaClass.leftShift << {value -> execution.setVariable(delegate, value)} \n" +
     " //replacing \n";
 
 
-var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
+var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
 var wordsListForAutoComplete = [];
 fillWordList();
