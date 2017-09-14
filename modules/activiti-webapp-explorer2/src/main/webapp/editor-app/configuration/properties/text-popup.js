@@ -14,10 +14,13 @@ var editor = ace.edit("editor");
 var variableMethodsDefinition = "def addVariable(String name, Object value){\n" +
     "execution.setVariable(name, value)\n" +
     "} \n" +
-    "def addVariables(Map variables) { \n " +
-    "variables.each { k, v -> \n " +
-    " execution.setVariable(k,v) \n" +
-    " }}";
+    "def addVariables(Map variables) { \n" +
+    " variables.each { k, v -> \n" +
+    "  execution.setVariable(k,v) \n" +
+    " }} \n" +
+    "def addVariable(Object value) { //methodStub \n}\n" +
+    " String.metaClass.\"<<\" {String name -> execution.setVariable(name, delegate)} \n" +
+    " //replacing \n";
 
 
 var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
