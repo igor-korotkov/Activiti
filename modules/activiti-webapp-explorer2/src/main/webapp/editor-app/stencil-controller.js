@@ -40,7 +40,10 @@ angular.module('activitiModeler')
 
         // Code that is dependent on an initialised Editor is wrapped in a promise for the editor
         $scope.editorFactory.promise.then(function () {
-        	
+
+            var inputParameters = $rootScope.inputParameters;
+            var outputParameters = $rootScope.outputParameters;
+
             /* Build stencil item list */
 
             // Build simple json representation of stencil set
@@ -598,6 +601,10 @@ angular.module('activitiModeler')
         $scope.getPropertyWriteModeTemplateUrl = function (index) {
             return $scope.selectedItem.properties[index].writeModeTemplateUrl;
         };
+
+        $scope.getModal = function(){
+            return $modal;
+        }
 
         /* Method available to all sub controllers (for property controllers) to update the internal Oryx model */
         $scope.updatePropertyInModel = function (property, shapeId) {

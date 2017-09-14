@@ -1,0 +1,151 @@
+#outVariables {
+    height: 34px;
+    width: 100%;
+}
+
+.selected {
+    background-color: #36a7c4;
+    color: black;
+}
+
+#variables {
+    width: 100%;
+}
+
+.custombtn {
+    padding: 4px 8px;
+    float: right;
+    background-color: #36a7c4;
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+#removeBtn {
+    margin-left: 5px;
+    margin-right: 10px;
+}
+
+#addBtn {}
+
+#variablesWrapper {
+    border-left: 1px solid #a4acb9;;
+    width: 396px;
+    display: inline-block;
+    vertical-align: top;
+    background-color: RGB(232, 237, 241);
+    padding-top: 8px;
+}
+
+#scriptTemplate {
+    width: 500px;
+    display: inline-block;
+    vertical-align: top;
+    height: 1px;
+}
+
+#table-scroll-out {
+    font-size: 12px;
+    margin-top: 4px;
+    display: inline-block;
+    width: 396px;
+    height: 175px;
+    overflow-y: overlay;
+    overflow-x: hidden;
+}
+#table-scroll-in {
+    font-size: 12px;
+    margin-top: 4px;
+    display: inline-block;
+    width: 386px;
+    height: 175px;
+    overflow-y: overlay;
+    overflow-x: hidden;
+}
+
+.inType {
+    width: 115px;
+    height: 30px;
+}
+
+.dropdown-btn {
+    display: inline-block;
+    width: 16px;
+    height: 23px;
+    padding-top: 3px;
+}
+
+#outTable {
+    display: inline-table;
+    width: 93%;
+    table-layout: fixed;
+    margin-left: 10px;
+    line-height: 2.02;
+}
+
+#inTable {
+    display: inline-table;
+    width: 95%;
+    table-layout: fixed;
+    line-height: 2.02;
+}
+
+table,
+th,
+td {
+    border: 1px solid #b5b5b5;
+    border-collapse: collapse;
+    padding: 3px;   
+}
+
+table{
+     background: #f5faff;
+}
+
+th {
+    font-weight: bold;
+    background-color: #EAEAEA;
+}
+
+.modal-body {
+    position: relative;
+    padding: 0px;
+}
+
+.modal-footer {
+    margin-top: 0px;
+    padding: 10px 15px 10px;
+    text-align: right;
+    border-top: 1px solid #a4acb9;;
+}
+
+.modal-header {
+    padding: 8px 30px;
+    padding-right: 10px;
+}
+
+#variables {
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+input {
+    width: 115px;
+}
+
+#filter {
+    display: inline-block;
+    float: right;
+    margin-bottom: 3px;
+    margin-right: 20px;
+}
+
+#templateSelectDiv{
+    font-size: 14px;
+    margin-left: 16px;
+    margin-top: 5px;
+}
+
+select{
+    width: 373px;
+    height: 30px;
+}
