@@ -99,9 +99,19 @@ templateSelect.change(function () {
   var selectedValue = templateSelect.val();
   if (selectedValue) {
     httpGetAsync(getScriptTemplateControllerPath(selectedValue), function (responseText) {
-      var script = JSON.parse(responseText);
-      var code = script.code;
-      editor.setValue(code, 1);
+        this.alert(responseText);
+        var script = JSON.parse(responseText);
+        this.alert(script);
+        var code = script.code;
+        this.alert(code);
+        var scriptStartIndex = code.prototype.search("//replacing");
+        this.alert(scriptStartIndex);
+        if (scriptStartIndex !== -1) {
+            var editedScript = code.prototype.substring(scriptStartIndex);
+            editor.setValue(editedScript, 1);
+        } else {
+            editor.setValue(code, 1);
+        }
       editor.focus();
     });
   }
@@ -194,7 +204,7 @@ function textChanged() {
 }
 
 function changeJson() {
-  var script = variableMethodsDefinition + editor.getSession().getValue();
+    var script = variableMethodsDefinition + editor.getSession().getValue();
 
   var scriptLines = script.split('\n');
   var scriptLinesString = '';
@@ -205,7 +215,7 @@ function changeJson() {
       scriptLinesString = scriptLinesString + ',';
     }
   }
-  var JSONString = "{" + "\"script\":[" + scriptLinesString + "], " +
+    var JSONString = "{" + "\"script\":[" +  scriptLinesString + "], " +
     "\"vars\":[" +
     getOutVariablesTableJson() +
     "]" + "}";
