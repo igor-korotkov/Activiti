@@ -1,7 +1,10 @@
 var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
 var jsonObject;
+
 if (jsonString) {
-  jsonObject = JSON.parse(jsonString);
+    jsonObject = JSON.parse(jsonString);
+    var scriptArr = jsonObject.script;
+    jsonObject.script = scriptArr.slice(11)
 } else {
   jsonObject = null;
 }
@@ -25,18 +28,18 @@ var variableMethodsDefinition = "def addVariable(String name, Object value){\n" 
 
 var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
-var worlListForAutoComplete = [];
+var wordsListForAutoComplete = [];
 fillWordList();
 
 function fillWordList() {
   for (var i = 0; i < inputParams.length; i++) {
-    worlListForAutoComplete.push(inputParams[i].name);
+      wordsListForAutoComplete.push(inputParams[i].name);
   }
   for (var j = 0; j < nodes.length; j++) {
     var node = nodes[j];
     var vars = node.vars;
     for (var y = 0; y < vars.length; y++) {
-      worlListForAutoComplete.push(nodes[j].vars[y].name);
+        wordsListForAutoComplete.push(nodes[j].vars[y].name);
     }
   }
 }
@@ -71,7 +74,7 @@ function fillInTable() {
 
 var variablesWordCompleter = {
   getCompletions: function (editor, session, pos, prefix, callback) {
-    callback(null, worlListForAutoComplete.map(function (word) {
+      callback(null, wordsListForAutoComplete.map(function (word) {
       return {
         caption: word,
         value: word,
@@ -99,20 +102,10 @@ templateSelect.change(function () {
   var selectedValue = templateSelect.val();
   if (selectedValue) {
     httpGetAsync(getScriptTemplateControllerPath(selectedValue), function (responseText) {
-        this.alert(responseText);
         var script = JSON.parse(responseText);
-        this.alert(script);
         var code = script.code;
-        this.alert(code);
-        var scriptStartIndex = code.prototype.search("//replacing");
-        this.alert(scriptStartIndex);
-        if (scriptStartIndex !== -1) {
-            var editedScript = code.prototype.substring(scriptStartIndex);
-            editor.setValue(editedScript, 1);
-        } else {
-            editor.setValue(code, 1);
-        }
-      editor.focus();
+        editor.setValue(code, 1);
+        editor.focus();
     });
   }
 });
