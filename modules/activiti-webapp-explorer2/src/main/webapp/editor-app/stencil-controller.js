@@ -200,7 +200,10 @@ angular.module('activitiModeler')
                 	if (stencilItemGroups[i].paletteItems && stencilItemGroups[i].paletteItems.length == 0)
                 	{
                 		stencilItemGroups[i].visible = false;
-                	}
+                    } else {
+                        stencilItemGroups[i].visible = true;
+                        stencilItemGroups[i].expanded = true;
+                    }
                 }
                 
                 $scope.stencilItemGroups = stencilItemGroups;
