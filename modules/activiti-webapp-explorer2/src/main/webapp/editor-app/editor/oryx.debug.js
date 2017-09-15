@@ -18460,7 +18460,6 @@ ORYX.Plugins.OpenEdit = Clazz.extend({
 		var sc = null;
 		if( !(shape instanceof ORYX.Core.Shape) ){ return; }
 
-        alert(shape.properties);
 		if (shape.properties['oryx-beanselect'] !== undefined) {
             func = KisBpmBeanSelectCtrl[2];
             sc = this.getScope("beanselect", shape)

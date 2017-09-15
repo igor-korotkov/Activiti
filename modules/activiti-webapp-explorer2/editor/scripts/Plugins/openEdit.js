@@ -40,4 +40,4 @@ ORYX.Plugins.OpenEdit = Clazz.extend({
 			}
 		}
 	}
-})
+});
