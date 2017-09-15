@@ -112,6 +112,17 @@ var KisBpmBeanSelectCtrl = [ '$scope', '$modal', function($scope, $modal) {
     $modal(opts);
 }];
 
+var KisBpmConditionFlowSelectCtrl = [ '$scope', '$modal', function($scope, $modal) {
+
+    var opts = {
+        template:  'editor-app/configuration/properties/condition-expression-popup.html?version=' + Date.now(),
+        scope: $scope
+    };
+
+    // Open the dialog
+    $modal(opts);
+}];
+
 var KisBpmTextPropertyPopupCtrl = ['$scope', function($scope) {
     
     $scope.save = function() {

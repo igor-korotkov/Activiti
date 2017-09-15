@@ -18458,15 +18458,18 @@ ORYX.Plugins.OpenEdit = Clazz.extend({
 		
 		var func = null;
 		var sc = null;
-		var mod = null;
 		if( !(shape instanceof ORYX.Core.Shape) ){ return; }
-		
+
+        alert(shape.properties);
 		if (shape.properties['oryx-beanselect'] !== undefined) {
-			func = KisBpmBeanSelectCtrl[2]
-			var sc = this.getScope("beanselect", shape)
+            func = KisBpmBeanSelectCtrl[2];
+            sc = this.getScope("beanselect", shape)
 		} else if (shape.properties['oryx-scripttext'] !== undefined) {
-			func = KisBpmTextPropertyCtrl[2];
-			var sc = this.getScope("scripttext", shape)
+            func = KisBpmTextPropertyCtrl[2];
+            sc = this.getScope("scripttext", shape)
+        } else if (shape.properties['oryx-conditionsequenceflow'] !== undefined) {
+            func = KisBpmConditionFlowSelectCtrl[2];
+            sc = this.getScope("conditionsequenceflow", shape)
 		} else {
 			return;
 		}
