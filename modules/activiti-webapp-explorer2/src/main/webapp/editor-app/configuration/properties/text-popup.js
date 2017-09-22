@@ -6,14 +6,15 @@ if (jsonString) {
   jsonObject = null;
 }
 
-var typeList = ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
+var typeList = ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"];
 
 ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
 
 
-var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
+var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
+var outputParams = angular.element(document.getElementById('textarea')).scope().outputParameters;
 var worlListForAutoComplete = [];
 fillWordList();
 
@@ -21,11 +22,11 @@ function fillWordList() {
   for (var i = 0; i < inputParams.length; i++) {
     worlListForAutoComplete.push(inputParams[i].name);
   }
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i]
-    var vars = node.vars
+    for (var j = 0; j < nodes.length; j++) {
+        var node = nodes[j];
+        var vars = node.vars;
     for (var y = 0; y < vars.length; y++) {
-      worlListForAutoComplete.push(nodes[i].vars[y].name);
+        worlListForAutoComplete.push(nodes[j].vars[y].name);
     }
   }
 }
@@ -49,11 +50,18 @@ function fillInTable() {
     jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>'+'</td></tr>')
   }
 
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i]
-    var vars = node.vars
+    for (var j = 0; j < outputParams.length; j++) {
+        if (!outputParams[j].valueStr) {
+            outputParams[j].valueStr = ''
+        }
+        jQuery("#inTable").append('<tr><td>' + outputParams[j].name + '</td><td>' + outputParams[j].parameterType + '<td>' + '</td></tr>')
+    }
+
+    for (var k = 0; k < nodes.length; k++) {
+        var node = nodes[k];
+        var vars = node.vars;
     for (var y = 0; y < vars.length; y++) {
-      jQuery("#inTable").append('<tr><td>' + nodes[i].vars[y].name + '</td><td>' + nodes[i].vars[y].type + '</td>' + '<td>' + nodes[i].vars[y].description +'</td></tr>')
+        jQuery("#inTable").append('<tr><td>' + nodes[k].vars[y].name + '</td><td>' + nodes[k].vars[y].type + '</td>' + '<td>' + nodes[k].vars[y].description + '</td></tr>')
     }
   }
 }
@@ -68,7 +76,7 @@ var variablesWordCompleter = {
       };
     }));
   }
-}
+};
 
 var langTools = ace.require("ace/ext/language_tools");
 editor.getSession().on('change', function () {
@@ -94,7 +102,7 @@ templateSelect.change(function () {
       editor.focus();
     });
   }
-})
+});
 
 httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
   var names = JSON.parse(responseText);
@@ -103,34 +111,34 @@ httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
   opt.innerHTML = '';
   opt.value = '';
   sel.appendChild(opt);
-  if (names.length == 0) {
+    if (names.length === 0) {
     jQuery("#templateSelectDiv").hide();
   } else {
     jQuery("#templateSelectDiv").show();
     for (var i = 0; i < names.length; i++) {
-      var opt = document.createElement('option');
-      opt.innerHTML = names[i].name;
-      opt.value = names[i].name;
-      sel.appendChild(opt);
+        var option = document.createElement('option');
+        option.innerHTML = names[i].name;
+        option.value = names[i].name;
+        sel.appendChild(option);
     }
   }
   if (jsonObject) {
     var scriptRows = jsonObject.script;
-    var scriptValue = ''
-    for (var i = 0; i < scriptRows.length; i++) {
-      scriptValue = scriptValue + scriptRows[i];
-      if (i + 1 != scriptRows.length) {
+      var scriptValue = '';
+      for (var j = 0; j < scriptRows.length; j++) {
+          scriptValue = scriptValue + scriptRows[j];
+          if (j + 1 !== scriptRows.length) {
         scriptValue = scriptValue + '\n';
       }
     }
     editor.setValue(utility.unescapeQuotes(scriptValue), 1);
     jsonObject.vars.forEach(function (item, i, arr) {
       jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.name) + '\"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.type) + '\"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.description) + '\"></td></tr>')
-    })
+    });
     changeJson();
-    jQuery("#outTable tr").not(':first').click(function () {
+      jQuery("#outTable").find("tr").not(':first').click(function () {
       jQuery(this).addClass('selected').siblings().removeClass('selected');
-    })
+      });
     initAutoComplete();
     editor.focus();
   }
@@ -154,29 +162,30 @@ function getPath(controllerName) {
 function httpGetAsync(theUrl, callback) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
-    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+      if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
       callback(xmlHttp.responseText);
-  }
+  };
   xmlHttp.open("GET", theUrl, true);
   xmlHttp.send(null);
 }
 
 jQuery("#removeBtn").click(function () {
-  var selected = jQuery('.selected')
+    var selected = jQuery('.selected');
   var next = selected.next();
   selected.remove();
   next.addClass('selected');
   changeJson();
-})
+});
 
 jQuery("#addBtn").click(function () {
-  jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td></tr>')
-  jQuery("#outTable tr").unbind("click");
-  jQuery("#outTable tr").not(':first').click(function () {
+    var outTable = jQuery("#outTable");
+    outTable.append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td></tr>')
+    outTable.find("tr").unbind("click");
+    outTable.find("tr").not(':first').click(function () {
     jQuery(this).addClass('selected').siblings().removeClass('selected');
-  })
+    });
   initAutoComplete();
-})
+});
 
 function textChanged() {
   changeJson();
@@ -194,18 +203,18 @@ function changeJson() {
       scriptLinesString = scriptLinesString + ',';
     }
   }
-  var JSONString = "{" + "\"script\":[" + scriptLinesString + "], " +
-    "\"vars\":[" +
-    getOutVariablesTableJson() +
-    "]" + "}";
-  document.getElementById("textarea").value = JSONString;
+    document.getElementById("textarea").value = "{" + "\"script\":[" + scriptLinesString + "], " +
+        "\"vars\":[" +
+        getOutVariablesTableJson() +
+        "]" + "}";
   jQuery("textarea").change();
 }
 
 function getOutVariablesTableJson() {
-  var result = "";
-  var total = jQuery('#outTable').find('tbody tr').not(':first').length;
-  jQuery('#outTable').find('tbody tr').not(':first').each(function (index) {
+    var result = "";
+    var outTable = jQuery('#outTable');
+    var total = outTable.find('tbody tr').not(':first').length;
+    outTable.find('tbody tr').not(':first').each(function (index) {
     var name = jQuery(this).find("td:eq(0) input[type='text']").val();
     var type = jQuery(this).find("td:eq(1) input[type='text']").val();
     var descrpition = jQuery(this).find("td:eq(2) input[type='text']").val();
@@ -214,7 +223,7 @@ function getOutVariablesTableJson() {
       result = result + ',';
     }
 
-  })
+    });
   return result;
 }
 
@@ -233,12 +242,11 @@ var utility = {
 
 };
 
-jQuery("#outTable tr").not(':first').click(function () {
+jQuery("#outTable").find("tr").not(':first').click(function () {
   jQuery(this).addClass('selected').siblings().removeClass('selected');
+});
 
-})
-
-var comboplets = []
+var comboplets = [];
 
 function initAutoComplete() {
   var input = document.getElementsByClassName("inType");
@@ -249,9 +257,9 @@ function initAutoComplete() {
         list: ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
       });
       var dropdownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
-      var obj = {}
-      obj.c = comboplete
-      obj.b = dropdownBtn
+      var obj = {};
+      obj.c = comboplete;
+      obj.b = dropdownBtn;
       comboplets.push(obj);
       initDropDownListeners();
     }
@@ -281,7 +289,7 @@ function initDropDownListeners() {
 jQuery("#filterInput").keyup(function () {
   var data = this.value.split(" ");
   var trSelector = jQuery("#inTable").find('tr').not(':first');
-  if (this.value == "") {
+  if (this.value === "") {
     trSelector.show();
     return;
   }
@@ -290,8 +298,8 @@ jQuery("#filterInput").keyup(function () {
       var $t = jQuery(this);
 
       for (var d = 0; d < data.length; ++d) {
-        var inputText = data[d].toUpperCase()
-        var tableText = $t.text().toUpperCase()
+        var inputText = data[d].toUpperCase();
+        var tableText = $t.text().toUpperCase();
         if (tableText.indexOf(inputText) >= 0) {
           return true;
         }
@@ -299,7 +307,7 @@ jQuery("#filterInput").keyup(function () {
       return false;
     })
     .show();
-})
+});
 
 
 
