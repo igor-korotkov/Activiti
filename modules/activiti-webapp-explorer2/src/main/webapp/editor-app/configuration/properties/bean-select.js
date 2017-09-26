@@ -14,7 +14,7 @@ if (jsonString) {
 
 var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
-
+var outputParams = angular.element(document.getElementById('textarea')).scope().outputParameters;
 var typeList = ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"];
 
 fillInTable();
@@ -23,24 +23,32 @@ function fillInTable() {
   //nodes = node id and variables from prev nodes
   //input params = process input params
 
-  if (!nodes.length && !inputParams.length) {
+    if (!nodes.length && !inputParams.length && !outputParams.length) {
     jQuery("#inputVariablesWrapper").hide();
   } else {
-    jQuery("#inputVariablesWrapper").show();
-  }
-  for (var i = 0; i < inputParams.length; i++) {
-    if (!inputParams[i].valueStr) {
-      inputParams[i].valueStr = ''
-    }
-    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>'+'</td></tr>')
-  }
+        jQuery("#inputVariablesWrapper").show();
 
-    for (var j = 0; j < nodes.length; j++) {
-        var node = nodes[j];
-        var vars = node.vars;
-    for (var y = 0; y < vars.length; y++) {
-        jQuery("#inTable").append('<tr><td>' + nodes[j].vars[y].name + '</td><td>' + nodes[j].vars[y].type + '</td>' + '<td>' + nodes[j].vars[y].description + '</td></tr>')
-    }
+        for (var i = 0; i < inputParams.length; i++) {
+            if (!inputParams[i].valueStr) {
+                inputParams[i].valueStr = ''
+            }
+            jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>' + '</td></tr>')
+        }
+
+        for (var j = 0; j < outputParams.length; j++) {
+            if (!outputParams[j].valueStr) {
+                outputParams[j].valueStr = ''
+            }
+            jQuery("#inTable").append('<tr><td>' + outputParams[j].name + '</td><td>' + outputParams[j].parameterType + '<td>' + '</td></tr>')
+        }
+
+        for (var k = 0; k < nodes.length; k++) {
+            var node = nodes[k];
+            var vars = node.vars;
+            for (var y = 0; y < vars.length; y++) {
+                jQuery("#inTable").append('<tr><td>' + nodes[k].vars[y].name + '</td><td>' + nodes[k].vars[y].type + '</td>' + '<td>' + nodes[k].vars[y].description + '</td></tr>')
+            }
+        }
   }
 }
 
