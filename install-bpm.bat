@@ -1,4 +1,4 @@
-set TOMCAT_PATH=d:\projects\scorecard\deploy\tomcat
+set TOMCAT_PATH=C:\Users\malyshev\projects\tab-bank\scorecard\deploy\tomcat
 set MODELER_VERSION=5.20.bespoke.4-SNAPSHOT
 
 cd modules\activiti-webapp-explorer2
