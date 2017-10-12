@@ -1,31 +1,45 @@
 var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
 var jsonObject;
+
 if (jsonString) {
-  jsonObject = JSON.parse(jsonString);
+    jsonObject = JSON.parse(jsonString);
+    var scriptArr = jsonObject.script;
+    jsonObject.script = scriptArr.slice(11)
 } else {
   jsonObject = null;
 }
 
-var typeList = ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
+var typeList = ["Integer", "Double", "String", "Boolean", "BigDecimal", "Date", "Time", "DateTime", "Map", "Set", "List"]
 
 ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
 
+var variableMethodsDefinition = "def addVariable(String name, Object value){\n" +
+    "execution.setVariable(name, value)\n" +
+    "} \n" +
+    "def addVariables(Map variables) { \n" +
+    " variables.each { k, v -> \n" +
+    "  execution.setVariable(k,v) \n" +
+    " }} \n" +
+    "def addVariable(Object value) { //methodStub \n}\n" +
+    " String.metaClass.leftShift << {value -> execution.setVariable(delegate, value)} \n" +
+    " //replacing \n";
 
-var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
+
+var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
-var worlListForAutoComplete = [];
+var wordsListForAutoComplete = [];
 fillWordList();
 
 function fillWordList() {
   for (var i = 0; i < inputParams.length; i++) {
-    worlListForAutoComplete.push(inputParams[i].name);
+      wordsListForAutoComplete.push(inputParams[i].name);
   }
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i]
-    var vars = node.vars
+  for (var j = 0; j < nodes.length; j++) {
+    var node = nodes[j];
+    var vars = node.vars;
     for (var y = 0; y < vars.length; y++) {
-      worlListForAutoComplete.push(nodes[i].vars[y].name);
+        wordsListForAutoComplete.push(nodes[j].vars[y].name);
     }
   }
 }
@@ -49,18 +63,18 @@ function fillInTable() {
     jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>'+'</td></tr>')
   }
 
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i]
-    var vars = node.vars
+  for (var j = 0; j < nodes.length; j++) {
+    var node = nodes[j];
+    var vars = node.vars;
     for (var y = 0; y < vars.length; y++) {
-      jQuery("#inTable").append('<tr><td>' + nodes[i].vars[y].name + '</td><td>' + nodes[i].vars[y].type + '</td>' + '<td>' + nodes[i].vars[y].description +'</td></tr>')
+      jQuery("#inTable").append('<tr><td>' + nodes[j].vars[y].name + '</td><td>' + nodes[j].vars[y].type + '</td>' + '<td>' + nodes[j].vars[y].description +'</td></tr>')
     }
   }
 }
 
 var variablesWordCompleter = {
   getCompletions: function (editor, session, pos, prefix, callback) {
-    callback(null, worlListForAutoComplete.map(function (word) {
+      callback(null, wordsListForAutoComplete.map(function (word) {
       return {
         caption: word,
         value: word,
@@ -68,7 +82,7 @@ var variablesWordCompleter = {
       };
     }));
   }
-}
+};
 
 var langTools = ace.require("ace/ext/language_tools");
 editor.getSession().on('change', function () {
@@ -88,13 +102,13 @@ templateSelect.change(function () {
   var selectedValue = templateSelect.val();
   if (selectedValue) {
     httpGetAsync(getScriptTemplateControllerPath(selectedValue), function (responseText) {
-      var script = JSON.parse(responseText);
-      var code = script.code;
-      editor.setValue(code, 1);
-      editor.focus();
+        var script = JSON.parse(responseText);
+        var code = script.code;
+        editor.setValue(code, 1);
+        editor.focus();
     });
   }
-})
+});
 
 httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
   var names = JSON.parse(responseText);
@@ -126,11 +140,11 @@ httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
     editor.setValue(utility.unescapeQuotes(scriptValue), 1);
     jsonObject.vars.forEach(function (item, i, arr) {
       jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.name) + '\"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.type) + '\"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.description) + '\"></td></tr>')
-    })
+    });
     changeJson();
     jQuery("#outTable tr").not(':first').click(function () {
       jQuery(this).addClass('selected').siblings().removeClass('selected');
-    })
+    });
     initAutoComplete();
     editor.focus();
   }
@@ -156,7 +170,7 @@ function httpGetAsync(theUrl, callback) {
   xmlHttp.onreadystatechange = function () {
     if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
       callback(xmlHttp.responseText);
-  }
+  };
   xmlHttp.open("GET", theUrl, true);
   xmlHttp.send(null);
 }
@@ -167,23 +181,23 @@ jQuery("#removeBtn").click(function () {
   selected.remove();
   next.addClass('selected');
   changeJson();
-})
+});
 
 jQuery("#addBtn").click(function () {
   jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td></tr>')
   jQuery("#outTable tr").unbind("click");
   jQuery("#outTable tr").not(':first').click(function () {
     jQuery(this).addClass('selected').siblings().removeClass('selected');
-  })
+  });
   initAutoComplete();
-})
+});
 
 function textChanged() {
   changeJson();
 }
 
 function changeJson() {
-  var script = editor.getSession().getValue();
+    var script = variableMethodsDefinition + editor.getSession().getValue();
 
   var scriptLines = script.split('\n');
   var scriptLinesString = '';
@@ -194,7 +208,7 @@ function changeJson() {
       scriptLinesString = scriptLinesString + ',';
     }
   }
-  var JSONString = "{" + "\"script\":[" + scriptLinesString + "], " +
+    var JSONString = "{" + "\"script\":[" +  scriptLinesString + "], " +
     "\"vars\":[" +
     getOutVariablesTableJson() +
     "]" + "}";
@@ -214,7 +228,7 @@ function getOutVariablesTableJson() {
       result = result + ',';
     }
 
-  })
+  });
   return result;
 }
 
@@ -235,23 +249,22 @@ var utility = {
 
 jQuery("#outTable tr").not(':first').click(function () {
   jQuery(this).addClass('selected').siblings().removeClass('selected');
+});
 
-})
-
-var comboplets = []
+var comboplets = [];
 
 function initAutoComplete() {
   var input = document.getElementsByClassName("inType");
   for (var i = 0; i < input.length; i++) {
     if (!input[i].parentElement.classList.contains('awesomplete')) {
       var comboplete = new Awesomplete(input[i], {
-        minChars: 1,
-        list: ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
+          minChars: 1,
+          list: ["Integer", "Double", "String", "Boolean", "BigDecimal", "Date", "Time", "DateTime", "Map", "Set", "List"]
       });
       var dropdownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
-      var obj = {}
-      obj.c = comboplete
-      obj.b = dropdownBtn
+      var obj = {};
+      obj.c = comboplete;
+      obj.b = dropdownBtn;
       comboplets.push(obj);
       initDropDownListeners();
     }
@@ -281,7 +294,7 @@ function initDropDownListeners() {
 jQuery("#filterInput").keyup(function () {
   var data = this.value.split(" ");
   var trSelector = jQuery("#inTable").find('tr').not(':first');
-  if (this.value == "") {
+  if (this.value === "") {
     trSelector.show();
     return;
   }
@@ -290,8 +303,8 @@ jQuery("#filterInput").keyup(function () {
       var $t = jQuery(this);
 
       for (var d = 0; d < data.length; ++d) {
-        var inputText = data[d].toUpperCase()
-        var tableText = $t.text().toUpperCase()
+        var inputText = data[d].toUpperCase();
+        var tableText = $t.text().toUpperCase();
         if (tableText.indexOf(inputText) >= 0) {
           return true;
         }
@@ -299,7 +312,7 @@ jQuery("#filterInput").keyup(function () {
       return false;
     })
     .show();
-})
+});
 
 
 
