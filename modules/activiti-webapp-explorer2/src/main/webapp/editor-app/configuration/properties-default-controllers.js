@@ -57,7 +57,7 @@ var KisBpmStringPropertyCtrl = [ '$scope', function ($scope) {
  */
 
 var KisBpmBooleanPropertyCtrl = ['$scope', function ($scope) {
-
+    // alert("KisBpmBooleanPropertyCtrl")
     $scope.changeValue = function() {
         if ($scope.property.key === 'oryx-defaultflow' && $scope.property.value) {
             var selectedShape = $scope.selectedShape;
@@ -91,7 +91,7 @@ var KisBpmBooleanPropertyCtrl = ['$scope', function ($scope) {
  */
 
 var KisBpmTextPropertyCtrl = [ '$scope', '$modal', function($scope, $modal) {
-
+    // alert("KisBpmTextPropertyCtrl")
     var opts = {
         template:  'editor-app/configuration/properties/text-popup.html?version=' + Date.now(),
         scope: $scope
@@ -102,9 +102,20 @@ var KisBpmTextPropertyCtrl = [ '$scope', '$modal', function($scope, $modal) {
 }];
 
 var KisBpmBeanSelectCtrl = [ '$scope', '$modal', function($scope, $modal) {
-
+    // alert("KisBpmBeanSelectCtrl")
     var opts = {
         template:  'editor-app/configuration/properties/bean-select.html?version=' + Date.now(),
+        scope: $scope
+    };
+
+    // Open the dialog
+    $modal(opts);
+}];
+
+var KisBpmConditionFlowSelectCtrl = [ '$scope', '$modal', function($scope, $modal) {
+    // alert("KisBpmConditionFlowSelectCtrl")
+    var opts = {
+        template:  'editor-app/configuration/properties/condition-expression-popup.html?version=' + Date.now(),
         scope: $scope
     };
 

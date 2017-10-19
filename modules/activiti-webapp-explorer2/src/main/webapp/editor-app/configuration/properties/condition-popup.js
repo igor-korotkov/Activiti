@@ -6,14 +6,14 @@ ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
 
 
-var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
+var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
-var worlListForAutoComplete = [];
+var wordsListForAutoComplete = [];
 fillWordList();
 
 function fillWordList() {
   for (var i = 0; i < inputParams.length; i++) {
-    worlListForAutoComplete.push(inputParams[i].name);
+    wordsListForAutoComplete.push(inputParams[i].name);
   }
   for (var j = 0; j < nodes.length; j++) {
     var node = nodes[j];
@@ -26,7 +26,7 @@ function fillWordList() {
 
 var variablesWordCompleter = {
   getCompletions: function (editor, session, pos, prefix, callback) {
-    callback(null, worlListForAutoComplete.map(function (word) {
+    callback(null, wordsListForAutoComplete.map(function (word) {
       return {
         caption: word,
         value: word,
@@ -92,10 +92,10 @@ function initAutoComplete() {
         minChars: 1,
         list: ["Integer", "Double", "String", "Boolean", "BigDecimal", "Date", "Time", "DateTime", "Map", "Set", "List"]
       });
-      var dropdownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
+      var dropDownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
       var obj = {};
       obj.c = comboplete;
-      obj.b = dropdownBtn;
+      obj.b = dropDownBtn;
       comboplets.push(obj);
       initDropDownListeners();
     }
@@ -130,7 +130,7 @@ function closeAllOtherComboplets(item) {
   })
 }
  if (jsonString) {
-console.log(jsonString)
+     console.log(jsonString);
     editor.setValue(utility.unescapeQuotes(jsonString), 1);
 	editor.focus();
  }
