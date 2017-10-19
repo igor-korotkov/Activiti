@@ -15,11 +15,11 @@ function fillWordList() {
   for (var i = 0; i < inputParams.length; i++) {
     wordsListForAutoComplete.push(inputParams[i].name);
   }
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i];
+  for (var j = 0; j < nodes.length; j++) {
+    var node = nodes[j];
     var vars = node.vars;
     for (var y = 0; y < vars.length; y++) {
-      wordsListForAutoComplete.push(nodes[i].vars[y].name);
+      worlListForAutoComplete.push(nodes[j].vars[y].name);
     }
   }
 }
@@ -65,7 +65,7 @@ function changeJson() {
       scriptLinesString = scriptLinesString + ',';
     }
   }
-    document.getElementById("textarea").value = scriptLinesString;
+  document.getElementById("textarea").value = scriptLinesString;
   jQuery("textarea").change();
 }
 
@@ -89,13 +89,13 @@ function initAutoComplete() {
   for (var i = 0; i < input.length; i++) {
     if (!input[i].parentElement.classList.contains('awesomplete')) {
       var comboplete = new Awesomplete(input[i], {
-          minChars: 1,
-          list: typeList
+        minChars: 1,
+        list: ["Integer", "Double", "String", "Boolean", "BigDecimal", "Date", "Time", "DateTime", "Map", "Set", "List"]
       });
-        var dropDownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
-        var obj = {};
-        obj.c = comboplete;
-        obj.b = dropDownBtn;
+      var dropDownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
+      var obj = {};
+      obj.c = comboplete;
+      obj.b = dropDownBtn;
       comboplets.push(obj);
       initDropDownListeners();
     }

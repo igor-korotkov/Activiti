@@ -1,32 +1,45 @@
 var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
 var jsonObject;
+
 if (jsonString) {
-  jsonObject = JSON.parse(jsonString);
+    jsonObject = JSON.parse(jsonString);
+    var scriptArr = jsonObject.script;
+    jsonObject.script = scriptArr.slice(11)
 } else {
   jsonObject = null;
 }
 
-var typeList = ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"];
+var typeList = ["Integer", "Double", "String", "Boolean", "BigDecimal", "Date", "Time", "DateTime", "Map", "Set", "List"]
 
 ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
 
+var variableMethodsDefinition = "def addVariable(String name, Object value){\n" +
+    "execution.setVariable(name, value)\n" +
+    "} \n" +
+    "def addVariables(Map variables) { \n" +
+    " variables.each { k, v -> \n" +
+    "  execution.setVariable(k,v) \n" +
+    " }} \n" +
+    "def addVariable(Object value) { //methodStub \n}\n" +
+    " String.metaClass.leftShift << {value -> execution.setVariable(delegate, value)} \n" +
+    " //replacing \n";
 
 var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
 var outputParams = angular.element(document.getElementById('textarea')).scope().outputParameters;
-var worlListForAutoComplete = [];
+var wordsListForAutoComplete = [];
 fillWordList();
 
 function fillWordList() {
   for (var i = 0; i < inputParams.length; i++) {
-    worlListForAutoComplete.push(inputParams[i].name);
+      wordsListForAutoComplete.push(inputParams[i].name);
   }
-    for (var j = 0; j < nodes.length; j++) {
-        var node = nodes[j];
-        var vars = node.vars;
+  for (var j = 0; j < nodes.length; j++) {
+    var node = nodes[j];
+    var vars = node.vars;
     for (var y = 0; y < vars.length; y++) {
-        worlListForAutoComplete.push(nodes[j].vars[y].name);
+        wordsListForAutoComplete.push(nodes[j].vars[y].name);
     }
   }
 }
@@ -68,7 +81,7 @@ function fillInTable() {
 
 var variablesWordCompleter = {
   getCompletions: function (editor, session, pos, prefix, callback) {
-    callback(null, worlListForAutoComplete.map(function (word) {
+      callback(null, wordsListForAutoComplete.map(function (word) {
       return {
         caption: word,
         value: word,
@@ -96,10 +109,10 @@ templateSelect.change(function () {
   var selectedValue = templateSelect.val();
   if (selectedValue) {
     httpGetAsync(getScriptTemplateControllerPath(selectedValue), function (responseText) {
-      var script = JSON.parse(responseText);
-      var code = script.code;
-      editor.setValue(code, 1);
-      editor.focus();
+        var script = JSON.parse(responseText);
+        var code = script.code;
+        editor.setValue(code, 1);
+        editor.focus();
     });
   }
 });
@@ -192,7 +205,7 @@ function textChanged() {
 }
 
 function changeJson() {
-  var script = editor.getSession().getValue();
+    var script = variableMethodsDefinition + editor.getSession().getValue();
 
   var scriptLines = script.split('\n');
   var scriptLinesString = '';
@@ -203,10 +216,11 @@ function changeJson() {
       scriptLinesString = scriptLinesString + ',';
     }
   }
-    document.getElementById("textarea").value = "{" + "\"script\":[" + scriptLinesString + "], " +
-        "\"vars\":[" +
-        getOutVariablesTableJson() +
-        "]" + "}";
+    var JSONString = "{" + "\"script\":[" +  scriptLinesString + "], " +
+    "\"vars\":[" +
+    getOutVariablesTableJson() +
+    "]" + "}";
+  document.getElementById("textarea").value = JSONString;
   jQuery("textarea").change();
 }
 
@@ -253,8 +267,8 @@ function initAutoComplete() {
   for (var i = 0; i < input.length; i++) {
     if (!input[i].parentElement.classList.contains('awesomplete')) {
       var comboplete = new Awesomplete(input[i], {
-        minChars: 1,
-        list: ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"]
+          minChars: 1,
+          list: ["Integer", "Double", "String", "Boolean", "BigDecimal", "Date", "Time", "DateTime", "Map", "Set", "List"]
       });
       var dropdownBtn = input[i].parentElement.parentElement.getElementsByClassName('dropdown-btn')[0];
       var obj = {};

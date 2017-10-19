@@ -5,15 +5,17 @@ if (jsonString) {
   try {
     jsonObject = JSON.parse(jsonString);
   } catch (e) {
-    console.error(e)
+      console.error(e);
     jsonObject = null;
   }
 } else {
   jsonObject = null;
 }
 
-var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape()
+var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
+var outputParams = angular.element(document.getElementById('textarea')).scope().outputParameters;
+var typeList = ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time", "DateTime", "Map", "Set", "List"];
 
 fillInTable();
 
@@ -21,24 +23,32 @@ function fillInTable() {
   //nodes = node id and variables from prev nodes
   //input params = process input params
 
-  if (!nodes.length && !inputParams.length) {
+    if (!nodes.length && !inputParams.length && !outputParams.length) {
     jQuery("#inputVariablesWrapper").hide();
   } else {
-    jQuery("#inputVariablesWrapper").show();
-  }
-  for (var i = 0; i < inputParams.length; i++) {
-    if (!inputParams[i].valueStr) {
-      inputParams[i].valueStr = ''
-    }
-    jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>'+'</td></tr>')
-  }
+        jQuery("#inputVariablesWrapper").show();
 
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i]
-    var vars = node.vars
-    for (var y = 0; y < vars.length; y++) {
-      jQuery("#inTable").append('<tr><td>' + nodes[i].vars[y].name + '</td><td>' + nodes[i].vars[y].type + '</td>' + '<td>' + nodes[i].vars[y].description + '</td></tr>')
-    }
+        for (var i = 0; i < inputParams.length; i++) {
+            if (!inputParams[i].valueStr) {
+                inputParams[i].valueStr = ''
+            }
+            jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>' + '</td></tr>')
+        }
+
+        for (var j = 0; j < outputParams.length; j++) {
+            if (!outputParams[j].valueStr) {
+                outputParams[j].valueStr = ''
+            }
+            jQuery("#inTable").append('<tr><td>' + outputParams[j].name + '</td><td>' + outputParams[j].parameterType + '<td>' + '</td></tr>')
+        }
+
+        for (var k = 0; k < nodes.length; k++) {
+            var node = nodes[k];
+            var vars = node.vars;
+            for (var y = 0; y < vars.length; y++) {
+                jQuery("#inTable").append('<tr><td>' + nodes[k].vars[y].name + '</td><td>' + nodes[k].vars[y].type + '</td>' + '<td>' + nodes[k].vars[y].description + '</td></tr>')
+            }
+        }
   }
 }
 
@@ -66,11 +76,12 @@ jQuery('#beanSelect').change(function () {
       fillDropDownList('methodSelect', 'methodName', responseText);
       clearTable();
       changeJson();
+        var methodSelect = jQuery('#methodSelect');
       if (jsonObject) {
-        jQuery('#methodSelect').val(jsonObject.methodName);
-        jQuery('#methodSelect').change();
+          methodSelect.val(jsonObject.methodName);
+          methodSelect.change();
       } else {
-        jQuery("#methodSelect").prop("selectedIndex", -1);
+          methodSelect.prop("selectedIndex", -1);
       }
     });
   }
@@ -78,8 +89,10 @@ jQuery('#beanSelect').change(function () {
 
 function updateOutputTypeDescription(outputClassName) {
   if (outputClassName) {
-    if (/\S/.test(outputClassName)) {
-      jQuery('#outputType').html("<a target='_blank' href='" + KISBPM.URL.getStubsDocs(outputType) + "'>" + outputType + "</a>");
+      if (typeList.indexOf(outputClassName.toString()) > -1) {
+          jQuery('#outputType').innerText = outputClassName;
+      } else if (/\S/.test(outputClassName)) {
+          jQuery('#outputType').html("<a target='_blank' href='" + KISBPM.URL.getStubsDocs(outputType) + "'>" + outputType + "</a>");
     }
   }
 }
@@ -89,11 +102,12 @@ document.getElementById('outputVariableName').addEventListener("input", function
 });
 
 httpGetAsync(getBeanNames(), function (responseText) {
-  fillDropDownList('beanSelect', 'beanName', responseText)
+    fillDropDownList('beanSelect', 'beanName', responseText);
   if (jsonObject) {
-    jQuery('#beanSelect').val(jsonObject.beanName);
+      var beanSelect = jQuery('#beanSelect');
+      beanSelect.val(jsonObject.beanName);
     jQuery('#outputVariableName').val(jsonObject.outputName);
-    jQuery('#beanSelect').change();
+      beanSelect.change();
   } else {
     jQuery("#beanSelect").prop("selectedIndex", -1);
   }
@@ -113,12 +127,16 @@ function fillTable(responseText) {
     value.id = 'val' + i;
     name.innerHTML = this.argName;
     var currentArgName = this.argName;
-    type.innerHTML = "<a target='_blank' href='" + KISBPM.URL.getStubsDocs(this.argType) + "'>" + this.argType + "</a>";
+      if (typeList.indexOf(this.argType) > -1) {
+          type.innerText = this.argType;
+      } else {
+          type.innerHTML = "<a target='_blank' href='" + KISBPM.URL.getStubsDocs(this.argType) + "'>" + this.argType + "</a>";
+      }
     descr.innerHTML = this.description;
     value.innerHTML = "<input type=\"text\" id='val'" + i + ">";
     if (jsonObject && jsonObject.args) {
       jsonObject.args.forEach(function (item, i, arr) {
-        if (item.paramName == currentArgName) {
+          if (item.paramName === currentArgName) {
           value.innerHTML = '<input type=\"text\" id="val' + i + '" value=\"' + utility.unescapeQuotesToQuotChr(item.paramValue) + '\">'
         }
       });
@@ -144,12 +162,11 @@ function clearOptions(elementId) {
 function getTableValueMap() {
   var table = document.getElementById("argTable");
   var result = [];
-  var y = 1;
   for (var i = table.rows.length - 1; i > 0; i--) {
     var paramName = table.rows[i].cells[0].innerHTML;
     var paramType = table.rows[i].cells[1].innerText;
     var paramValue = table.rows[i].cells[3].firstChild.value;
-    var obj = new Object();
+      var obj = {};
     obj.paramName = paramName;
     obj.paramValue = paramValue;
     obj.paramType = paramType;
@@ -189,31 +206,29 @@ function changeJson() {
   var outputVariableName = jQuery("#outputVariableName").val();
   updateOutputTypeDescription(outputType);
   var argsString = argsMapAsString();
-  var JSONString = "{" + "\"beanName\":\"" + beanName + "\", " +
-    "\"methodName\":\"" + methodName + "\", " +
-    "\"outputName\":\"" + outputVariableName + "\", " +
-    "\"outputType\":\"" + outputType + "\", " +
-    "\"args\":[" +
-    argsString +
-    "]" + "}";
-  document.getElementById("textarea").value = JSONString;
+    document.getElementById("textarea").value = "{" + "\"beanName\":\"" + beanName + "\", " +
+        "\"methodName\":\"" + methodName + "\", " +
+        "\"outputName\":\"" + outputVariableName + "\", " +
+        "\"outputType\":\"" + outputType + "\", " +
+        "\"args\":[" +
+        argsString +
+        "]" + "}";
   jQuery('#textarea').change();
 }
 
 function changeJsonWithOutputType(outputTypeValue) {
-  outputType = outputTypeValue
+    outputType = outputTypeValue;
   var beanName = jQuery("#beanSelect").val();
   var methodName = jQuery("#methodSelect").val();
   updateOutputTypeDescription(outputType);
   var argsString = argsMapAsString();
-  var JSONString = "{" + "\"beanName\":\"" + beanName + "\", " +
-    "\"methodName\":\"" + methodName + "\", " +
-    "\"outputName\":\"" + outputType + "\", " +
-    "\"outputType\":\"" + outputType + "\", " +
-    "\"args\":[" +
-    argsString +
-    "]" + "}";
-  document.getElementById("textarea").value = JSONString;
+    document.getElementById("textarea").value = "{" + "\"beanName\":\"" + beanName + "\", " +
+        "\"methodName\":\"" + methodName + "\", " +
+        "\"outputName\":\"" + outputType + "\", " +
+        "\"outputType\":\"" + outputType + "\", " +
+        "\"args\":[" +
+        argsString +
+        "]" + "}";
   jQuery('#textarea').change();
 }
 
@@ -262,7 +277,7 @@ function getPath(controllerName) {
 jQuery("#filterInput").keyup(function () {
   var data = this.value.split(" ");
   var trSelector = jQuery("#inTable").find('tr').not(':first');
-  if (this.value == "") {
+    if (this.value === "") {
     trSelector.show();
     return;
   }
@@ -270,8 +285,8 @@ jQuery("#filterInput").keyup(function () {
   trSelector.filter(function (i, v) {
       var $t = jQuery(this);
       for (var d = 0; d < data.length; ++d) {
-        var inputText = data[d].toUpperCase()
-        var tableText = $t.text().toUpperCase()
+          var inputText = data[d].toUpperCase();
+          var tableText = $t.text().toUpperCase();
         if (tableText.indexOf(inputText) >= 0) {
           return true;
         }
@@ -279,14 +294,14 @@ jQuery("#filterInput").keyup(function () {
       return false;
     })
     .show();
-})
+});
 
 function httpGetAsync(theUrl, callback) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
-    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+      if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
       callback(xmlHttp.responseText);
-  }
+  };
   xmlHttp.open("GET", theUrl, true);
   xmlHttp.send(null);
 }
