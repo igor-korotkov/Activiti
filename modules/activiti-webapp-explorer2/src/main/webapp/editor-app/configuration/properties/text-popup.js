@@ -25,9 +25,9 @@ var variableMethodsDefinition = "def addVariable(String name, Object value){\n" 
     " String.metaClass.leftShift << {value -> execution.setVariable(delegate, value)} \n" +
     " //replacing \n";
 
-
 var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
+var outputParams = angular.element(document.getElementById('textarea')).scope().outputParameters;
 var wordsListForAutoComplete = [];
 fillWordList();
 
@@ -63,11 +63,18 @@ function fillInTable() {
     jQuery("#inTable").append('<tr><td>' + inputParams[i].name + '</td><td>' + inputParams[i].parameterType + '<td>'+'</td></tr>')
   }
 
-  for (var j = 0; j < nodes.length; j++) {
-    var node = nodes[j];
-    var vars = node.vars;
+    for (var j = 0; j < outputParams.length; j++) {
+        if (!outputParams[j].valueStr) {
+            outputParams[j].valueStr = ''
+        }
+        jQuery("#inTable").append('<tr><td>' + outputParams[j].name + '</td><td>' + outputParams[j].parameterType + '<td>' + '</td></tr>')
+    }
+
+    for (var k = 0; k < nodes.length; k++) {
+        var node = nodes[k];
+        var vars = node.vars;
     for (var y = 0; y < vars.length; y++) {
-      jQuery("#inTable").append('<tr><td>' + nodes[j].vars[y].name + '</td><td>' + nodes[j].vars[y].type + '</td>' + '<td>' + nodes[j].vars[y].description +'</td></tr>')
+        jQuery("#inTable").append('<tr><td>' + nodes[k].vars[y].name + '</td><td>' + nodes[k].vars[y].type + '</td>' + '<td>' + nodes[k].vars[y].description + '</td></tr>')
     }
   }
 }
@@ -117,23 +124,23 @@ httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
   opt.innerHTML = '';
   opt.value = '';
   sel.appendChild(opt);
-  if (names.length == 0) {
+    if (names.length === 0) {
     jQuery("#templateSelectDiv").hide();
   } else {
     jQuery("#templateSelectDiv").show();
     for (var i = 0; i < names.length; i++) {
-      var opt = document.createElement('option');
-      opt.innerHTML = names[i].name;
-      opt.value = names[i].name;
-      sel.appendChild(opt);
+        var option = document.createElement('option');
+        option.innerHTML = names[i].name;
+        option.value = names[i].name;
+        sel.appendChild(option);
     }
   }
   if (jsonObject) {
     var scriptRows = jsonObject.script;
-    var scriptValue = ''
-    for (var i = 0; i < scriptRows.length; i++) {
-      scriptValue = scriptValue + scriptRows[i];
-      if (i + 1 != scriptRows.length) {
+      var scriptValue = '';
+      for (var j = 0; j < scriptRows.length; j++) {
+          scriptValue = scriptValue + scriptRows[j];
+          if (j + 1 !== scriptRows.length) {
         scriptValue = scriptValue + '\n';
       }
     }
@@ -142,9 +149,9 @@ httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
       jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.name) + '\"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.type) + '\"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.description) + '\"></td></tr>')
     });
     changeJson();
-    jQuery("#outTable tr").not(':first').click(function () {
+      jQuery("#outTable").find("tr").not(':first').click(function () {
       jQuery(this).addClass('selected').siblings().removeClass('selected');
-    });
+      });
     initAutoComplete();
     editor.focus();
   }
@@ -168,7 +175,7 @@ function getPath(controllerName) {
 function httpGetAsync(theUrl, callback) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function () {
-    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+      if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
       callback(xmlHttp.responseText);
   };
   xmlHttp.open("GET", theUrl, true);
@@ -176,7 +183,7 @@ function httpGetAsync(theUrl, callback) {
 }
 
 jQuery("#removeBtn").click(function () {
-  var selected = jQuery('.selected')
+    var selected = jQuery('.selected');
   var next = selected.next();
   selected.remove();
   next.addClass('selected');
@@ -184,11 +191,12 @@ jQuery("#removeBtn").click(function () {
 });
 
 jQuery("#addBtn").click(function () {
-  jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td></tr>')
-  jQuery("#outTable tr").unbind("click");
-  jQuery("#outTable tr").not(':first').click(function () {
+    var outTable = jQuery("#outTable");
+    outTable.append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text"></td></tr>')
+    outTable.find("tr").unbind("click");
+    outTable.find("tr").not(':first').click(function () {
     jQuery(this).addClass('selected').siblings().removeClass('selected');
-  });
+    });
   initAutoComplete();
 });
 
@@ -217,9 +225,10 @@ function changeJson() {
 }
 
 function getOutVariablesTableJson() {
-  var result = "";
-  var total = jQuery('#outTable').find('tbody tr').not(':first').length;
-  jQuery('#outTable').find('tbody tr').not(':first').each(function (index) {
+    var result = "";
+    var outTable = jQuery('#outTable');
+    var total = outTable.find('tbody tr').not(':first').length;
+    outTable.find('tbody tr').not(':first').each(function (index) {
     var name = jQuery(this).find("td:eq(0) input[type='text']").val();
     var type = jQuery(this).find("td:eq(1) input[type='text']").val();
     var descrpition = jQuery(this).find("td:eq(2) input[type='text']").val();
@@ -228,7 +237,7 @@ function getOutVariablesTableJson() {
       result = result + ',';
     }
 
-  });
+    });
   return result;
 }
 
@@ -247,7 +256,7 @@ var utility = {
 
 };
 
-jQuery("#outTable tr").not(':first').click(function () {
+jQuery("#outTable").find("tr").not(':first').click(function () {
   jQuery(this).addClass('selected').siblings().removeClass('selected');
 });
 

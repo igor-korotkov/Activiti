@@ -36,6 +36,10 @@ KISBPM.PROPERTY_CONFIG =
 		"readModeTemplateUrl": "editor-app/configuration/properties/default-value-display-template.html",
         "writeModeTemplateUrl": "editor-app/configuration/properties/bean-select-write-template.html"
 	},
+    "conditionsequenceflow": {
+        "readModeTemplateUrl": "editor-app/configuration/properties/condition-expression-display-template.html",
+        "writeModeTemplateUrl": "editor-app/configuration/properties/condition-expression-write-template.html"
+    },
     "kisbpm-multiinstance" : {
         "readModeTemplateUrl": "editor-app/configuration/properties/default-value-display-template.html",
         "writeModeTemplateUrl": "editor-app/configuration/properties/multiinstance-property-write-template.html"

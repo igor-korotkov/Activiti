@@ -28,7 +28,7 @@ CubaStencilUtils = {
         angScope = angular.element(document.getElementsByClassName('modal-dialog')).scope();
         return getAffectedNodesForSelectedShape();
     }
-}
+};
 
 function getAffectedNodesForSelectedShape() {
     var result = [];
