@@ -25,7 +25,13 @@ var variableMethodsDefinition = "def addVariable(String name, Object value){\n" 
     " String.metaClass.leftShift << {value -> execution.setVariable(delegate, value)} \n" +
     " //replacing \n";
 
-var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
+var nodes = function () {
+    if (CubaStencilUtils.getAvailableVariablesForSelectedShape() !== null)
+        return CubaStencilUtils.getAvailableVariablesForSelectedShape();
+    else
+        return [];
+};
+// var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
 var outputParams = angular.element(document.getElementById('textarea')).scope().outputParameters;
 var wordsListForAutoComplete = [];

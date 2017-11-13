@@ -1,7 +1,3 @@
-var childShapes;
-
-var angScope;
-
 CubaStencilUtils = {
     fillMainAndAdvancedProperties: function (selectedItem, stencil) {
         selectedItem.mainProperties = [];
@@ -11,7 +7,7 @@ CubaStencilUtils = {
         // properties should be in main group
         // otherwise fill two collections: mainProperties (defined in mainPropertiesPackages) and
         // advancedProperties (the others)
-        if (stencil._mainPropertiesIds == undefined || stencil._mainPropertiesIds.length == 0) {
+        if (stencil._mainPropertiesIds === undefined || stencil._mainPropertiesIds.length === 0) {
             selectedItem.mainProperties = selectedItem.properties;
         } else {
             selectedItem.properties.each(function (prop) {
@@ -25,47 +21,47 @@ CubaStencilUtils = {
         }
     },
     getAvailableVariablesForSelectedShape: function () {
-        angScope = angular.element(document.getElementsByClassName('modal-dialog')).scope();
         return getAffectedNodesForSelectedShape();
     }
 };
 
 function getAffectedNodesForSelectedShape() {
+    var angScope = angular.element(document.getElementsByClassName('modal-dialog')).scope();
     var result = [];
-    var selectedShapeId = angScope.selectedShape.resourceId
+    var selectedShapeId = angScope.selectedShape.resourceId;
 
     var selectedShapeValue = angScope.selectedShape;
     if (selectedShapeValue._stencil._jsonStencil.id.includes("IntegrationNode")) {
-        var beforeText = selectedShapeValue.properties['oryx-beforeexecutionscripttext']
-        var beforeJson = parseJson(beforeText)
+        var beforeText = selectedShapeValue.properties['oryx-beforeexecutionscripttext'];
+        var beforeJson = parseJson(beforeText);
         if (beforeJson && beforeJson.vars) {
-            var nodeVariblesWrapper = {}
-            nodeVariblesWrapper.id = 'root'
-            nodeVariblesWrapper.vars = beforeJson.vars
+            var nodeVariblesWrapper = {};
+            nodeVariblesWrapper.id = 'root';
+            nodeVariblesWrapper.vars = beforeJson.vars;
             result.push(nodeVariblesWrapper)
         }
     }
 
     var jsonModel = angScope.editor.getJSON();
-    childShapes = jsonModel.childShapes
+    var childShapes = jsonModel.childShapes;
     var queue = [selectedShapeId];
     while (queue.length) {
-        var nodeId = queue.shift()
+        var nodeId = queue.shift();
         for (var i = 0; i < childShapes.length; i++) {
             var currentShape = childShapes[i];
-            var outgoingShapes = currentShape.outgoing
+            var outgoingShapes = currentShape.outgoing;
             for (var y = 0; y < outgoingShapes.length; y++) {
-                if (outgoingShapes[y].resourceId == nodeId) {
+                if (outgoingShapes[y].resourceId === nodeId) {
                     var alreadyContainVarsFromShape = false;
                     for (var z = 0; z < result.length; z++) {
-                        if (result[z].id == currentShape.resourceId) {
+                        if (result[z].id === currentShape.resourceId) {
                             alreadyContainVarsFromShape = true;
                         }
                     }
                     if (!alreadyContainVarsFromShape) {
-                        var nodeVariblesWrapper = {}
-                        nodeVariblesWrapper.id = currentShape.resourceId
-                        nodeVariblesWrapper.vars = getVariables(currentShape)
+                        var nodeVariblesWrapper = {};
+                        nodeVariblesWrapper.id = currentShape.resourceId;
+                        nodeVariblesWrapper.vars = getVariables(currentShape);
                         result.push(nodeVariblesWrapper)
                     }
                     queue.push(currentShape.resourceId)
@@ -73,12 +69,18 @@ function getAffectedNodesForSelectedShape() {
             }
         }
     }
+    var res = "result arr [";
+    result.forEach(function (item, i, arr) {
+        res += item.toString();
+    });
+    res += "]";
+    alert(res);
     return result;
 }
 
 function getVariables(shape) {
     var vars = [];
-    var type = shape.stencil.id
+    var type = shape.stencil.id;
     switch (type) {
         case 'ScriptTask':
             var text = shape.properties.scripttext;
@@ -91,22 +93,22 @@ function getVariables(shape) {
             var text = shape.properties.beanselect;
             var beanJson = parseJson(text);
 
-            var afterText = shape.properties.afterexecutionscripttext
+            var afterText = shape.properties.afterexecutionscripttext;
             var afterJson = parseJson(afterText);
             if (afterJson && afterJson.vars) {
                 vars = vars.concat(afterJson.vars)
             }
 
-            var beforeText = shape.properties.beforeexecutionscripttext
-            var beforeJson = parseJson(beforeText)
+            var beforeText = shape.properties.beforeexecutionscripttext;
+            var beforeJson = parseJson(beforeText);
             if (beforeJson && beforeJson.vars) {
                 vars = vars.concat(beforeJson.vars)
             }
 
-            var variable = {}
+            var variable = {};
             if (beanJson) {
-                variable.name = beanJson.outputName
-                variable.type = beanJson.outputType
+                variable.name = beanJson.outputName;
+                variable.type = beanJson.outputType;
                 vars.push(variable)
             }
             break;
