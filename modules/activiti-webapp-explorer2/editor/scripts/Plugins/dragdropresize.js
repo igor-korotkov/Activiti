@@ -1452,16 +1452,16 @@ ORYX.Core.Command.Move = ORYX.Core.Command.extend({
 				}	
 				
 				/*var i=-1;
-				var nodes = value.getChildShapes(true);
+				var inputNodes = value.getChildShapes(true);
 				var allEdges = [];
-				while(++i<nodes.length){
-					var edges = [].concat(nodes[i].getIncomingShapes())
-						.concat(nodes[i].getOutgoingShapes())
+				while(++i<inputNodes.length){
+					var edges = [].concat(inputNodes[i].getIncomingShapes())
+						.concat(inputNodes[i].getOutgoingShapes())
 						// Remove all edges which are included in the selection from the list
 						.findAll(function(r){ return r instanceof ORYX.Core.Edge && !allEdges.include(r) && r.dockers.any(function(d){ return !value.bounds.isIncluded(d.bounds.center)})})
 					allEdges = allEdges.concat(edges);
 					if (edges.length <= 0){ continue }
-					//this.plugin.layoutEdges(nodes[i], edges, offset);
+					//this.plugin.layoutEdges(inputNodes[i], edges, offset);
 				}*/
 			}
 		}

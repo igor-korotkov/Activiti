@@ -112,7 +112,7 @@ public class DefaultWorkflowDefinitionConversionListener implements WorkflowDefi
     // To make the generated workflow compatible with some tools (eg the
     // Modeler, but also others),
     // We must add the ingoing and outgoing sequence flow to each of the flow
-    // nodes
+    // inputNodes
     SequenceFlowMapping sequenceFlowMapping = generateSequenceflowMappings(process);
 
     for (FlowNode flowNode : process.findFlowElementsOfType(FlowNode.class)) {

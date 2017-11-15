@@ -309,7 +309,7 @@ Event.observe(window, 'load', Kickstart.load);var ERDF = {
 			subject.type, subject.value,
 			properties);
 
-		// parse all children that are element nodes.
+		// parse all children that are element inputNodes.
 		var children = node.childNodes;
 		if(children) $A(children).each(function(_node) {
 			if(_node.nodeType == _node.ELEMENT_NODE)
@@ -709,7 +709,7 @@ var DataManager = {
 	
 	__persistDOM: function(facade) {
 
-		// getChildShapes gets all shapes (nodes AND edges), deep flag
+		// getChildShapes gets all shapes (inputNodes AND edges), deep flag
 		// makes it return a flattened child hierarchy.
 		
 		var canvas = facade.getCanvas();
@@ -825,7 +825,7 @@ var DataManager = {
 	 */
 	__syncglobal: function(facade) {
 
-		// getChildShapes gets all shapes (nodes AND edges), deep flag
+		// getChildShapes gets all shapes (inputNodes AND edges), deep flag
 		// makes it return a flattened child hierarchy.
 		
 		var canvas = facade.getCanvas();
@@ -4907,7 +4907,7 @@ ORYX.Core.SVG.Label = Clazz.extend({
 	},
 	
 	/**
-	 * iterates parent nodes till it finds a SVG font-size
+	 * iterates parent inputNodes till it finds a SVG font-size
 	 * attribute.
 	 * @param {SVGElement} node
 	 */
@@ -10301,9 +10301,9 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         );
   
         // Deserialize the properties from the shapes
-        // This can't be done earlier because Shape#deserialize expects that all referenced nodes are already there
+        // This can't be done earlier because Shape#deserialize expects that all referenced inputNodes are already there
         
-        // first, deserialize all nodes
+        // first, deserialize all inputNodes
         shapes.each(function(shape) {
         	if(shape.object instanceof ORYX.Core.Node) {
         		shape.object.deserialize(shape.__properties, shape.json);
@@ -10483,7 +10483,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 	},
 	
 	/**   
-	* Removes all nodes (and its children) that has the
+	* Removes all inputNodes (and its children) that has the
 	* attribute visibility set to "hidden"
 	*/
 	_removeInvisibleElements: function(element) {
@@ -14285,7 +14285,7 @@ ORYX.Core.Node = {
         var result = arguments.callee.$.serialize.apply(this);
         
         // Add the docker's bounds
-        // nodes only have at most one docker!
+        // inputNodes only have at most one docker!
         this.dockers.each((function(docker){
 			if (docker.getDockedShape()) {
 				var center = docker.referencePoint;
@@ -14767,7 +14767,7 @@ ORYX.Core.Edge = {
         this._dockersByPath = new Hash();
         this._markersByPath = new Hash();
 		
-		/* Data structures to store positioning information of attached child nodes */ 
+		/* Data structures to store positioning information of attached child inputNodes */
 		this.attachedNodePositionData = new Hash();
         
         //TODO was muss hier initial erzeugt werden?
@@ -15142,7 +15142,7 @@ ORYX.Core.Edge = {
 	},
 	
 	/**
-	 * Refreshes the visual representation of edge's attached nodes.
+	 * Refreshes the visual representation of edge's attached inputNodes.
 	 */	
 	refreshAttachedNodes: function() {
 		this.attachedNodePositionData.values().each(function(nodeData) {
@@ -15347,7 +15347,7 @@ ORYX.Core.Edge = {
 	/**
 	 * Move the first and last docker and calls the refresh method.
 	 * Attention: This does not calculates intersection point between the
-	 * edge and the bounded nodes. This only works if only the nodes are
+	 * edge and the bounded inputNodes. This only works if only the inputNodes are
 	 * moves.
 	 *
 	 */
@@ -15565,11 +15565,11 @@ ORYX.Core.Edge = {
 			return undefined;
 		} 
 			
-		/* Get child nodes concerning the segment of the new docker */
+		/* Get child inputNodes concerning the segment of the new docker */
 		var startDocker = this.dockers[index-1];
 		var endDocker = this.dockers[index+1];
 		
-		/* Adjust the position of edge's child nodes */
+		/* Adjust the position of edge's child inputNodes */
 		var segmentElements = 
 			this.getAttachedNodePositionDataForSegment(startDocker, endDocker);
 		
@@ -15638,7 +15638,7 @@ ORYX.Core.Edge = {
 			}
 		}.bind(this));
 		
-		/* Update attached nodes visual representation */
+		/* Update attached inputNodes visual representation */
 		this.refreshAttachedNodes();
 	},
 	
@@ -15823,7 +15823,7 @@ ORYX.Core.Edge = {
 			this.updateReferencePointOfLabel(label, intersection, from, to, true);
 		}.bind(this));
 		
-		/* Update attached nodes visual representation */
+		/* Update attached inputNodes visual representation */
 		this.refreshAttachedNodes();
 	},
 	
@@ -17310,7 +17310,7 @@ ORYX.Plugins.Edit = Clazz.extend({
 	
     /**
      * Returns a list of shapes which should be considered while copying.
-     * Besides the shapes of given ones, edges and attached nodes are added to the result set.
+     * Besides the shapes of given ones, edges and attached inputNodes are added to the result set.
      * If one of the given shape is a child of another given shape, it is not put into the result. 
      */
     getAllShapesToConsider: function(shapes){
@@ -17326,7 +17326,7 @@ ORYX.Plugins.Edit = Clazz.extend({
             
             // This shape should be considered
             shapesToConsider.push(shape);
-            // Consider attached nodes (e.g. intermediate events)
+            // Consider attached inputNodes (e.g. intermediate events)
             if (shape instanceof ORYX.Core.Node) {
 				var attached = shape.getOutgoingNodes();
 				attached = attached.findAll(function(a){ return !shapes.include(a) });
@@ -18851,7 +18851,7 @@ ORYX.Plugins.Arrangement = ORYX.Plugins.AbstractPlugin.extend({
 		// Reverse the elements
 		tmpElem = tmpElem.reverse();
 		
-		// Delete all Nodes who are the next Node in the nodes-Array
+		// Delete all Nodes who are the next Node in the inputNodes-Array
 		var compactElem = tmpElem.findAll(function(el) {return !tmpElem.some(function(checkedEl){ return checkedEl.node == el.node.previousSibling})});
 		
 		// Sortiertes Array wird nach eine Ebene nach oben verschoben.
@@ -18874,7 +18874,7 @@ ORYX.Plugins.Arrangement = ORYX.Plugins.AbstractPlugin.extend({
 		});
 
 
-		// Delete all Nodes who are the next Node in the nodes-Array
+		// Delete all Nodes who are the next Node in the inputNodes-Array
 		var compactElem = tmpElem.findAll(function(el) {return !tmpElem.some(function(checkedEl){ return checkedEl.node == el.node.nextSibling})});
 	
 			
@@ -18896,7 +18896,7 @@ ORYX.Plugins.Arrangement = ORYX.Plugins.AbstractPlugin.extend({
 
 		// Set the elements to all Top-Level elements
 		elements = this.facade.getCanvas().getShapesWithSharedParent(elements);
-		// Get only nodes
+		// Get only inputNodes
 		elements = elements.findAll(function(value) {
 			return (value instanceof ORYX.Core.Node)
 		});
@@ -20569,16 +20569,16 @@ ORYX.Core.Command.Move = ORYX.Core.Command.extend({
 				}	
 				
 				/*var i=-1;
-				var nodes = value.getChildShapes(true);
+				var inputNodes = value.getChildShapes(true);
 				var allEdges = [];
-				while(++i<nodes.length){
-					var edges = [].concat(nodes[i].getIncomingShapes())
-						.concat(nodes[i].getOutgoingShapes())
+				while(++i<inputNodes.length){
+					var edges = [].concat(inputNodes[i].getIncomingShapes())
+						.concat(inputNodes[i].getOutgoingShapes())
 						// Remove all edges which are included in the selection from the list
 						.findAll(function(r){ return r instanceof ORYX.Core.Edge && !allEdges.include(r) && r.dockers.any(function(d){ return !value.bounds.isIncluded(d.bounds.center)})})
 					allEdges = allEdges.concat(edges);
 					if (edges.length <= 0){ continue }
-					//this.plugin.layoutEdges(nodes[i], edges, offset);
+					//this.plugin.layoutEdges(inputNodes[i], edges, offset);
 				}*/
 			}
 		}
@@ -21759,7 +21759,7 @@ ORYX.Plugins.Overlay = Clazz.extend({
     },
 	
 	/**
-	 * Show the overlay for specific nodes
+	 * Show the overlay for specific inputNodes
 	 * @param {Object} options
 	 * 
 	 * 	String				options.id		- MUST - Define the id of the overlay (is needed for the hiding of this overlay)		
@@ -22834,7 +22834,7 @@ new function(){
 			
 			var children = shape.getChildNodes(true);
 			
-			// Get all nodes
+			// Get all inputNodes
 			var dockers = children
 				// Get all incoming and outgoing edges
 				.map(function(node){
@@ -23289,7 +23289,7 @@ new function(){
                
                 scale = scale || 0;
 
-                // For every lane, adjust the child nodes with the offset
+                // For every lane, adjust the child inputNodes with the offset
                 lanes.each(function(l){
                         l.getChildNodes().each(function(child){
                                 if (!child.getStencil().id().endsWith("Lane")){

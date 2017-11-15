@@ -23,7 +23,7 @@ import com.hazelcast.monitor.LocalQueueStats;
  * Note: very experimental and untested!
  * 
  * Implementation of the Activiti {@link AsyncExecutor} using a distributed queue where the jobs
- * to be executed are put on. One of the distributed nodes will take the job off the queue, 
+ * to be executed are put on. One of the distributed inputNodes will take the job off the queue,
  * and hand it off the local thread pool.
  * 
  * Needs a config file (hazelcast.xml on the classpath) that defines a queue with the name 'activiti':

@@ -2278,7 +2278,7 @@ Object.extend(Selector, {
       return a;
     },
 
-    // marks an array of nodes for counting
+    // marks an array of inputNodes for counting
     mark: function(nodes) {
       for (var i = 0, node; node = nodes[i]; i++)
         node._counted = true;
@@ -2307,7 +2307,7 @@ Object.extend(Selector, {
       }
     },
 
-    // filters out duplicates and extends all nodes
+    // filters out duplicates and extends all inputNodes
     unique: function(nodes) {
       if (nodes.length == 0) return nodes;
       var results = [], n;
@@ -2537,7 +2537,7 @@ Object.extend(Selector, {
 
     'empty': function(nodes, value, root) {
       for (var i = 0, results = [], node; node = nodes[i]; i++) {
-        // IE treats comments as element nodes
+        // IE treats comments as element inputNodes
         if (node.tagName == '!' || (node.firstChild && !node.innerHTML.match(/^\s*$/))) continue;
         results.push(node);
       }

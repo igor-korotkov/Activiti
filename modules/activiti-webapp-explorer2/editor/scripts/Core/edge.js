@@ -45,7 +45,7 @@ ORYX.Core.Edge = {
         this._dockersByPath = new Hash();
         this._markersByPath = new Hash();
 		
-		/* Data structures to store positioning information of attached child nodes */ 
+		/* Data structures to store positioning information of attached child inputNodes */ 
 		this.attachedNodePositionData = new Hash();
         
         //TODO was muss hier initial erzeugt werden?
@@ -420,7 +420,7 @@ ORYX.Core.Edge = {
 	},
 	
 	/**
-	 * Refreshes the visual representation of edge's attached nodes.
+	 * Refreshes the visual representation of edge's attached inputNodes.
 	 */	
 	refreshAttachedNodes: function() {
 		this.attachedNodePositionData.values().each(function(nodeData) {
@@ -625,7 +625,7 @@ ORYX.Core.Edge = {
 	/**
 	 * Move the first and last docker and calls the refresh method.
 	 * Attention: This does not calculates intersection point between the
-	 * edge and the bounded nodes. This only works if only the nodes are
+	 * edge and the bounded inputNodes. This only works if only the inputNodes are
 	 * moves.
 	 *
 	 */
@@ -843,11 +843,11 @@ ORYX.Core.Edge = {
 			return undefined;
 		} 
 			
-		/* Get child nodes concerning the segment of the new docker */
+		/* Get child inputNodes concerning the segment of the new docker */
 		var startDocker = this.dockers[index-1];
 		var endDocker = this.dockers[index+1];
 		
-		/* Adjust the position of edge's child nodes */
+		/* Adjust the position of edge's child inputNodes */
 		var segmentElements = 
 			this.getAttachedNodePositionDataForSegment(startDocker, endDocker);
 		
@@ -916,7 +916,7 @@ ORYX.Core.Edge = {
 			}
 		}.bind(this));
 		
-		/* Update attached nodes visual representation */
+		/* Update attached inputNodes visual representation */
 		this.refreshAttachedNodes();
 	},
 	
@@ -1101,7 +1101,7 @@ ORYX.Core.Edge = {
 			this.updateReferencePointOfLabel(label, intersection, from, to, true);
 		}.bind(this));
 		
-		/* Update attached nodes visual representation */
+		/* Update attached inputNodes visual representation */
 		this.refreshAttachedNodes();
 	},
 	

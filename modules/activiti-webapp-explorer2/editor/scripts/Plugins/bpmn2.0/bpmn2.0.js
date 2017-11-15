@@ -209,7 +209,7 @@ new function(){
 			
 			var children = shape.getChildNodes(true);
 			
-			// Get all nodes
+			// Get all inputNodes
 			var dockers = children
 				// Get all incoming and outgoing edges
 				.map(function(node){

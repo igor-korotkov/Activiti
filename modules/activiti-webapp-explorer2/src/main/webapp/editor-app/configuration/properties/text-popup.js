@@ -25,15 +25,9 @@ var variableMethodsDefinition = "def addVariable(String name, Object value){\n" 
     " String.metaClass.leftShift << {value -> execution.setVariable(delegate, value)} \n" +
     " //replacing \n";
 
-var nodes = function () {
-    if (CubaStencilUtils.getAvailableVariablesForSelectedShape() !== null)
-        return CubaStencilUtils.getAvailableVariablesForSelectedShape();
-    else
-        return [];
-};
-// var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
 var outputParams = angular.element(document.getElementById('textarea')).scope().outputParameters;
+var inputNodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var wordsListForAutoComplete = [];
 fillWordList();
 
@@ -41,11 +35,11 @@ function fillWordList() {
   for (var i = 0; i < inputParams.length; i++) {
       wordsListForAutoComplete.push(inputParams[i].name);
   }
-  for (var j = 0; j < nodes.length; j++) {
-    var node = nodes[j];
+  for (var j = 0; j < inputNodes.length; j++) {
+    var node = inputNodes[j];
     var vars = node.vars;
     for (var y = 0; y < vars.length; y++) {
-        wordsListForAutoComplete.push(nodes[j].vars[y].name);
+        wordsListForAutoComplete.push(inputNodes[j].vars[y].name);
     }
   }
 }
@@ -53,7 +47,7 @@ function fillWordList() {
 fillInTable();
 
 function fillInTable() {
-  //nodes = node id and variables from prev nodes
+  //inputNodes = node id and variables from prev nodes
   //input params = process input params
 
   jQuery("#inputVariablesWrapper").show();
@@ -72,11 +66,11 @@ function fillInTable() {
         jQuery("#inTable").append('<tr><td>' + outputParams[j].name + '</td><td>' + outputParams[j].parameterType + '<td>' + '</td></tr>')
     }
 
-    for (var k = 0; k < nodes.length; k++) {
-        var node = nodes[k];
+    for (var k = 0; k < inputNodes.length; k++) {
+        var node = inputNodes[k];
         var vars = node.vars;
     for (var y = 0; y < vars.length; y++) {
-        jQuery("#inTable").append('<tr><td>' + nodes[k].vars[y].name + '</td><td>' + nodes[k].vars[y].type + '</td>' + '<td>' + nodes[k].vars[y].description + '</td></tr>')
+        jQuery("#inTable").append('<tr><td>' + inputNodes[k].vars[y].name + '</td><td>' + inputNodes[k].vars[y].type + '</td>' + '<td>' + inputNodes[k].vars[y].description + '</td></tr>')
     }
   }
 }
