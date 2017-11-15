@@ -504,9 +504,9 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
         );
   
         // Deserialize the properties from the shapes
-        // This can't be done earlier because Shape#deserialize expects that all referenced inputNodes are already there
+        // This can't be done earlier because Shape#deserialize expects that all referenced nodes are already there
         
-        // first, deserialize all inputNodes
+        // first, deserialize all nodes
         shapes.each(function(shape) {
         	if(shape.object instanceof ORYX.Core.Node) {
         		shape.object.deserialize(shape.__properties, shape.json);
@@ -686,7 +686,7 @@ ORYX.Core.Canvas = ORYX.Core.AbstractShape.extend({
 	},
 	
 	/**   
-	* Removes all inputNodes (and its children) that has the
+	* Removes all nodes (and its children) that has the
 	* attribute visibility set to "hidden"
 	*/
 	_removeInvisibleElements: function(element) {

@@ -162,7 +162,7 @@ ORYX.Plugins.Edit = Clazz.extend({
 	
     /**
      * Returns a list of shapes which should be considered while copying.
-     * Besides the shapes of given ones, edges and attached inputNodes are added to the result set.
+     * Besides the shapes of given ones, edges and attached nodes are added to the result set.
      * If one of the given shape is a child of another given shape, it is not put into the result. 
      */
     getAllShapesToConsider: function(shapes){
@@ -178,7 +178,7 @@ ORYX.Plugins.Edit = Clazz.extend({
             
             // This shape should be considered
             shapesToConsider.push(shape);
-            // Consider attached inputNodes (e.g. intermediate events)
+            // Consider attached nodes (e.g. intermediate events)
             if (shape instanceof ORYX.Core.Node) {
 				var attached = shape.getOutgoingNodes();
 				attached = attached.findAll(function(a){ return !shapes.include(a) });

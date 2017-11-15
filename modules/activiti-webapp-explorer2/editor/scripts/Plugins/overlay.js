@@ -24,7 +24,7 @@ ORYX.Plugins.Overlay = Clazz.extend({
     },
 	
 	/**
-	 * Show the overlay for specific inputNodes
+	 * Show the overlay for specific nodes
 	 * @param {Object} options
 	 * 
 	 * 	String				options.id		- MUST - Define the id of the overlay (is needed for the hiding of this overlay)		

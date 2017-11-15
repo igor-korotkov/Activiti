@@ -927,7 +927,7 @@ ORYX.Core.SVG.Label = Clazz.extend({
 	},
 	
 	/**
-	 * iterates parent inputNodes till it finds a SVG font-size
+	 * iterates parent nodes till it finds a SVG font-size
 	 * attribute.
 	 * @param {SVGElement} node
 	 */

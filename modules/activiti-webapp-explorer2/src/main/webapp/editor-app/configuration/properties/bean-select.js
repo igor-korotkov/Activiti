@@ -20,7 +20,7 @@ var typeList = ["Integer", "Double", "String", "Boolean", "Money", "Date", "Time
 fillInTable();
 
 function fillInTable() {
-  //inputNodes = node id and variables from prev inputNodes
+  //nodes = node id and variables from prev nodes
   //input params = process input params
 
     if (!nodes.length && !inputParams.length && !outputParams.length) {

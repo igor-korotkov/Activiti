@@ -416,7 +416,7 @@ ORYX.Core.Node = {
         var result = arguments.callee.$.serialize.apply(this);
         
         // Add the docker's bounds
-        // inputNodes only have at most one docker!
+        // nodes only have at most one docker!
         this.dockers.each((function(docker){
 			if (docker.getDockedShape()) {
 				var center = docker.referencePoint;

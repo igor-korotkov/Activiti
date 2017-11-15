@@ -188,7 +188,7 @@ var ERDF = {
 			subject.type, subject.value,
 			properties);
 
-		// parse all children that are element inputNodes.
+		// parse all children that are element nodes.
 		var children = node.childNodes;
 		if(children) $A(children).each(function(_node) {
 			if(_node.nodeType == _node.ELEMENT_NODE)

@@ -11,7 +11,7 @@
         <port auto-increment="false" port-count="100">57001</port>
         <outbound-ports>
             <!--
-            Allowed port range when connecting to other inputNodes.
+            Allowed port range when connecting to other nodes.
             0 or * means use system provided port.
             -->
             <ports>0</ports>

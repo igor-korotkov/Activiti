@@ -174,7 +174,7 @@ jQuery.fn = jQuery.prototype = {
 					elem = document.getElementById( match[2] );
 
 					// Check parentNode to catch when Blackberry 4.6 returns
-					// inputNodes that are no longer in the document #6963
+					// nodes that are no longer in the document #6963
 					if ( elem && elem.parentNode ) {
 						// Handle the case where IE and Opera return items
 						// by name instead of ID
@@ -472,7 +472,7 @@ jQuery.extend({
 
 		// Must be an Object.
 		// Because of IE, we also have to check the presence of the constructor property.
-		// Make sure that DOM inputNodes and window objects don't pass through, as well
+		// Make sure that DOM nodes and window objects don't pass through, as well
 		if ( !obj || jQuery.type(obj) !== "object" || obj.nodeType || jQuery.isWindow( obj ) ) {
 			return false;
 		}
@@ -1209,7 +1209,7 @@ function Sizzle( selector, context, results, seed ) {
 				if ( nodeType === 9 ) {
 					elem = context.getElementById( m );
 					// Check parentNode to catch when Blackberry 4.6 returns
-					// inputNodes that are no longer in the document #6963
+					// nodes that are no longer in the document #6963
 					if ( elem && elem.parentNode ) {
 						// Handle the case where IE, Opera, and Webkit return items
 						// by name instead of ID
@@ -1365,7 +1365,7 @@ function siblingCheck( a, b ) {
 			( ~b.sourceIndex || MAX_NEGATIVE ) -
 			( ~a.sourceIndex || MAX_NEGATIVE );
 
-	// Use IE sourceIndex if available on both inputNodes
+	// Use IE sourceIndex if available on both nodes
 	if ( diff ) {
 		return diff;
 	}
@@ -1517,7 +1517,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			if ( typeof context.getElementById !== strundefined && documentIsHTML ) {
 				var m = context.getElementById( id );
 				// Check parentNode to catch when Blackberry 4.6 returns
-				// inputNodes that are no longer in the document #6963
+				// nodes that are no longer in the document #6963
 				return m && m.parentNode ? [m] : [];
 			}
 		};
@@ -1704,7 +1704,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 		var compare = b.compareDocumentPosition && a.compareDocumentPosition && a.compareDocumentPosition( b );
 
 		if ( compare ) {
-			// Disconnected inputNodes
+			// Disconnected nodes
 			if ( compare & 1 ||
 				(!support.sortDetached && b.compareDocumentPosition( a ) === compare) ) {
 
@@ -1736,12 +1736,12 @@ setDocument = Sizzle.setDocument = function( node ) {
 			ap = [ a ],
 			bp = [ b ];
 
-		// Exit early if the inputNodes are identical
+		// Exit early if the nodes are identical
 		if ( a === b ) {
 			hasDuplicate = true;
 			return 0;
 
-		// Parentless inputNodes are either documents or disconnected
+		// Parentless nodes are either documents or disconnected
 		} else if ( !aup || !bup ) {
 			return a === doc ? -1 :
 				b === doc ? 1 :
@@ -1751,7 +1751,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 				( indexOf.call( sortInput, a ) - indexOf.call( sortInput, b ) ) :
 				0;
 
-		// If the inputNodes are siblings, we can do a quick check
+		// If the nodes are siblings, we can do a quick check
 		} else if ( aup === bup ) {
 			return siblingCheck( a, b );
 		}
@@ -1772,10 +1772,10 @@ setDocument = Sizzle.setDocument = function( node ) {
 		}
 
 		return i ?
-			// Do a sibling check if the inputNodes have a common ancestor
+			// Do a sibling check if the nodes have a common ancestor
 			siblingCheck( ap[i], bp[i] ) :
 
-			// Otherwise inputNodes in our document sort first
+			// Otherwise nodes in our document sort first
 			ap[i] === preferredDoc ? -1 :
 			bp[i] === preferredDoc ? 1 :
 			0;
@@ -1804,9 +1804,9 @@ Sizzle.matchesSelector = function( elem, expr ) {
 		try {
 			var ret = matches.call( elem, expr );
 
-			// IE 9's matchesSelector returns false on disconnected inputNodes
+			// IE 9's matchesSelector returns false on disconnected nodes
 			if ( ret || support.disconnectedMatch ||
-					// As well, disconnected inputNodes are said to be in a document
+					// As well, disconnected nodes are said to be in a document
 					// fragment in IE 9
 					elem.document && elem.document.nodeType !== 11 ) {
 				return ret;
@@ -1880,7 +1880,7 @@ Sizzle.uniqueSort = function( results ) {
 };
 
 /**
- * Utility function for retrieving the text value of an array of DOM inputNodes
+ * Utility function for retrieving the text value of an array of DOM nodes
  * @param {Array|Element} elem
  */
 getText = Sizzle.getText = function( elem ) {
@@ -1892,7 +1892,7 @@ getText = Sizzle.getText = function( elem ) {
 	if ( !nodeType ) {
 		// If no nodeType, this is expected to be an array
 		for ( ; (node = elem[i]); i++ ) {
-			// Do not traverse comment inputNodes
+			// Do not traverse comment nodes
 			ret += getText( node );
 		}
 	} else if ( nodeType === 1 || nodeType === 9 || nodeType === 11 ) {
@@ -1909,7 +1909,7 @@ getText = Sizzle.getText = function( elem ) {
 	} else if ( nodeType === 3 || nodeType === 4 ) {
 		return elem.nodeValue;
 	}
-	// Do not include comment or processing instruction inputNodes
+	// Do not include comment or processing instruction nodes
 
 	return ret;
 };
@@ -2294,7 +2294,7 @@ Expr = Sizzle.selectors = {
 		// Contents
 		"empty": function( elem ) {
 			// http://www.w3.org/TR/selectors/#empty-pseudo
-			// :empty is only affected by element inputNodes and content inputNodes(including text(3), cdata(4)),
+			// :empty is only affected by element nodes and content nodes(including text(3), cdata(4)),
 			//   not comment, processing instructions, or others
 			// Thanks to Diego Perini for the nodeName shortcut
 			//   Greater than "@" means alpha characters (specifically not starting with "#" or "?")
@@ -2492,7 +2492,7 @@ function addCombinator( matcher, combinator, base ) {
 			var data, cache, outerCache,
 				dirkey = dirruns + " " + doneName;
 
-			// We can't set arbitrary data on XML inputNodes, so they don't benefit from dir caching
+			// We can't set arbitrary data on XML nodes, so they don't benefit from dir caching
 			if ( xml ) {
 				while ( (elem = elem[ dir ]) ) {
 					if ( elem.nodeType === 1 || checkNonElements ) {
@@ -2919,7 +2919,7 @@ support.detectDuplicates = hasDuplicate;
 setDocument();
 
 // Support: Webkit<537.32 - Safari 6.0.3/Chrome 25 (fixed in Chrome 27)
-// Detached inputNodes confoundingly follow *each other*
+// Detached nodes confoundingly follow *each other*
 support.sortDetached = assert(function( div1 ) {
 	// Should return 1, but returns 4 (following)
 	return div1.compareDocumentPosition( document.createElement("div") ) & 1;
@@ -3573,11 +3573,11 @@ function internalData( elem, name, data, pvt /* Internal Use Only */ ){
 	var ret, thisCache,
 		internalKey = jQuery.expando,
 
-		// We have to handle DOM inputNodes and JS objects differently because IE6-7
+		// We have to handle DOM nodes and JS objects differently because IE6-7
 		// can't GC object references properly across the DOM-JS boundary
 		isNode = elem.nodeType,
 
-		// Only DOM inputNodes need the global jQuery cache; JS object data is
+		// Only DOM nodes need the global jQuery cache; JS object data is
 		// attached directly to the object so GC can occur automatically
 		cache = isNode ? jQuery.cache : elem,
 
@@ -3592,7 +3592,7 @@ function internalData( elem, name, data, pvt /* Internal Use Only */ ){
 	}
 
 	if ( !id ) {
-		// Only DOM inputNodes need a new unique ID for each element since their data
+		// Only DOM nodes need a new unique ID for each element since their data
 		// ends up in the global cache
 		if ( isNode ) {
 			id = elem[ internalKey ] = core_deletedIds.pop() || jQuery.guid++;
@@ -3787,7 +3787,7 @@ jQuery.extend({
 
 		var noData = elem.nodeName && jQuery.noData[ elem.nodeName.toLowerCase() ];
 
-		// inputNodes accept data unless otherwise specified; rejection can be conditional
+		// nodes accept data unless otherwise specified; rejection can be conditional
 		return !noData || noData !== true && elem.getAttribute("classid") === noData;
 	}
 });
@@ -4350,7 +4350,7 @@ jQuery.extend({
 		var hooks, ret,
 			nType = elem.nodeType;
 
-		// don't get/set attributes on text, comment and attribute inputNodes
+		// don't get/set attributes on text, comment and attribute nodes
 		if ( !elem || nType === 3 || nType === 8 || nType === 2 ) {
 			return;
 		}
@@ -4451,7 +4451,7 @@ jQuery.extend({
 		var ret, hooks, notxml,
 			nType = elem.nodeType;
 
-		// don't get/set properties on text, comment and attribute inputNodes
+		// don't get/set properties on text, comment and attribute nodes
 		if ( !elem || nType === 3 || nType === 8 || nType === 2 ) {
 			return;
 		}
@@ -4737,7 +4737,7 @@ jQuery.event = {
 			handlers, type, namespaces, origType,
 			elemData = jQuery._data( elem );
 
-		// Don't attach events to noData or text/comment inputNodes (but allow plain objects)
+		// Don't attach events to noData or text/comment nodes (but allow plain objects)
 		if ( !elemData ) {
 			return;
 		}
@@ -4927,7 +4927,7 @@ jQuery.event = {
 
 		cur = tmp = elem = elem || document;
 
-		// Don't do events on text and comment inputNodes
+		// Don't do events on text and comment nodes
 		if ( elem.nodeType === 3 || elem.nodeType === 8 ) {
 			return;
 		}
@@ -6105,12 +6105,12 @@ jQuery.fn.extend({
 			i = 0;
 
 		for ( ; (elem = this[i]) != null; i++ ) {
-			// Remove element inputNodes and prevent memory leaks
+			// Remove element nodes and prevent memory leaks
 			if ( elem.nodeType === 1 ) {
 				jQuery.cleanData( getAll( elem, false ) );
 			}
 
-			// Remove any remaining inputNodes
+			// Remove any remaining nodes
 			while ( elem.firstChild ) {
 				elem.removeChild( elem.firstChild );
 			}
@@ -6156,7 +6156,7 @@ jQuery.fn.extend({
 
 				try {
 					for (; i < l; i++ ) {
-						// Remove element inputNodes and prevent memory leaks
+						// Remove element nodes and prevent memory leaks
 						elem = this[i] || {};
 						if ( elem.nodeType === 1 ) {
 							jQuery.cleanData( getAll( elem, false ) );
@@ -6486,7 +6486,7 @@ jQuery.extend({
 		if ( jQuery.support.html5Clone || jQuery.isXMLDoc(elem) || !rnoshimcache.test( "<" + elem.nodeName + ">" ) ) {
 			clone = elem.cloneNode( true );
 
-		// IE<=8 does not properly clone detached, unknown element inputNodes
+		// IE<=8 does not properly clone detached, unknown element nodes
 		} else {
 			fragmentDiv.innerHTML = elem.outerHTML;
 			fragmentDiv.removeChild( clone = fragmentDiv.firstChild );
@@ -6550,7 +6550,7 @@ jQuery.extend({
 
 			if ( elem || elem === 0 ) {
 
-				// Add inputNodes directly
+				// Add nodes directly
 				if ( jQuery.type( elem ) === "object" ) {
 					jQuery.merge( nodes, elem.nodeType ? [ elem ] : elem );
 
@@ -6558,7 +6558,7 @@ jQuery.extend({
 				} else if ( !rhtml.test( elem ) ) {
 					nodes.push( context.createTextNode( elem ) );
 
-				// Convert html into DOM inputNodes
+				// Convert html into DOM nodes
 				} else {
 					tmp = tmp || safe.appendChild( context.createElement("div") );
 
@@ -6694,8 +6694,8 @@ jQuery.extend({
 
 						delete cache[ id ];
 
-						// IE does not allow us to delete expando properties from inputNodes,
-						// nor does it have a removeAttribute function on Document inputNodes;
+						// IE does not allow us to delete expando properties from nodes,
+						// nor does it have a removeAttribute function on Document nodes;
 						// we must handle all of these cases
 						if ( deleteExpando ) {
 							delete elem[ internalKey ];
@@ -6979,7 +6979,7 @@ jQuery.extend({
 
 	// Get and set the style property on a DOM Node
 	style: function( elem, name, value, extra ) {
-		// Don't set styles on text and comment inputNodes
+		// Don't set styles on text and comment nodes
 		if ( !elem || elem.nodeType === 3 || elem.nodeType === 8 || !elem.style ) {
 			return;
 		}
@@ -9269,7 +9269,7 @@ Tween.propHooks = {
 };
 
 // Support: IE <=9
-// Panic based approach to setting things on disconnected inputNodes
+// Panic based approach to setting things on disconnected nodes
 
 Tween.propHooks.scrollTop = Tween.propHooks.scrollLeft = {
 	set: function( tween ) {

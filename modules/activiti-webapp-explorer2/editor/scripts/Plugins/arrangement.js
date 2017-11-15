@@ -248,7 +248,7 @@ ORYX.Plugins.Arrangement = ORYX.Plugins.AbstractPlugin.extend({
 		// Reverse the elements
 		tmpElem = tmpElem.reverse();
 		
-		// Delete all Nodes who are the next Node in the inputNodes-Array
+		// Delete all Nodes who are the next Node in the nodes-Array
 		var compactElem = tmpElem.findAll(function(el) {return !tmpElem.some(function(checkedEl){ return checkedEl.node == el.node.previousSibling})});
 		
 		// Sortiertes Array wird nach eine Ebene nach oben verschoben.
@@ -271,7 +271,7 @@ ORYX.Plugins.Arrangement = ORYX.Plugins.AbstractPlugin.extend({
 		});
 
 
-		// Delete all Nodes who are the next Node in the inputNodes-Array
+		// Delete all Nodes who are the next Node in the nodes-Array
 		var compactElem = tmpElem.findAll(function(el) {return !tmpElem.some(function(checkedEl){ return checkedEl.node == el.node.nextSibling})});
 	
 			
@@ -293,7 +293,7 @@ ORYX.Plugins.Arrangement = ORYX.Plugins.AbstractPlugin.extend({
 
 		// Set the elements to all Top-Level elements
 		elements = this.facade.getCanvas().getShapesWithSharedParent(elements);
-		// Get only inputNodes
+		// Get only nodes
 		elements = elements.findAll(function(value) {
 			return (value instanceof ORYX.Core.Node)
 		});

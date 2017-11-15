@@ -205,7 +205,7 @@ var DataManager = {
 	
 	__persistDOM: function(facade) {
 
-		// getChildShapes gets all shapes (inputNodes AND edges), deep flag
+		// getChildShapes gets all shapes (nodes AND edges), deep flag
 		// makes it return a flattened child hierarchy.
 		
 		var canvas = facade.getCanvas();
@@ -321,7 +321,7 @@ var DataManager = {
 	 */
 	__syncglobal: function(facade) {
 
-		// getChildShapes gets all shapes (inputNodes AND edges), deep flag
+		// getChildShapes gets all shapes (nodes AND edges), deep flag
 		// makes it return a flattened child hierarchy.
 		
 		var canvas = facade.getCanvas();
