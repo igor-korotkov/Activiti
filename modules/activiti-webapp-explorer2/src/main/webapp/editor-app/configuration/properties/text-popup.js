@@ -56,11 +56,7 @@ function fillInTable() {
   //nodes = node id and variables from prev nodes
   //input params = process input params
 
-  if (!nodes.length && !inputParams.length) {
-    jQuery("#inputVariablesWrapper").hide();
-  } else {
-    jQuery("#inputVariablesWrapper").show();
-  }
+  jQuery("#inputVariablesWrapper").show();
 
   for (var i = 0; i < inputParams.length; i++) {
     if (!inputParams[i].valueStr) {

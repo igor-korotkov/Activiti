@@ -35,10 +35,10 @@ function getAffectedNodesForSelectedShape() {
         var beforeText = selectedShapeValue.properties['oryx-beforeexecutionscripttext'];
         var beforeJson = parseJson(beforeText);
         if (beforeJson && beforeJson.vars) {
-            var nodeVariblesWrapper = {};
-            nodeVariblesWrapper.id = 'root';
-            nodeVariblesWrapper.vars = beforeJson.vars;
-            result.push(nodeVariblesWrapper)
+            var nodeVariablesWrapper = {};
+            nodeVariablesWrapper.id = 'root';
+            nodeVariablesWrapper.vars = beforeJson.vars;
+            result.push(nodeVariablesWrapper)
         }
     }
 
@@ -59,22 +59,16 @@ function getAffectedNodesForSelectedShape() {
                         }
                     }
                     if (!alreadyContainVarsFromShape) {
-                        var nodeVariblesWrapper = {};
-                        nodeVariblesWrapper.id = currentShape.resourceId;
-                        nodeVariblesWrapper.vars = getVariables(currentShape);
-                        result.push(nodeVariblesWrapper)
+                        var shapeNodeVariablesWrapper = {};
+                        shapeNodeVariablesWrapper.id = currentShape.resourceId;
+                        shapeNodeVariablesWrapper.vars = getVariables(currentShape);
+                        result.push(shapeNodeVariablesWrapper)
                     }
                     queue.push(currentShape.resourceId)
                 }
             }
         }
     }
-    var res = "result arr [";
-    result.forEach(function (item, i, arr) {
-        res += item.toString();
-    });
-    res += "]";
-    alert(res);
     return result;
 }
 
