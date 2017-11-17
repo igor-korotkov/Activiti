@@ -25,9 +25,9 @@ var variableMethodsDefinition = "def addVariable(String name, Object value){\n" 
     " String.metaClass.leftShift << {value -> execution.setVariable(delegate, value)} \n" +
     " //replacing \n";
 
-var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
 var outputParams = angular.element(document.getElementById('textarea')).scope().outputParameters;
+var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var wordsListForAutoComplete = [];
 fillWordList();
 
@@ -50,11 +50,7 @@ function fillInTable() {
   //nodes = node id and variables from prev nodes
   //input params = process input params
 
-  if (!nodes.length && !inputParams.length) {
-    jQuery("#inputVariablesWrapper").hide();
-  } else {
-    jQuery("#inputVariablesWrapper").show();
-  }
+  jQuery("#inputVariablesWrapper").show();
 
   for (var i = 0; i < inputParams.length; i++) {
     if (!inputParams[i].valueStr) {
