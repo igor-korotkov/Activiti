@@ -1,29 +1,31 @@
-
 <div class="modal" ng-controller="KisBpmConditionExpressionPopupCtrl">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;</button>
-    <h2 translate>PROPERTY.SEQUENCEFLOW.CONDITION.TITLE</h2>
-</div>
-			<div class="modal-body">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;
+                </button>
+                <h2 translate>PROPERTY.SEQUENCEFLOW.CONDITION.TITLE</h2>
+            </div>
+            <div class="modal-body">
+                <div id="scriptTemplate">
+                    <div id="editor" auto-focus=""
+                         style="top: 0;right: 0;bottom: 0;left: 0;height:424px;margin-top:5px;"></div>
+                    <textarea id="textarea" class="form-control ng-pristine ng-valid"
+                              ng-model="conditionExpression.value" style="visibility: hidden; height: 0"
+                              ng-change="doTest()"></textarea>
+                </div>
+                <div class="modal-footer" style="margin-top: 0">
+                    <button ng-click="save()" class="btn btn-primary" translate>ACTION.OK</button>
+                    <button ng-click="close()" class="btn btn-primary" translate>ACTION.CANCEL</button>
+                </div>
+            </div>
 
-				<div id="scriptTemplate">
-					<div id="editor" auto-focus="" style="top: 0;right: 0;bottom: 0;left: 0;height:424px;margin-top:10px;"></div>
-					<textarea id="textarea" class="form-control ng-pristine ng-valid" ng-model="conditionExpression.value" style="" ng-change="doTest()"></textarea>
-				</div>
-    <div class="modal-footer">
-        <button ng-click="save()" class="btn btn-primary" translate>ACTION.SAVE</button>
-        <button ng-click="close()" class="btn btn-primary" translate>ACTION.CANCEL</button>
+            <link rel="stylesheet" href="editor-app/awesomplete/awesomplete.css"/>
+            <script src="editor-app/awesomplete/awesomplete.js" async></script>
+            <script src="editor-app/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+            <script src="editor-app/ace/ext-language_tools.js"></script>
+            <script src="editor-app/configuration/properties/condition-popup.js"></script>
+            <link rel="stylesheet" type="text/css" href="editor-app/configuration/properties/condition-popup.css">
+        </div>
     </div>
 </div>
-</div>
-
-
-<link rel="stylesheet" href="editor-app/awesomplete/awesomplete.css" />
-<script src="editor-app/awesomplete/awesomplete.js" async></script>
-
-<script src="editor-app/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="editor-app/ace/ext-language_tools.js"></script>
-<script src="editor-app/configuration/properties/condition-popup.js"></script>
-<link rel="stylesheet" type="text/css" href="editor-app/configuration/properties/condition-popup.css">

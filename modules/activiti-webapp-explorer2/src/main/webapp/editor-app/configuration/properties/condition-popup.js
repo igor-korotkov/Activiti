@@ -6,6 +6,7 @@ ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
 
 
+
 var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
 var wordsListForAutoComplete = [];
@@ -19,7 +20,7 @@ function fillWordList() {
     var node = nodes[j];
     var vars = node.vars;
     for (var y = 0; y < vars.length; y++) {
-      worlListForAutoComplete.push(nodes[j].vars[y].name);
+        wordsListForAutoComplete.push(nodes[j].vars[y].name);
     }
   }
 }
@@ -41,10 +42,13 @@ editor.getSession().on('change', function () {
   changeJson();
   jQuery("textarea").change();
 });
-editor.getSession().setMode("ace/mode/groovy");
 
 editor.setOptions({
-  enableBasicAutocompletion: true
+    enableBasicAutocompletion: true,
+    autoScrollEditorIntoView: true,
+    theme: "ace/theme/crimson_editor",
+    showPrintMargin: false,
+    mode: "ace/mode/groovy"
 });
 editor.completers.push(variablesWordCompleter);
 
