@@ -92,12 +92,15 @@ editor.getSession().on('change', function () {
   changeJson();
   jQuery("textarea").change();
 });
-editor.getSession().setMode("ace/mode/groovy");
 
 editor.setOptions({
-  theme: 'ace/theme/crimson_editor',
-  enableBasicAutocompletion: true
+    enableBasicAutocompletion: true,
+    autoScrollEditorIntoView: true,
+    theme: "ace/theme/crimson_editor",
+    showPrintMargin: false,
+    mode: "ace/mode/groovy"
 });
+
 editor.completers.push(variablesWordCompleter);
 
 var templateSelect = jQuery('#templateSelect');
