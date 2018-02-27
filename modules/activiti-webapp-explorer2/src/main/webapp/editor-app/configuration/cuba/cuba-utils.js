@@ -25,6 +25,21 @@ CubaStencilUtils = {
     }
 };
 
+StringUtils = {
+    escapeQuotes: function (string) {
+        return string.replace(/"/g, '\\"');
+    },
+    unescapeQuotesToQuotChr: function (string) {
+        return string.replace(/"/g, '&quot;');
+    },
+    unescapeQuotes: function (string) {
+        return string.replace(/"/g, '\"');
+    },
+    replaceLineEndings: function (string) {
+        return string.replace(/(?:\r\n|\r|\n)/g, '');
+    }
+};
+
 function getAffectedNodesForSelectedShape() {
     var angScope = angular.element(document.getElementsByClassName('modal-dialog')).scope();
     var result = [];
