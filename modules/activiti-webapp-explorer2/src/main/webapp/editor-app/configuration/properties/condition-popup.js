@@ -58,19 +58,18 @@ function textChanged() {
 }
 
 function changeJson() {
-  var script = editor.getSession().getValue();
-
-  var scriptLines = script.split('\n');
-  var scriptLinesString = '';
-  for (var i = 0; i < scriptLines.length; i++) {
-    var line = StringUtils.escapeQuotes(scriptLines[i]);
-    scriptLinesString = scriptLinesString +  line ;
-    if (i + 1 < scriptLines.length) {
-      scriptLinesString = scriptLinesString + ',';
+    var script = editor.getSession().getValue();
+    var scriptLines = script.split('\n');
+    var scriptLinesString = '';
+    for (var i = 0; i < scriptLines.length; i++) {
+        var line = StringUtils.escapeQuotes(scriptLines[i]);
+        scriptLinesString = scriptLinesString + line;
+        if (i + 1 < scriptLines.length) {
+            scriptLinesString = scriptLinesString + ',';
+        }
     }
-  }
-  document.getElementById("textarea").value = scriptLinesString;
-  jQuery("textarea").change();
+    document.getElementById("textarea").value = scriptLinesString;
+    jQuery("textarea").change();
 }
 
 var comboplets = [];
