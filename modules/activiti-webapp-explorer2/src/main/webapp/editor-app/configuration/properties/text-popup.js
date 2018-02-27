@@ -210,6 +210,7 @@ function changeJson() {
   var scriptLinesString = '';
   for (var i = 0; i < scriptLines.length; i++) {
     var line = utility.escapeQuotes(scriptLines[i]);
+    line = utility.replaceLineEndings(line);
     scriptLinesString = scriptLinesString + '"' + line + '"';
     if (i + 1 < scriptLines.length) {
       scriptLinesString = scriptLinesString + ',';
@@ -240,19 +241,19 @@ function getOutVariablesTableJson() {
   return result;
 }
 
-
 var utility = {
-  escapeQuotes: function (string) {
-    return string.replace(/"/g, '\\"');
-  },
-  unescapeQuotesToQuotChr: function (string) {
-    return string.replace(/"/g, '&quot;');
-  },
-  unescapeQuotes: function (string) {
-    return string.replace(/"/g, '\"');
-  }
-
-
+    escapeQuotes: function (string) {
+        return string.replace(/"/g, '\\"');
+    },
+    unescapeQuotesToQuotChr: function (string) {
+        return string.replace(/"/g, '&quot;');
+    },
+    unescapeQuotes: function (string) {
+        return string.replace(/"/g, '\"');
+    },
+    replaceLineEndings: function (string) {
+        return string.replace(/(?:\r\n|\r|\n)/g, '');
+    }
 };
 
 jQuery("#outTable").find("tr").not(':first').click(function () {
