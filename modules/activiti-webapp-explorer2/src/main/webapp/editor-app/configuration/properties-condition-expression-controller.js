@@ -22,7 +22,7 @@
  */
 
 var KisBpmConditionExpressionCtrl = [ '$scope', '$modal', function($scope, $modal) {
-    // alert("KisBpmConditionExpressionCtrl")
+    alert("KisBpmConditionExpressionCtrl")
     // Config for the modal window
     var opts = {
         template:  'editor-app/configuration/properties/condition-expression-popup.html?version=' + Date.now(),
@@ -34,7 +34,7 @@ var KisBpmConditionExpressionCtrl = [ '$scope', '$modal', function($scope, $moda
 }];
 
 var KisBpmConditionExpressionPopupCtrl = [ '$scope', '$translate', '$http', function($scope, $translate, $http) {
-    // alert("KisBpmConditionExpressionPopupCtrl")
+    alert("KisBpmConditionExpressionPopupCtrl")
 	// Put json representing condition on scope
     if ($scope.property.value !== undefined && $scope.property.value !== null) {
 
@@ -43,7 +43,7 @@ var KisBpmConditionExpressionPopupCtrl = [ '$scope', '$translate', '$http', func
     } else {
         $scope.conditionExpression = {value: ''};
     }
-	
+	alert($scope.conditionExpression)
     $scope.save = function() {
         $scope.property.value = $scope.conditionExpression.value;
         $scope.updatePropertyInModel($scope.property);
