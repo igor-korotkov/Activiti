@@ -96,7 +96,7 @@ editor.getSession().on('change', function () {
 editor.setOptions({
     enableBasicAutocompletion: true,
     autoScrollEditorIntoView: true,
-    theme: "ace/theme/crimson_editor",
+    theme: "ace/theme/monokai",
     showPrintMargin: false,
     mode: "ace/mode/groovy"
 });

@@ -1092,7 +1092,7 @@ exports.scrollbarWidth = function(document) {
     var style = outer.style;
 
     style.position = "absolute";
-    style.left = "-100000px";
+    style.left = "-1000000px";
     style.overflow = "hidden";
     style.width = "200px";
     style.minWidth = "0px";
@@ -16320,7 +16320,7 @@ var VirtualRenderer = function(container, theme) {
         this.scrollCursorIntoView(anchor, offset);
         this.scrollCursorIntoView(lead, offset);
     };
-    /*this.scrollCursorIntoView = function(cursor, offset, $viewMargin) {
+    this.scrollCursorIntoView = function(cursor, offset, $viewMargin) {
         if (this.$size.scrollerHeight === 0)
             return;
 
@@ -16357,8 +16357,8 @@ var VirtualRenderer = function(container, theme) {
         } else if (scrollLeft <= this.$padding && left - scrollLeft < this.characterWidth) {
             this.session.setScrollLeft(0);
         }
-    };*/
-    this.scrollCursorIntoView = function(cursor, offset, $viewMargin) {
+    };
+    /*this.scrollCursorIntoView = function(cursor, offset, $viewMargin) {
         // the editor is not visible
         if (this.$size.scrollerHeight === 0)
             return;
@@ -16393,7 +16393,7 @@ var VirtualRenderer = function(container, theme) {
                 this.scrollToX(tmp);
             }
         }
-    };
+    };*/
     this.getScrollTop = function() {
         return this.session.getScrollTop();
     };
