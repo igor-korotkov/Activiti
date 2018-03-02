@@ -43,7 +43,7 @@ var KisBpmConditionExpressionPopupCtrl = [ '$scope', '$translate', '$http', func
     } else {
         $scope.conditionExpression = {value: ''};
     }
-	
+	alert($scope.conditionExpression)
     $scope.save = function() {
         $scope.property.value = $scope.conditionExpression.value;
         $scope.updatePropertyInModel($scope.property);

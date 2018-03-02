@@ -96,7 +96,7 @@ editor.getSession().on('change', function () {
 editor.setOptions({
     enableBasicAutocompletion: true,
     autoScrollEditorIntoView: true,
-    theme: "ace/theme/crimson_editor",
+    theme: "ace/theme/monokai",
     showPrintMargin: false,
     mode: "ace/mode/groovy"
 });
@@ -143,9 +143,9 @@ httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
         scriptValue = scriptValue + '\n';
       }
     }
-    editor.setValue(utility.unescapeQuotes(scriptValue), 1);
+    editor.setValue(StringUtils.unescapeQuotes(scriptValue), 1);
     jsonObject.vars.forEach(function (item, i, arr) {
-      jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.name) + '\"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.type) + '\"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + utility.unescapeQuotesToQuotChr(item.description) + '\"></td></tr>')
+      jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + StringUtils.unescapeQuotesToQuotChr(item.name) + '\"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + StringUtils.unescapeQuotesToQuotChr(item.type) + '\"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + StringUtils.unescapeQuotesToQuotChr(item.description) + '\"></td></tr>')
     });
     changeJson();
       jQuery("#outTable").find("tr").not(':first').click(function () {
@@ -209,7 +209,8 @@ function changeJson() {
   var scriptLines = script.split('\n');
   var scriptLinesString = '';
   for (var i = 0; i < scriptLines.length; i++) {
-    var line = utility.escapeQuotes(scriptLines[i]);
+    var line = StringUtils.escapeQuotes(scriptLines[i]);
+    line = StringUtils.replaceLineEndings(line);
     scriptLinesString = scriptLinesString + '"' + line + '"';
     if (i + 1 < scriptLines.length) {
       scriptLinesString = scriptLinesString + ',';
@@ -231,7 +232,7 @@ function getOutVariablesTableJson() {
     var name = jQuery(this).find("td:eq(0) input[type='text']").val();
     var type = jQuery(this).find("td:eq(1) input[type='text']").val();
     var descrpition = jQuery(this).find("td:eq(2) input[type='text']").val();
-    result = result + "{\"name\": \"" + utility.escapeQuotes(name) + "\", \"type\": \"" + utility.escapeQuotes(type) + "\", \"description\": \"" + utility.escapeQuotes(descrpition) + "\"}";
+    result = result + "{\"name\": \"" + StringUtils.escapeQuotes(name) + "\", \"type\": \"" + StringUtils.escapeQuotes(type) + "\", \"description\": \"" + StringUtils.escapeQuotes(descrpition) + "\"}";
     if (index !== total - 1) {
       result = result + ',';
     }
@@ -239,21 +240,6 @@ function getOutVariablesTableJson() {
     });
   return result;
 }
-
-
-var utility = {
-  escapeQuotes: function (string) {
-    return string.replace(/"/g, '\\"');
-  },
-  unescapeQuotesToQuotChr: function (string) {
-    return string.replace(/"/g, '&quot;');
-  },
-  unescapeQuotes: function (string) {
-    return string.replace(/"/g, '\"');
-  }
-
-
-};
 
 jQuery("#outTable").find("tr").not(':first').click(function () {
   jQuery(this).addClass('selected').siblings().removeClass('selected');

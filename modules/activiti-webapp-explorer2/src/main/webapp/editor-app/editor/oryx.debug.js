@@ -18468,7 +18468,8 @@ ORYX.Plugins.OpenEdit = Clazz.extend({
             sc = this.getScope("scripttext", shape)
         } else if (shape.properties['oryx-conditionsequenceflow'] !== undefined) {
             // alert("invoke ctrl oryx-conditionsequenceflow");
-            func = KisBpmConditionFlowSelectCtrl[2];
+            func = KisBpmConditionExpressionCtrl[2];
+            // func = KisBpmConditionFlowSelectCtrl[2];
             sc = this.getScope("conditionsequenceflow", shape)
 		} else {
 			return;

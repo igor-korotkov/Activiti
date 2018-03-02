@@ -46,7 +46,7 @@ editor.getSession().on('change', function () {
 editor.setOptions({
     enableBasicAutocompletion: true,
     autoScrollEditorIntoView: true,
-    theme: "ace/theme/crimson_editor",
+    theme: "ace/theme/monokai",
     showPrintMargin: false,
     mode: "ace/mode/groovy"
 });
@@ -58,33 +58,19 @@ function textChanged() {
 }
 
 function changeJson() {
-  var script = editor.getSession().getValue();
-
-  var scriptLines = script.split('\n');
-  var scriptLinesString = '';
-  for (var i = 0; i < scriptLines.length; i++) {
-    var line = utility.escapeQuotes(scriptLines[i]);
-    scriptLinesString = scriptLinesString +  line ;
-    if (i + 1 < scriptLines.length) {
-      scriptLinesString = scriptLinesString + ',';
+    var script = editor.getSession().getValue();
+    var scriptLines = script.split('\n');
+    var scriptLinesString = '';
+    for (var i = 0; i < scriptLines.length; i++) {
+        var line = StringUtils.escapeQuotes(scriptLines[i]);
+        scriptLinesString = scriptLinesString + line;
+        if (i + 1 < scriptLines.length) {
+            scriptLinesString = scriptLinesString + ',';
+        }
     }
-  }
-  document.getElementById("textarea").value = scriptLinesString;
-  jQuery("textarea").change();
+    document.getElementById("textarea").value = scriptLinesString;
+    jQuery("textarea").change();
 }
-
-var utility = {
-  escapeQuotes: function (string) {
-    return string.replace(/"/g, '\\"');
-  },
-  unescapeQuotesToQuotChr: function (string) {
-    return string.replace(/"/g, '&quot;');
-  },
-  unescapeQuotes: function (string) {
-    return string.replace(/"/g, '\"');
-  }
-};
-
 
 var comboplets = [];
 
@@ -135,7 +121,7 @@ function closeAllOtherComboplets(item) {
 }
  if (jsonString) {
      console.log(jsonString);
-    editor.setValue(utility.unescapeQuotes(jsonString), 1);
+    editor.setValue(StringUtils.unescapeQuotes(jsonString), 1);
 	editor.focus();
  }
 if (!jsonString) {
