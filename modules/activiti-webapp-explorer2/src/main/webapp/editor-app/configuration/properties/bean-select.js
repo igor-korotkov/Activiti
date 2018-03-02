@@ -137,7 +137,7 @@ function fillTable(responseText) {
     if (jsonObject && jsonObject.args) {
       jsonObject.args.forEach(function (item, i, arr) {
           if (item.paramName === currentArgName) {
-          value.innerHTML = '<input type=\"text\" id="val' + i + '" value=\"' + utility.unescapeQuotesToQuotChr(item.paramValue) + '\">'
+          value.innerHTML = '<input type=\"text\" id="val' + i + '" value=\"' + StringUtils.unescapeQuotesToQuotChr(item.paramValue) + '\">'
         }
       });
     }
@@ -183,22 +183,13 @@ function argsMapAsString() {
     var paramName = item.paramName;
     var paramValue = item.paramValue;
     var paramType = item.paramType;
-    result = result + "{\"paramName\": \"" + paramName + "\", \"paramValue\": \"" + utility.escapeQuotes(paramValue) + "\", \"paramType\": \"" + paramType + "\"}";
+    result = result + "{\"paramName\": \"" + paramName + "\", \"paramValue\": \"" + StringUtils.escapeQuotes(paramValue) + "\", \"paramType\": \"" + paramType + "\"}";
     if (i < arr.size() - 1) {
       result = result + ",";
     }
   });
   return result;
 }
-
-var utility = {
-  escapeQuotes: function (string) {
-    return string.replace(/"/g, '\\"');
-  },
-  unescapeQuotesToQuotChr: function (string) {
-    return string.replace(/"/g, '&quot;');
-  }
-};
 
 function changeJson() {
   var beanName = jQuery("#beanSelect").val();

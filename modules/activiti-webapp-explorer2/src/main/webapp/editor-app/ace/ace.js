@@ -1092,7 +1092,7 @@ exports.scrollbarWidth = function(document) {
     var style = outer.style;
 
     style.position = "absolute";
-    style.left = "-10000px";
+    style.left = "-1000000px";
     style.overflow = "hidden";
     style.width = "200px";
     style.minWidth = "0px";
@@ -16358,6 +16358,42 @@ var VirtualRenderer = function(container, theme) {
             this.session.setScrollLeft(0);
         }
     };
+    /*this.scrollCursorIntoView = function(cursor, offset, $viewMargin) {
+        // the editor is not visible
+        if (this.$size.scrollerHeight === 0)
+            return;
+
+        var pos = this.$cursorLayer.getPixelPosition();
+
+        var left = pos.left + this.$padding;
+        var top = pos.top;
+
+        if (this.scrollTop > top) {
+            this.scrollToY(top);
+        }
+
+        if (this.scrollTop + this.$size.scrollerHeight < top + this.lineHeight) {
+            this.scrollToY(top + this.lineHeight - this.$size.scrollerHeight);
+        }
+
+        var scrollLeft = this.scroller.scrollLeft;
+
+        var left_ = left - this.characterWidth;
+        if (scrollLeft > left_) {
+            this.scrollToX(left_);
+        }
+
+        var right_side_scroll_yes = scrollLeft + this.$size.scrollerWidth < left + this.characterWidth;
+        if (right_side_scroll_yes) {
+            if (left > this.layerConfig.width) {
+                this.$desiredScrollLeft = left + 2 * this.characterWidth;
+                this.scrollToX(this.$desiredScrollLeft);
+            } else {
+                var tmp = Math.round(left + this.characterWidth - this.$size.scrollerWidth);
+                this.scrollToX(tmp);
+            }
+        }
+    };*/
     this.getScrollTop = function() {
         return this.session.getScrollTop();
     };
