@@ -1,11 +1,16 @@
-var jsonString = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
+var jsonObject = angular.element(document.getElementById('textarea')).scope().getPropertyValue();
+if (!jsonObject.script) {
+    if (jsonObject) {
+        jsonObject = JSON.parse(jsonObject);
+    } else {
+        jsonObject = null;
+    }
+}
 
 var typeList = ["Integer", "Double", "String", "Boolean", "BigDecimal", "Date", "Time", "DateTime", "Map", "Set", "List"]
 
 ace.require("ace/ext/language_tools");
 var editor = ace.edit("editor");
-
-
 
 var nodes = CubaStencilUtils.getAvailableVariablesForSelectedShape();
 var inputParams = angular.element(document.getElementById('textarea')).scope().inputParameters;
@@ -57,18 +62,35 @@ function textChanged() {
   changeJson();
 }
 
+if (jsonObject) {
+    var scriptRows = jsonObject.script;
+    var scriptValue = '';
+    for (var j = 0; j < scriptRows.length; j++) {
+        scriptValue = scriptValue + scriptRows[j];
+        if (j + 1 !== scriptRows.length) {
+            scriptValue = scriptValue + '\n';
+        }
+    }
+    editor.setValue(StringUtils.unescapeQuotes(scriptValue), 1);
+    initAutoComplete();
+    editor.focus();
+} else {
+    changeJson();
+}
+
 function changeJson() {
     var script = editor.getSession().getValue();
     var scriptLines = script.split('\n');
     var scriptLinesString = '';
     for (var i = 0; i < scriptLines.length; i++) {
         var line = StringUtils.escapeQuotes(scriptLines[i]);
-        scriptLinesString = scriptLinesString + line;
+        line = StringUtils.replaceLineEndings(line);
+        scriptLinesString = scriptLinesString + '"' + line + '"';
         if (i + 1 < scriptLines.length) {
             scriptLinesString = scriptLinesString + ',';
         }
     }
-    document.getElementById("textarea").value = scriptLinesString;
+    document.getElementById("textarea").value = "{" + "\"script\":[" + scriptLinesString + "]}";
     jQuery("textarea").change();
 }
 
@@ -119,6 +141,7 @@ function closeAllOtherComboplets(item) {
     }
   })
 }
+/*
  if (jsonString) {
      console.log(jsonString);
     editor.setValue(StringUtils.unescapeQuotes(jsonString), 1);
@@ -126,4 +149,4 @@ function closeAllOtherComboplets(item) {
  }
 if (!jsonString) {
   changeJson();
-}
+}*/
