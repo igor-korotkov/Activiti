@@ -1,5 +1,5 @@
-set TOMCAT_PATH=d:\projects\scorecard\deploy\tomcat
-set MODELER_VERSION=5.20.bespoke.7-SNAPSHOT
+set TOMCAT_PATH=c:\users\malyshev\projects\tab-bank\scorecard\deploy\tomcat
+set MODELER_VERSION=5.20.bespoke.10-SNAPSHOT
 
 cd modules\activiti-webapp-explorer2
 rem call mvn assembly:single install:install-file deploy:deploy-file -P cuba
