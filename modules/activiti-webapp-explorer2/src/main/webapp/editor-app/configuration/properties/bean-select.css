@@ -23,7 +23,7 @@ input[type="text"] {
 #beanSelectWrapper {
   padding-top: 4px;
   margin-left: 10px;
-  width: 440px;
+  width: 740px;
   padding-right: 10px;
   display: inline-block;
   vertical-align: top;
@@ -31,7 +31,6 @@ input[type="text"] {
 
 #variablesWrapper {
   border-left: 1px solid #a4acb9;
-  ;
   width: 446px;
   height: 100%;
   display: inline-block;

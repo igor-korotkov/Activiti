@@ -37,10 +37,10 @@
 }
 
 #scriptTemplate {
-    width: 500px;
+    width: 800px;
     display: inline-block;
     vertical-align: top;
-    height: 1px;
+    height: 710px;
 }
 
 #table-scroll-out {
@@ -48,7 +48,7 @@
     margin-top: 4px;
     display: inline-block;
     width: 396px;
-    height: 175px;
+    height: 440px;
     overflow-y: overlay;
     overflow-x: hidden;
 }
@@ -57,7 +57,7 @@
     margin-top: 4px;
     display: inline-block;
     width: 386px;
-    height: 175px;
+    height: 440px;
     overflow-y: overlay;
     overflow-x: hidden;
 }
@@ -148,4 +148,12 @@ input {
 select{
     width: 373px;
     height: 30px;
+}
+
+.ace-monokai .ace_string {
+    color: #963900;
+}
+
+.ace-monokai {
+    color: rgb(14, 14, 14);
 }
