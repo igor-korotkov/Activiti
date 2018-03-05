@@ -141,12 +141,3 @@ function closeAllOtherComboplets(item) {
     }
   })
 }
-/*
- if (jsonString) {
-     console.log(jsonString);
-    editor.setValue(StringUtils.unescapeQuotes(jsonString), 1);
-	editor.focus();
- }
-if (!jsonString) {
-  changeJson();
-}*/
