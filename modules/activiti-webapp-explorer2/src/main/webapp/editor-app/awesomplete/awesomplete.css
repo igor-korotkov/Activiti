@@ -44,7 +44,7 @@
 
 @supports (transform: scale(0)) {
 	.awesomplete>ul {
-		margin-left: 640px;
+		margin-left: 935px;
 		transition: .3s cubic-bezier(.4, .2, .5, 1.4);
 		transform-origin: 1.43em -.43em;
 	}
