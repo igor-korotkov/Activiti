@@ -19,14 +19,8 @@ ORYX.Plugins.OpenEdit = Clazz.extend({
             func = KisBpmBeanSelectCtrl[2];
             sc = this.getScope("beanselect", shape)
 		} else if (shape.properties['oryx-scripttext'] !== undefined) {
-            alert("invoke ctrl oryx-scripttext");
 			func = KisBpmTextPropertyCtrl[2];
             sc = this.getScope("scripttext", shape)
-        } else if (shape.properties['oryx-conditionsequenceflow'] !== undefined) {
-			alert("invoke ctrl oryx-conditionsequenceflow");
-            func = KisBpmConditionExpressionCtrl[2];
-            // func = KisBpmConditionFlowSelectCtrl[2];
-            sc = this.getScope("conditionsequenceflow", shape)
 		} else {
 			return;
 		}
