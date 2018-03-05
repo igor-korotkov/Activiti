@@ -59,6 +59,7 @@ function getAffectedNodesForSelectedShape() {
 
     var jsonModel = angScope.editor.getJSON();
     var childShapes = jsonModel.childShapes;
+    var processedShapes = [];
     var queue = [selectedShapeId];
     while (queue.length) {
         var nodeId = queue.shift();
@@ -77,9 +78,11 @@ function getAffectedNodesForSelectedShape() {
                         var shapeNodeVariablesWrapper = {};
                         shapeNodeVariablesWrapper.id = currentShape.resourceId;
                         shapeNodeVariablesWrapper.vars = getVariables(currentShape);
-                        result.push(shapeNodeVariablesWrapper)
+                        result.push(shapeNodeVariablesWrapper);
+                        processedShapes.push(currentShape.resourceId);
                     }
-                    queue.push(currentShape.resourceId)
+                    if (processedShapes.indexOf(nodeId) < 0)
+                        queue.push(currentShape.resourceId)
                 }
             }
         }
