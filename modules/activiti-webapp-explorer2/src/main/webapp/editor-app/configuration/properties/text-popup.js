@@ -117,43 +117,43 @@ templateSelect.change(function () {
 });
 
 httpGetAsync(getScriptTemplateListControllerPath(), function (responseText) {
-  var names = JSON.parse(responseText);
-  var sel = document.getElementById('templateSelect');
-  var opt = document.createElement('option');
-  opt.innerHTML = '';
-  opt.value = '';
-  sel.appendChild(opt);
+    var names = JSON.parse(responseText);
+    var sel = document.getElementById('templateSelect');
+    var opt = document.createElement('option');
+    opt.innerHTML = '';
+    opt.value = '';
+    sel.appendChild(opt);
     if (names.length === 0) {
-    jQuery("#templateSelectDiv").hide();
-  } else {
-    jQuery("#templateSelectDiv").show();
-    for (var i = 0; i < names.length; i++) {
-        var option = document.createElement('option');
-        option.innerHTML = names[i].name;
-        option.value = names[i].name;
-        sel.appendChild(option);
+        jQuery("#templateSelectDiv").hide();
+    } else {
+        jQuery("#templateSelectDiv").show();
+        for (var i = 0; i < names.length; i++) {
+            var option = document.createElement('option');
+            option.innerHTML = names[i].name;
+            option.value = names[i].name;
+            sel.appendChild(option);
+        }
     }
-  }
-  if (jsonObject) {
-    var scriptRows = jsonObject.script;
-      var scriptValue = '';
-      for (var j = 0; j < scriptRows.length; j++) {
-          scriptValue = scriptValue + scriptRows[j];
-          if (j + 1 !== scriptRows.length) {
-        scriptValue = scriptValue + '\n';
-      }
+    if (jsonObject) {
+        var scriptRows = jsonObject.script;
+        var scriptValue = '';
+        for (var j = 0; j < scriptRows.length; j++) {
+            scriptValue = scriptValue + scriptRows[j];
+            if (j + 1 !== scriptRows.length) {
+                scriptValue = scriptValue + '\n';
+            }
+        }
+        editor.setValue(StringUtils.unescapeQuotes(scriptValue), 1);
+        jsonObject.vars.forEach(function (item, i, arr) {
+            jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + StringUtils.unescapeQuotesToQuotChr(item.name) + '\"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + StringUtils.unescapeQuotesToQuotChr(item.type) + '\"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + StringUtils.unescapeQuotesToQuotChr(item.description) + '\"></td></tr>')
+        });
+        changeJson();
+        jQuery("#outTable").find("tr").not(':first').click(function () {
+            jQuery(this).addClass('selected').siblings().removeClass('selected');
+        });
+        initAutoComplete();
+        editor.focus();
     }
-    editor.setValue(StringUtils.unescapeQuotes(scriptValue), 1);
-    jsonObject.vars.forEach(function (item, i, arr) {
-      jQuery("#outTable").append('<tr><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + StringUtils.unescapeQuotesToQuotChr(item.name) + '\"></td><td><input class="inType" onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + StringUtils.unescapeQuotesToQuotChr(item.type) + '\"><div class="dropdown-btn"><span class="caret"></span></div></td><td><input onchange="textChanged();" oninput="this.onchange();" type="text" value = \"' + StringUtils.unescapeQuotesToQuotChr(item.description) + '\"></td></tr>')
-    });
-    changeJson();
-      jQuery("#outTable").find("tr").not(':first').click(function () {
-      jQuery(this).addClass('selected').siblings().removeClass('selected');
-      });
-    initAutoComplete();
-    editor.focus();
-  }
 });
 
 function getScriptTemplateListControllerPath() {
