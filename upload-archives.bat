@@ -1,4 +1,4 @@
-set MODELER_VERSION=5.20.bespoke.11
+set MODELER_VERSION=5.20.bespoke.14
 set UPLOAD_REPO_PATH=http://repository.haulmont.com:8587/nexus/content/repositories/releases
 
 cd modules\activiti-webapp-explorer2

@@ -1,4 +1,4 @@
-set MODELER_VERSION=5.20.bespoke.11
+set MODELER_VERSION=5.20.bespoke.14
 set UPLOAD_REPO_PATH = http://10.1.20.55:8082/nexus/content/groups/cuba-group/repositories/releases
 
 cd modules\activiti-webapp-explorer2
